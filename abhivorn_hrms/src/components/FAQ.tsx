@@ -68,7 +68,7 @@ const FAQ: React.FC = () => {
                   >
                     {faq.question}
                   </span>
-
+  
                   <ChevronDown
                     className={`h-5 w-5 flex-shrink-0 transition-transform duration-300 ${
                       isOpen ? "rotate-180 text-blue-600" : "text-gray-400"
