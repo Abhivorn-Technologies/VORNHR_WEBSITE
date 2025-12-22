@@ -22,7 +22,7 @@
   }
 
   body {
-    @apply font-sans text-gray-900 antialiased bg-white;
+    @apply font-sans text-gray-900 antialiased bg-white dark:bg-gray-900 dark:text-white transition-colors duration-300;
   }
 
   /* Custom selection */
