@@ -1,160 +1,115 @@
-import React from "react";
-import { Linkedin, Instagram } from "lucide-react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-
-const logo = "/logo5.png";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Linkedin, Instagram } from 'lucide-react';
 
 const Footer: React.FC = () => {
-  const links = [
-    {
-      title: "Product",
-      items: [
-        { label: "Features", path: "/features" },
-        { label: "Pricing", path: "/pricing" },
-        { label: "Customers", path: "/customers" },
-        { label: "FAQ", path: "/faq" }
-      ]
-    },
-    {
-      title: "Company",
-      items: [
-        { label: "About", path: "#" },
-        { label: "Blog", path: "#" },
-        { label: "Careers", path: "#" },
-        { label: "Contact", path: "/contact" }
-      ]
-    },
-    {
-      title: "Resources",
-      items: [
-        { label: "Help Center", path: "#" },
-        { label: "Documentation", path: "#" },
-        { label: "Community", path: "#" },
-        { label: "System Status", path: "#" }
-      ]
-    },
-    {
-      title: "Legal",
-      items: [
-        { label: "Privacy Policy", path: "#" },
-        { label: "Terms of Service", path: "#" },
-        { label: "Security", path: "#" }
-      ]
-    },
-  ];
+    const socialLinks = [
+        { icon: <Linkedin className="w-5 h-5" />, href: "https://www.linkedin.com/company/abhivorn-technologies/" },
+        { icon: <Instagram className="w-5 h-5" />, href: "https://www.instagram.com/abhivorn_technologies?igsh=amh3bWw2d2N1bDVq" },
+    ];
 
-  const socialLinks = [
-    {
-      icon: Linkedin,
-      url: "https://www.linkedin.com/company/abhivorn-technologies/posts/?feedView=all",
-      label: "LinkedIn",
-    },
-    {
-      icon: Instagram,
-      url: "https://www.instagram.com/abhivorn_technologies",
-      label: "Instagram",
-    },
-  ];
+    const footerLinks = [
+        {
+            title: "Product",
+            links: [
+                { name: "Features", href: "/features" },
+                { name: "Solutions", href: "/solutions" },
+                { name: "Pricing", href: "/pricing" },
+                { name: "Updates", href: "#" },
+            ]
+        },
+        {
+            title: "Company",
+            links: [
+                { name: "About Us", href: "#" },
+                { name: "Careers", href: "#" },
+                { name: "Blog", href: "#" },
+                { name: "Contact", href: "/contact" },
+            ]
+        },
+        {
+            title: "Legal",
+            links: [
+                { name: "Privacy Policy", href: "#" },
+                { name: "Terms of Service", href: "#" },
+                { name: "Cookie Policy", href: "#" },
+                { name: "Security", href: "#" },
+            ]
+        }
+    ];
 
-  return (
-    <footer className="bg-gray-900 text-white overflow-hidden">
-      {/* TOP GRADIENT */}
-      <motion.div
-        className="h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 bg-[length:200%_auto]"
-        animate={{ backgroundPosition: ["0% center", "200% center"] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-      />
-
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        {/* CONTENT */}
-        <div className="flex flex-col lg:flex-row gap-12">
-          {/* BRAND */}
-          <div className="lg:w-2/5">
-            <Link to="/" className="inline-block mb-4">
-              <img src={logo} alt="VORN HR Logo" className="h-10 w-auto" />
-            </Link>
-
-            <p className="text-gray-300 text-sm max-w-sm mb-6 leading-relaxed">
-              All-in-one HR platform for efficient team management and growth.
-            </p>
-
-            {/* SOCIAL ICONS */}
-            <div className="flex gap-3">
-              {socialLinks.map((social) => {
-                const Icon = social.icon;
-                return (
-                  <motion.a
-                    key={social.label}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={social.label}
-                    whileHover={{ scale: 1.1, rotate: 5, backgroundColor: "rgba(255, 255, 255, 0.2)" }}
-                    whileTap={{ scale: 0.95 }}
-                    className="h-9 w-9 rounded-full bg-white/10
-                               flex items-center justify-center
-                               transition-colors"
-                  >
-                    <Icon className="h-4 w-4" />
-                  </motion.a>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* LINKS */}
-          <div className="flex-1 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8">
-            {links.map((section) => (
-              <div key={section.title}>
-                <h4 className="font-semibold mb-4 text-sm tracking-wide text-gray-100">
-                  {section.title}
-                </h4>
-                <ul className="space-y-2">
-                  {section.items.map((item) => (
-                    <li key={item.label}>
-                      {item.path.startsWith("/") ? (
-                        <Link to={item.path}>
-                          <motion.span
-                            className="inline-block text-gray-400 hover:text-cyan-300 text-sm transition-colors cursor-pointer"
-                            whileHover={{ x: 5, color: "#67e8f9" }}
-                          >
-                            {item.label}
-                          </motion.span>
+    return (
+        <footer className="bg-slate-950 pt-10 md:pt-16 pb-8 border-t border-slate-900">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-12 mb-8 md:mb-12">
+                    {/* Brand Column */}
+                    <div className="col-span-2 lg:col-span-2">
+                        <Link
+                            to="/"
+                            className="inline-flex items-center gap-2 mb-6 group transition-all duration-300 hover:scale-105 hover:brightness-110 hover:drop-shadow-[0_0_15px_rgba(42,182,234,0.4)]"
+                            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                        >
+                            <img src="/virnhrlogo.png" alt="Abhivorn Logo" className="h-10 md:h-12 w-auto object-contain" />
                         </Link>
-                      ) : (
-                        <a href={item.path}>
-                          <motion.span
-                            className="inline-block text-gray-400 hover:text-cyan-300 text-sm transition-colors cursor-pointer"
-                            whileHover={{ x: 5, color: "#67e8f9" }}
-                          >
-                            {item.label}
-                          </motion.span>
+                        <p className="text-slate-400 mb-6 max-w-sm leading-relaxed">
+                            Simplifying HR management for modern businesses. Automate payroll, track attendance, and manage your workforce with ease.
+                        </p>
+                        <div className="flex gap-4">
+                            {socialLinks.map((social, index) => (
+                                <a
+                                    key={index}
+                                    href={social.href}
+                                    className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-slate-400 hover:bg-blue-600 hover:text-white transition-all duration-300"
+                                >
+                                    {social.icon}
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Links Columns */}
+                    {footerLinks.map((column, index) => (
+                        <div key={index}>
+                            <h3 className="text-sm font-bold text-white tracking-wider uppercase mb-4">
+                                {column.title}
+                            </h3>
+                            <ul className="space-y-3">
+                                {column.links.map((link, linkIndex) => (
+                                    <li key={linkIndex}>
+                                        <Link
+                                            to={link.href}
+                                            className="text-slate-400 hover:text-blue-400 transition-colors text-sm"
+                                        >
+                                            {link.name}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Bottom Bar */}
+                <div className="border-t border-slate-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p className="text-sm text-slate-500">
+                        © {new Date().getFullYear()} <a href="https://www.abhivorn.com/" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition-colors">Abhivorn Technologies Pvt. Ltd.</a> All rights reserved.
+                    </p>
+                    <div className="flex items-center gap-1 text-sm text-slate-500">
+                        <span>Built in India by</span>
+                        <a
+                            href="https://www.abhivorn.com/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2.5 hover:text-blue-500 transition-colors font-medium "
+                        >
+                            <img src="/abhivorn.png" alt="Abhivorn" className="h-9 w-auto object-contain" />
+                            <span>Abhivorn Technologies Pvt. Ltd.</span>
                         </a>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* DIVIDER */}
-        <div className="my-10 border-t border-gray-800" />
-
-        {/* BOTTOM */}
-        <div className="text-center text-gray-500 text-sm flex flex-col sm:flex-row justify-between items-center gap-4">
-          <span>© {new Date().getFullYear()} VORN HR. All rights reserved.</span>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-gray-300 transition-colors">Privacy</a>
-            <a href="#" className="hover:text-gray-300 transition-colors">Terms</a>
-            <a href="#" className="hover:text-gray-300 transition-colors">Cookies</a>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
+                    </div>
+                </div>
+            </div>
+        </footer>
+    );
 };
 
 export default Footer;

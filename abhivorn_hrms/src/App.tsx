@@ -1,12 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Hero from "./components/Hero";
-import Features from "./components/Features";
-import Pricing from "./components/Pricing";
-import FAQ from "./components/FAQ";
-import ContactForm from "./components/ContactForm";
-import Customers from "./components/Customers";
-// import Testimonials from "./components/Testimonials"; // Keeping it commented as it was in original
+import FeaturesPage from "./components/FeaturesPage";
+import SolutionsPage from "./components/SolutionsPage";
+import PricingPage from "./components/PricingPage";
+import ContactPage from "./components/ContactPage";
 
 // Home Page Component
 const Home = () => (
@@ -21,12 +19,10 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="features" element={<Features />} />
-          <Route path="pricing" element={<Pricing />} />
-          <Route path="customers" element={<Customers />} />
-          <Route path="faq" element={<FAQ />} />
-          <Route path="contact" element={<ContactForm />} />
-          {/* Add other routes as needed */}
+          <Route path="features" element={<FeaturesPage />} />
+          <Route path="solutions" element={<SolutionsPage />} />
+          <Route path="pricing" element={<PricingPage />} />
+          <Route path="contact" element={<ContactPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

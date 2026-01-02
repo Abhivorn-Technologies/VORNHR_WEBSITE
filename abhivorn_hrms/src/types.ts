@@ -1,0 +1,6 @@
+export enum UserRole {
+    HR_ADMIN = 'HR_ADMIN',
+    EMPLOYEE = 'EMPLOYEE',
+    TEAM_LEAD = 'TEAM_LEAD',
+    PAYROLL_MANAGER = 'PAYROLL_MANAGER'
+}
