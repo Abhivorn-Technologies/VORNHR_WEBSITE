@@ -4,7 +4,6 @@ import { Mail, Phone, MapPin, Send } from "lucide-react";
 import emailjs from "@emailjs/browser";
 
 const ContactPage: React.FC = () => {
-    // Form State
     const [formState, setFormState] = useState({
         name: "",
         email: "",
@@ -16,7 +15,19 @@ const ContactPage: React.FC = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
 
-    // Submission Handler (Dual Email Logic)
+    const handleChange = (
+        e: React.ChangeEvent<
+            HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+        >
+    ) => {
+        const { name, value } = e.target;
+        setFormState((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    // Submission Handler (Unified Logic)
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -27,55 +38,70 @@ const ContactPage: React.FC = () => {
         const hrEmail = import.meta.env.VITE_HR_EMAIL || 'anjaneyachary@abhivorn.com';
 
         // Validation
-        if (!serviceId || !hrTemplateId || !userTemplateId || !publicKey) {
-            alert("Email service not configured properly. Check .env variables.");
+        if (!serviceId || !hrTemplateId || !publicKey) {
+            alert("Email service configuration missing. Please check .env variables.");
             return;
         }
 
         setIsSubmitting(true);
 
         try {
-            /* ---------------- 1. SENDING NOTIFICATION TO HR ---------------- */
-            const hrPayload = {
-                // Content for HR to see
+            // Create a single, comprehensive payload for ALL templates
+            // This ensures both HR and User emails verify the exact same data
+            const templateParams = {
+                // Core Data
+                to_name: "HR Team", // For HR email
                 from_name: formState.name,
                 from_email: formState.email,
                 phone: formState.phone,
                 subject: formState.subject,
                 message: formState.message,
 
-                // ROUTING: Force sending TO HR
-                to_email: hrEmail,
-                email: hrEmail,          // Backup routing key for some templates
+                // Routing
+                to_email: hrEmail,          // Main destination
+                hr_email: hrEmail,          // Backup key
+                reply_to: formState.email,  // Reply to visitor
 
-                // REPLY: Allow HR to reply directly to Visitors
-                reply_to: formState.email
-            };
-
-            console.log("Sending HR Notification...", hrPayload);
-            await emailjs.send(serviceId, hrTemplateId, hrPayload, publicKey);
-
-
-            /* ---------------- 2. SENDING AUTO-REPLY TO CUSTOMER ---------------- */
-            const userPayload = {
-                // Content for Customer to see
-                to_name: formState.name,
+                // Standard Variable Variations (Kitchen Sink)
+                // These cover almost every default EmailJS template format
                 name: formState.name,
-                subject: formState.subject,
-                message: formState.message,
-
-                // ROUTING: Force sending TO Customer
+                Name: formState.name,
                 email: formState.email,
-                to_email: formState.email,
+                Email: formState.email,
+                Subject: formState.subject,
+                Message: formState.message,
 
-                // REPLY: Allow Customer to reply to HR
-                reply_to: hrEmail
+                first_name: formState.name,
+                full_name: formState.name,
+                user_name: formState.name,
+                user_email: formState.email,
+                contact_number: formState.phone,
+                phone_number: formState.phone,
+                mobile: formState.phone,
             };
 
-            console.log("Sending Customer Auto-Reply...", userPayload);
-            await emailjs.send(serviceId, userTemplateId, userPayload, publicKey);
+            console.log("Sending Email Payload:", templateParams);
 
-            // Success Handling
+            // 1. Send to HR
+            await emailjs.send(serviceId, hrTemplateId, templateParams, publicKey);
+
+            // 2. Send Auto-Reply (if configured)
+            if (userTemplateId) {
+                // For the user email, we might want to tweak 'to_name' to be their name
+                const userAutoReplyParams = {
+                    ...templateParams,
+                    to_name: formState.name,      // Address the user by name
+                    to_email: formState.email,    // Send TO the user
+                    email: formState.email,       // Backup key
+                    reply_to: hrEmail             // User replies to HR
+                };
+
+                // Send silently - don't fail main flow if this fails
+                emailjs.send(serviceId, userTemplateId, userAutoReplyParams, publicKey)
+                    .catch(err => console.warn("Auto-reply failed:", err));
+            }
+
+            // Success
             setIsSuccess(true);
             setFormState({
                 name: "",
@@ -86,20 +112,13 @@ const ContactPage: React.FC = () => {
             });
 
             setTimeout(() => setIsSuccess(false), 5000);
+
         } catch (error: any) {
             console.error("Email Sending Failed:", error);
             alert(`Failed to send message: ${error.text || "Unknown error"}`);
         } finally {
             setIsSubmitting(false);
         }
-    };
-
-    const handleChange = (
-        e: React.ChangeEvent<
-            HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-        >
-    ) => {
-        setFormState({ ...formState, [e.target.name]: e.target.value });
     };
 
     return (
@@ -200,7 +219,7 @@ const ContactPage: React.FC = () => {
                                         onChange={handleChange}
                                         required
                                         className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:border-[#39a4de] focus:ring-4 focus:ring-[#39a4de]/10 outline-none transition-all duration-300"
-                                        placeholder="Available"
+                                        placeholder="John Doe"
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -262,8 +281,8 @@ const ContactPage: React.FC = () => {
                                 type="submit"
                                 disabled={isSubmitting}
                                 className={`w-full py-3 rounded-xl font-bold text-lg text-white flex items-center justify-center gap-2 transition-all duration-300 shadow-xl ${isSuccess
-                                        ? "bg-green-500 hover:bg-green-600 shadow-green-500/30"
-                                        : "bg-[#2ab6ea] text-white hover:bg-[#003973] hover:shadow-lg hover:-translate-y-1"
+                                    ? "bg-green-500 hover:bg-green-600 shadow-green-500/30"
+                                    : "bg-gradient-to-r from-[#003973] to-[#2ab6ea] hover:shadow-lg hover:-translate-y-1 shadow-blue-500/30"
                                     } disabled:opacity-70 disabled:cursor-not-allowed`}
                             >
                                 {isSubmitting
