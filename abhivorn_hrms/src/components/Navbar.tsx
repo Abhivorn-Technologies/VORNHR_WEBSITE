@@ -54,7 +54,11 @@ const Navbar: React.FC = () => {
                             className="flex items-center gap-2 group"
                             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                         >
-                            <img src="/virnhrlogo.png" alt="Abhivorn Logo" className="h-8 md:h-9 w-auto object-contain" />
+                            <img
+                                src="/virnhrlogo.png"
+                                alt="Abhivorn Logo"
+                                className="h-8 md:h-9 w-auto object-contain transition-all duration-300 hover:scale-105 hover:brightness-110 hover:drop-shadow-md"
+                            />
                         </Link>
 
                         {/* Desktop Navigation */}
@@ -64,10 +68,9 @@ const Navbar: React.FC = () => {
                                 <Link
                                     key={link.name}
                                     to={link.href}
-                                    className="relative text-[15px] font-medium text-slate-600 hover:text-[#003973] transition-colors duration-200 group"
+                                    className="relative px-4 py-2 text-[15px] font-medium text-slate-600 transition-all duration-300 rounded-full hover:text-[#003973] hover:bg-blue-50/80 hover:shadow-sm"
                                 >
                                     {link.name}
-                                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#2ab6ea] transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100 origin-left" />
                                 </Link>
                             ))}
                         </div>

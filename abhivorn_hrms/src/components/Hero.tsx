@@ -1,7 +1,23 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import { motion } from 'framer-motion';
+import { motion, useInView, useMotionValue, useTransform, animate } from 'framer-motion';
+import { useRef, useEffect } from 'react';
 import { ArrowRight, Star, TrendingUp } from 'lucide-react';
+
+const CountUp = ({ to, prefix = "", suffix = "", decimals = 0 }: { to: number, prefix?: string, suffix?: string, decimals?: number }) => {
+    const ref = useRef(null);
+    const inView = useInView(ref, { once: true });
+    const count = useMotionValue(0);
+    const rounded = useTransform(count, (latest) => `${prefix}${latest.toFixed(decimals)}${suffix}`);
+
+    useEffect(() => {
+        if (inView) {
+            animate(count, to, { duration: 2, ease: "easeOut" });
+        }
+    }, [inView, to, count]);
+
+    return <motion.span ref={ref}>{rounded}</motion.span>;
+};
 
 const Hero: React.FC = () => {
     return (
@@ -33,7 +49,7 @@ const Hero: React.FC = () => {
                             className="inline-flex items-center gap-2 px-4 py-2.5 bg-white/80 backdrop-blur-sm rounded-full border border-gray-200/50 shadow-sm mb-8"
                         >
                             <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse" />
-                            <span className="text-sm font-semibold text-gray-700">#1 HR Platform for Enterprises</span>
+                            <span className="text-sm font-semibold text-gray-700">HR Platform for Enterprises</span>
                         </motion.div>
 
                         <h1 className="text-4xl lg:text-6xl font-bold tracking-tight mb-6 leading-[1.1]">
@@ -57,12 +73,14 @@ const Hero: React.FC = () => {
 
                         <div className="flex items-center gap-8 py-6 border-t border-slate-100">
                             {[
-                                { count: '194', label: 'Active Users' },
-                                { count: '99.9%', label: 'Uptime SLA' },
-                                { count: '4.9/5', label: 'Customer Rating' }
+                                { value: 200, suffix: "+", label: 'Active Users' },
+                                { value: 99.9, suffix: "%", decimals: 1, label: 'Uptime SLA' },
+                                { value: 4.9, suffix: "/5", decimals: 1, label: 'Customer Rating' }
                             ].map((stat, i) => (
                                 <div key={i}>
-                                    <p className="text-2xl font-bold text-slate-900">{stat.count}</p>
+                                    <p className="text-2xl font-bold text-slate-900">
+                                        <CountUp to={stat.value} suffix={stat.suffix} decimals={stat.decimals} />
+                                    </p>
                                     <p className="text-sm text-slate-500 font-medium">{stat.label}</p>
                                 </div>
                             ))}

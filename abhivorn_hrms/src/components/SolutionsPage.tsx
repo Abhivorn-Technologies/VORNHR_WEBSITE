@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Users, Clock,
@@ -6,9 +6,26 @@ import {
     TrendingUp, Lock, PieChart, LayoutDashboard, CreditCard, Zap,
     Calendar, Star, Quote, Activity, DollarSign, ArrowUpRight
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useInView, useMotionValue, useTransform, animate } from 'framer-motion';
 import { UserRole } from '../types';
 
+
+
+
+const CountUp = ({ to, prefix = "", suffix = "", decimals = 0 }: { to: number, prefix?: string, suffix?: string, decimals?: number }) => {
+    const ref = useRef(null);
+    const inView = useInView(ref, { once: true });
+    const count = useMotionValue(0);
+    const rounded = useTransform(count, (latest) => `${prefix}${latest.toFixed(decimals)}${suffix}`);
+
+    useEffect(() => {
+        if (inView) {
+            animate(count, to, { duration: 2, ease: "easeOut" });
+        }
+    }, [inView, to, count]);
+
+    return <motion.span ref={ref}>{rounded}</motion.span>;
+};
 
 
 const RoleBenefits: React.FC = () => {
@@ -342,7 +359,7 @@ const RoleBenefits: React.FC = () => {
                                         />
 
                                         {/* Floating Badge */}
-                                        <div className="absolute bottom-6 left-6 z-20 bg-white/90 backdrop-blur-md px-4 py-3 rounded-xl border border-white/50 shadow-lg">
+                                        <div className="absolute top-4 left-4 md:top-auto md:bottom-4 md:left-6 z-20 bg-white/90 backdrop-blur-md px-4 py-3 rounded-xl border border-white/50 shadow-lg">
                                             <div className="flex items-center gap-3">
                                                 <div className="bg-brand-primary/10 p-2 rounded-lg text-brand-primary">
                                                     {currentBenefits.icon}
@@ -465,6 +482,23 @@ const SocialProof: React.FC = () => {
                 { label: "Rating", value: "4.9/5", icon: <Star className="w-4 h-4" />, color: "bg-white/10 text-orange-200" },
                 { label: "Cost Saving", value: "25%", icon: <DollarSign className="w-4 h-4" />, color: "bg-white/10 text-red-200" }
             ]
+        },
+        {
+            id: 4,
+            company: "Elevate Rootz",
+            fullCompany: "Elevate Rootz",
+            industry: "Corporate Services",
+            logo: "/elevaterootz.png",
+            color: "rose",
+            gradient: "from-rose-500 to-pink-500",
+            quote: "Abhivorn helps us stay compliant and organized across multiple locations. It's truly a game changer.",
+            author: "Priya Sharma",
+            role: "HR Manager",
+            metrics: [
+                { label: "Efficiency", value: "40%", icon: <Activity className="w-4 h-4" />, color: "bg-white/10 text-rose-200" },
+                { label: "Stability", value: "100%", icon: <Shield className="w-4 h-4" />, color: "bg-white/10 text-pink-200" },
+                { label: "Happier Teams", value: "9/10", icon: <Users className="w-4 h-4" />, color: "bg-white/10 text-red-200" }
+            ]
         }
     ];
 
@@ -483,7 +517,8 @@ const SocialProof: React.FC = () => {
         blue: "from-blue-900 via-blue-800 to-indigo-900",
         emerald: "from-emerald-900 via-emerald-800 to-teal-900",
         violet: "from-violet-900 via-purple-900 to-indigo-900",
-        amber: "from-amber-900 via-amber-800 to-orange-900"
+        amber: "from-amber-900 via-amber-800 to-orange-900",
+        rose: "from-rose-900 via-pink-900 to-red-900"
     };
 
     return (
@@ -520,70 +555,72 @@ const SocialProof: React.FC = () => {
                 {/* Interactive Success Stories Section - Optimized Height */}
                 <div className="grid lg:grid-cols-12 gap-6 h-auto lg:h-[400px] mb-10">
                     {/* Compact Sidebar */}
-                    <div className="lg:col-span-4 flex flex-col gap-2">
-                        {clients.map((client, index) => (
-                            <motion.button
-                                key={index}
-                                onClick={() => setActiveTab(index)}
-                                onMouseEnter={() => setIsAutoPlaying(false)}
-                                onMouseLeave={() => setIsAutoPlaying(true)}
-                                className={`
-                                    w-full text-left p-2.5 rounded-lg transition-all duration-300 border
-                                    flex items-center gap-3 group relative overflow-hidden
-                                    ${activeTab === index
-                                        ? 'bg-white border-blue-200 shadow-md scale-100 z-10 ring-1 ring-blue-100'
-                                        : 'bg-white/60 border-transparent hover:bg-white hover:border-gray-200 hover:shadow-sm'
-                                    }
-                                `}
-                            >
-                                {/* Active Background */}
-                                {activeTab === index && (
-                                    <motion.div
-                                        layoutId="active-tab-bg"
-                                        className="absolute inset-0 bg-gradient-to-r from-blue-50/50 to-white"
-                                        transition={{ type: "spring", bounce: 0, duration: 0.3 }}
-                                    />
-                                )}
+                    <div className="lg:col-span-4 flex flex-col h-full">
+                        <div className="flex-1 overflow-y-auto pr-1 space-y-2 custom-scrollbar">
+                            {clients.map((client, index) => (
+                                <motion.button
+                                    key={index}
+                                    onClick={() => setActiveTab(index)}
+                                    onMouseEnter={() => setIsAutoPlaying(false)}
+                                    onMouseLeave={() => setIsAutoPlaying(true)}
+                                    className={`
+                                        w-full text-left p-2.5 rounded-lg transition-all duration-300 border
+                                        flex items-center gap-3 group relative overflow-hidden shrink-0
+                                        ${activeTab === index
+                                            ? 'bg-white border-blue-200 shadow-md scale-100 z-10 ring-1 ring-blue-100'
+                                            : 'bg-white/60 border-transparent hover:bg-white hover:border-gray-200 hover:shadow-sm'
+                                        }
+                                    `}
+                                >
+                                    {/* Active Background */}
+                                    {activeTab === index && (
+                                        <motion.div
+                                            layoutId="active-tab-bg"
+                                            className="absolute inset-0 bg-gradient-to-r from-blue-50/50 to-white"
+                                            transition={{ type: "spring", bounce: 0, duration: 0.3 }}
+                                        />
+                                    )}
 
-                                {/* Logo - Smaller */}
-                                <div className={`
-                                    relative w-9 h-9 rounded-lg flex items-center justify-center p-1.5
-                                    transition-all duration-300 z-10 shrink-0
-                                    ${activeTab === index
-                                        ? 'bg-white shadow-sm border border-blue-100'
-                                        : 'bg-white shadow-sm border border-gray-100'
-                                    }
-                                `}>
-                                    <img
-                                        src={client.logo}
-                                        alt={client.company}
-                                        className={`w-full h-full object-contain transition-all duration-300 ${activeTab === index ? 'grayscale-0' : 'grayscale'}`}
-                                    />
-                                </div>
+                                    {/* Logo - Smaller */}
+                                    <div className={`
+                                        relative w-9 h-9 rounded-lg flex items-center justify-center p-1.5
+                                        transition-all duration-300 z-10 shrink-0
+                                        ${activeTab === index
+                                            ? 'bg-white shadow-sm border border-blue-100'
+                                            : 'bg-white shadow-sm border border-gray-100'
+                                        }
+                                    `}>
+                                        <img
+                                            src={client.logo}
+                                            alt={client.company}
+                                            className={`w-full h-full object-contain transition-all duration-300 ${activeTab === index ? 'grayscale-0' : 'grayscale'}`}
+                                        />
+                                    </div>
 
-                                <div className="z-10 flex-1 min-w-0">
-                                    <h4 className={`font-bold text-sm truncate ${activeTab === index ? 'text-gray-900' : 'text-gray-600'}`}>
-                                        {client.company}
-                                    </h4>
-                                    <span className={`text-[10px] font-medium uppercase tracking-wider ${activeTab === index ? 'text-blue-600' : 'text-gray-400'}`}>
-                                        {client.industry}
-                                    </span>
-                                </div>
+                                    <div className="z-10 flex-1 min-w-0">
+                                        <h4 className={`font-bold text-sm truncate ${activeTab === index ? 'text-gray-900' : 'text-gray-600'}`}>
+                                            {client.company}
+                                        </h4>
+                                        <span className={`text-[10px] font-medium uppercase tracking-wider ${activeTab === index ? 'text-blue-600' : 'text-gray-400'}`}>
+                                            {client.industry}
+                                        </span>
+                                    </div>
 
-                                {activeTab === index && (
-                                    <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="z-10 w-1.5 h-1.5 rounded-full bg-blue-500" />
-                                )}
-                            </motion.button>
-                        ))}
+                                    {activeTab === index && (
+                                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="z-10 w-1.5 h-1.5 rounded-full bg-blue-500" />
+                                    )}
+                                </motion.button>
+                            ))}
+                        </div>
 
                         {/* Trust Badge - Compact */}
-                        <div className="mt-auto pt-3 border-t border-gray-200/50">
+                        <div className="mt-2 pt-3 border-t border-gray-200/50 shrink-0">
                             <div className="flex items-center justify-between p-2.5 rounded-lg bg-white/50 border border-gray-100">
                                 <div className="flex items-center gap-2">
                                     <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
                                     <span className="text-sm font-bold text-gray-900">4.9/5</span>
                                 </div>
-                                <span className="text-[10px] text-gray-500 font-medium">194+ Reviews</span>
+                                <span className="text-[10px] text-gray-500 font-medium">200+ Reviews</span>
                             </div>
                         </div>
                     </div>
@@ -660,14 +697,14 @@ const SocialProof: React.FC = () => {
                 <div className="border-t border-gray-200 pt-8">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {[
-                            { label: "Active Users", value: "194+", color: "text-blue-600" },
-                            { label: "Payroll Processed", value: "₹1.5Cr", color: "text-emerald-600" },
-                            { label: "Hours Saved", value: "50k+", color: "text-amber-600" },
-                            { label: "Uptime SLA", value: "99.9%", color: "text-purple-600" },
+                            { label: "Active Users", value: 200, suffix: "+", color: "text-blue-600" },
+                            { label: "Payroll Processed", value: 2, prefix: "₹", suffix: "Cr+", color: "text-emerald-600" },
+                            { label: "Hours Saved", value: 50, suffix: "k+", color: "text-amber-600" },
+                            { label: "Uptime SLA", value: 99.9, suffix: "%", decimals: 1, color: "text-purple-600" },
                         ].map((stat, i) => (
                             <div key={i} className="group cursor-default p-3 hover:bg-white rounded-lg transition-colors">
                                 <div className={`text-3xl font-bold ${stat.color} mb-1`}>
-                                    {stat.value}
+                                    <CountUp to={stat.value} prefix={stat.prefix} suffix={stat.suffix} decimals={stat.decimals} />
                                 </div>
                                 <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">
                                     {stat.label}

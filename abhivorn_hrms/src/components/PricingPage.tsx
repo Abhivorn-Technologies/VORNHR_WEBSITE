@@ -473,7 +473,7 @@ const FAQ: React.FC = () => {
                             <motion.button
                                 whileHover={{ scale: 1.05, y: -2 }}
                                 whileTap={{ scale: 0.95 }}
-                                onClick={() => window.open('https://wa.me/919876543210', '_blank')}
+                                onClick={() => window.open('https://wa.me/919966629766', '_blank')}
                                 className="group bg-white border-2 border-gray-200 text-gray-700 px-8 py-4 rounded-xl font-semibold text-base transition-all hover:border-[#25D366] hover:text-[#25D366] shadow-sm hover:shadow-md"
                             >
                                 <div className="flex items-center justify-center gap-3">

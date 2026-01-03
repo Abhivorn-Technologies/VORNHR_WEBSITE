@@ -3,9 +3,25 @@ import {
     Clock, Calendar, DollarSign, BarChart2, Users,
     Shield
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, useInView, useMotionValue, useTransform, animate } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 
 // --- Components Merged: FeaturesOverview, AIAssistant ---
+
+const CountUp = ({ to, prefix = "", suffix = "" }: { to: number, prefix?: string, suffix?: string }) => {
+    const ref = useRef(null);
+    const inView = useInView(ref, { once: true });
+    const count = useMotionValue(0);
+    const rounded = useTransform(count, (latest) => `${prefix}${Math.round(latest)}${suffix}`);
+
+    useEffect(() => {
+        if (inView) {
+            animate(count, to, { duration: 2, ease: "easeOut" });
+        }
+    }, [inView, to, count]);
+
+    return <motion.span ref={ref}>{rounded}</motion.span>;
+};
 
 const FeaturesOverview: React.FC = () => {
     const features = [
@@ -18,7 +34,7 @@ const FeaturesOverview: React.FC = () => {
             borderColor: "group-hover:border-blue-200",
             hoverBg: "group-hover:bg-blue-50/50",
             hoverTitleColor: "group-hover:text-blue-600",
-            image: "/feature1.jpg"
+            image: "/timetracking.png"
         },
         {
             icon: <Calendar className="w-6 h-6" />,
@@ -29,7 +45,7 @@ const FeaturesOverview: React.FC = () => {
             borderColor: "group-hover:border-emerald-200",
             hoverBg: "group-hover:bg-emerald-50/50",
             hoverTitleColor: "group-hover:text-emerald-600",
-            image: "/feature2.jpg"
+            image: "/leavemanagement.png"
         },
         {
             icon: <DollarSign className="w-6 h-6" />,
@@ -40,7 +56,7 @@ const FeaturesOverview: React.FC = () => {
             borderColor: "group-hover:border-amber-200",
             hoverBg: "group-hover:bg-amber-50/50",
             hoverTitleColor: "group-hover:text-amber-600",
-            image: "/feature3.jpg"
+            image: "/automatedpayroll.png"
         },
         {
             icon: <BarChart2 className="w-6 h-6" />,
@@ -51,7 +67,7 @@ const FeaturesOverview: React.FC = () => {
             borderColor: "group-hover:border-purple-200",
             hoverBg: "group-hover:bg-purple-50/50",
             hoverTitleColor: "group-hover:text-purple-600",
-            image: "/feature4.jpg"
+            image: "/hranalytics.png"
         },
         {
             icon: <Users className="w-6 h-6" />,
@@ -62,7 +78,7 @@ const FeaturesOverview: React.FC = () => {
             borderColor: "group-hover:border-indigo-200",
             hoverBg: "group-hover:bg-indigo-50/50",
             hoverTitleColor: "group-hover:text-indigo-600",
-            image: "/feature5.jpg"
+            image: "/employeeportal.png"
         },
         {
             icon: <Shield className="w-6 h-6" />,
@@ -73,7 +89,7 @@ const FeaturesOverview: React.FC = () => {
             borderColor: "group-hover:border-red-200",
             hoverBg: "group-hover:bg-red-50/50",
             hoverTitleColor: "group-hover:text-red-600",
-            image: "/feature6.jpg"
+            image: "/EnterpriseSecurity.png"
         }
     ];
 
@@ -184,14 +200,14 @@ const FeaturesOverview: React.FC = () => {
                 >
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                         {[
-                            { label: "Active Users", value: "194", color: "text-blue-600" },
-                            { label: "Processed Payroll", value: "₹1.5Cr+", color: "text-emerald-600" },
-                            { label: "Companies", value: "4", color: "text-purple-600" },
-                            { label: "Support Score", value: "98%", color: "text-amber-600" }
+                            { label: "Active Users", value: 200, suffix: "+", color: "text-blue-600" },
+                            { label: "Processed Payroll", value: 2, prefix: "₹", suffix: "Cr+", color: "text-emerald-600" },
+                            { label: "Companies", value: 5, color: "text-purple-600" },
+                            { label: "Support Score", value: 99, suffix: "%", color: "text-amber-600" }
                         ].map((stat, index) => (
                             <div key={index} className="text-center group cursor-default">
                                 <div className={`text-3xl font-bold ${stat.color} mb-2 transform group-hover:scale-110 transition-transform duration-300`}>
-                                    {stat.value}
+                                    <CountUp to={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
                                 </div>
                                 <div className="text-sm text-gray-500 font-medium">
                                     {stat.label}
