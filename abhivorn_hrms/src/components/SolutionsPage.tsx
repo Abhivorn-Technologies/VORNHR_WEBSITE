@@ -214,9 +214,9 @@ const RoleBenefits: React.FC = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Section Header */}
                 <div className="text-center mb-16">
-                    <div className="inline-flex items-center gap-2 px-4 py-2.5 bg-white/80 backdrop-blur-sm rounded-full border border-gray-200/50 shadow-sm mb-6">
-                        <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse" />
-                        <span className="text-sm font-semibold text-gray-700">Role Specific Benefits</span>
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-6">
+                        <Users className="w-4 h-4 text-blue-600" />
+                        <span className="text-sm font-semibold text-blue-600">Role Specific Benefits</span>
                     </div>
 
                     <motion.h2
@@ -535,9 +535,9 @@ const SocialProof: React.FC = () => {
                     transition={{ duration: 0.5 }}
                     className="text-center mb-16"
                 >
-                    <div className="inline-flex items-center gap-2 px-4 py-2.5 bg-white/80 backdrop-blur-sm rounded-full border border-gray-200/50 shadow-sm mb-6">
-                        <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse" />
-                        <span className="text-sm font-semibold text-gray-700">Trusted by Industry Leaders</span>
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-6">
+                        <Star className="w-4 h-4 text-blue-600" />
+                        <span className="text-sm font-semibold text-blue-600">Trusted by Industry Leaders</span>
                     </div>
 
                     <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">

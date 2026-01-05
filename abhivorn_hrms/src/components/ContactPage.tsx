@@ -136,17 +136,17 @@ const ContactPage: React.FC = () => {
                         initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-white/80 backdrop-blur-sm rounded-full border border-gray-200/50 shadow-sm mb-6"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-6"
                     >
-                        <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse" />
-                        <span className="text-sm font-semibold text-gray-700">Get In Touch</span>
+                        <Mail className="w-4 h-4 text-blue-600" />
+                        <span className="text-sm font-semibold text-blue-600">Get In Touch</span>
                     </motion.div>
 
                     <motion.h2
                         initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="text-4xl md:text-5xl font-bold mb-4"
+                        className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4"
                     >
                         <span className="text-[#003973]">Ready to Transform Your</span>{" "}
                         <br className="hidden md:block" />
@@ -282,7 +282,7 @@ const ContactPage: React.FC = () => {
                                 disabled={isSubmitting}
                                 className={`w-full py-3 rounded-xl font-bold text-lg text-white flex items-center justify-center gap-2 transition-all duration-300 shadow-xl ${isSuccess
                                     ? "bg-green-500 hover:bg-green-600 shadow-green-500/30"
-                                    : "bg-gradient-to-r from-[#003973] to-[#2ab6ea] hover:shadow-lg hover:-translate-y-1 shadow-blue-500/30"
+                                    : "bg-gradient-to-r from-[#39a4de] to-[#2ab6ea] hover:shadow-lg hover:-translate-y-1 shadow-blue-500/30"
                                     } disabled:opacity-70 disabled:cursor-not-allowed`}
                             >
                                 {isSubmitting

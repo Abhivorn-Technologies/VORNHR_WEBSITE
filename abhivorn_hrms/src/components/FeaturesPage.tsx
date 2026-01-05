@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     Clock, Calendar, DollarSign, BarChart2, Users,
-    Shield
+    Shield, Smartphone,
+    Briefcase, FileText, MapPin, Layout,
+    Bell, CheckCircle, TrendingUp
 } from 'lucide-react';
 import { motion, useInView, useMotionValue, useTransform, animate } from 'framer-motion';
-import { useEffect, useRef } from 'react';
 
-// --- Components Merged: FeaturesOverview, AIAssistant ---
+// --- Brand Colors ---
+// Primary: #003973
+// Secondary: #2ab6ea
 
 const CountUp = ({ to, prefix = "", suffix = "" }: { to: number, prefix?: string, suffix?: string }) => {
     const ref = useRef(null);
@@ -25,168 +28,171 @@ const CountUp = ({ to, prefix = "", suffix = "" }: { to: number, prefix?: string
 
 const FeaturesOverview: React.FC = () => {
     const features = [
+        // Using a more unified, professional palette while keeping distinct icons
+        {
+            icon: <Users className="w-6 h-6" />,
+            title: "Employee Management",
+            description: "Centralized profiles, document management, and complete lifecycle tracking.",
+            activeColor: "bg-[#003973] text-white",
+            inactiveIcon: "text-[#003973]",
+            image: "/teamlead.jpg"
+        },
         {
             icon: <Clock className="w-6 h-6" />,
-            title: "Time Tracking",
-            description: "AI-powered GPS and biometric tracking for precise attendance.",
-            color: "text-blue-600",
-            bg: "bg-blue-50",
-            borderColor: "group-hover:border-blue-200",
-            hoverBg: "group-hover:bg-blue-50/50",
-            hoverTitleColor: "group-hover:text-blue-600",
+            title: "Time & Attendance",
+            description: "AI-powered GPS and biometric tracking with geo-fencing support.",
+            activeColor: "bg-[#2ab6ea] text-white",
+            inactiveIcon: "text-[#2ab6ea]",
             image: "/timetracking.png"
         },
         {
             icon: <Calendar className="w-6 h-6" />,
             title: "Leave Management",
-            description: "Automated scheduling with instant approval workflows.",
-            color: "text-emerald-600",
-            bg: "bg-emerald-50",
-            borderColor: "group-hover:border-emerald-200",
-            hoverBg: "group-hover:bg-emerald-50/50",
-            hoverTitleColor: "group-hover:text-emerald-600",
+            description: "Automated leave workflows, multi-type balance tracking, and holiday calendars.",
+            activeColor: "bg-[#003973] text-white",
+            inactiveIcon: "text-[#003973]",
             image: "/leavemanagement.png"
         },
         {
             icon: <DollarSign className="w-6 h-6" />,
             title: "Automated Payroll",
-            description: "Tax-compliant salary processing in just a few clicks.",
-            color: "text-amber-600",
-            bg: "bg-amber-50",
-            borderColor: "group-hover:border-amber-200",
-            hoverBg: "group-hover:bg-amber-50/50",
-            hoverTitleColor: "group-hover:text-amber-600",
+            description: "Tax-compliant salary processing, one-click payslips, and compliance.",
+            activeColor: "bg-[#2ab6ea] text-white",
+            inactiveIcon: "text-[#2ab6ea]",
             image: "/automatedpayroll.png"
         },
         {
+            icon: <FileText className="w-6 h-6" />,
+            title: "Requests & Approvals",
+            description: "Streamlined chains for assets, certificates, and employee requests.",
+            activeColor: "bg-[#003973] text-white",
+            inactiveIcon: "text-[#003973]",
+            image: "/feature.png"
+        },
+        // Advanced
+        {
             icon: <BarChart2 className="w-6 h-6" />,
             title: "HR Analytics",
-            description: "Real-time insights to optimize workforce performance.",
-            color: "text-purple-600",
-            bg: "bg-purple-50",
-            borderColor: "group-hover:border-purple-200",
-            hoverBg: "group-hover:bg-purple-50/50",
-            hoverTitleColor: "group-hover:text-purple-600",
+            description: "Real-time insights into trends, performance, and payroll expenses.",
+            activeColor: "bg-[#2ab6ea] text-white",
+            inactiveIcon: "text-[#2ab6ea]",
             image: "/hranalytics.png"
         },
         {
-            icon: <Users className="w-6 h-6" />,
+            icon: <Smartphone className="w-6 h-6" />,
             title: "Employee Portal",
-            description: "Self-service access for payslips, leaves, and requests.",
-            color: "text-indigo-600",
-            bg: "bg-indigo-50",
-            borderColor: "group-hover:border-indigo-200",
-            hoverBg: "group-hover:bg-indigo-50/50",
-            hoverTitleColor: "group-hover:text-indigo-600",
+            description: "Mobile-first self-service for leaves, payslips, and profiles.",
+            activeColor: "bg-[#003973] text-white",
+            inactiveIcon: "text-[#003973]",
             image: "/employeeportal.png"
         },
         {
             icon: <Shield className="w-6 h-6" />,
             title: "Enterprise Security",
-            description: "Bank-grade encryption keeping your data fully protected.",
-            color: "text-red-600",
-            bg: "bg-red-50",
-            borderColor: "group-hover:border-red-200",
-            hoverBg: "group-hover:bg-red-50/50",
-            hoverTitleColor: "group-hover:text-red-600",
+            description: "Bank-grade encryption, RBAC, and comprehensive audit logs.",
+            activeColor: "bg-[#2ab6ea] text-white",
+            inactiveIcon: "text-[#2ab6ea]",
             image: "/EnterpriseSecurity.png"
+        },
+        {
+            icon: <MapPin className="w-6 h-6" />,
+            title: "Smart Work Mode",
+            description: "Validate remote work with IP-based tracking and location verification for hybrid teams.",
+            activeColor: "bg-[#003973] text-white",
+            inactiveIcon: "text-[#003973]",
+            image: "/hr_with_laptop.png"
+        },
+        // Admin
+        {
+            icon: <Layout className="w-6 h-6" />,
+            title: "Admin Dashboard",
+            description: "A centralized command center for workforce overview, alerts, and vital company stats.",
+            activeColor: "bg-[#2ab6ea] text-white",
+            inactiveIcon: "text-[#2ab6ea]",
+            image: "/reports.jpg"
+        },
+        {
+            icon: <Users className="w-6 h-6" />,
+            title: "Org Structure",
+            description: "Flexible configuration for departments, designations, and complex reporting hierarchies.",
+            activeColor: "bg-[#003973] text-white",
+            inactiveIcon: "text-[#003973]",
+            image: "/hr.jpg"
+        },
+        {
+            icon: <Bell className="w-6 h-6" />,
+            title: "Communication",
+            description: "Automated alerts, announcements, and push notifications to keep teams aligned.",
+            activeColor: "bg-[#2ab6ea] text-white",
+            inactiveIcon: "text-[#2ab6ea]",
+            image: "/employees.jpg"
         }
     ];
 
-    return (
-        <section className="py-16 bg-white relative overflow-hidden" id="features">
-            {/* Background Elements - Minimal */}
-            <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-0 right-0 w-96 h-96 bg-blue-50 rounded-full blur-3xl opacity-30" />
-                <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-50 rounded-full blur-3xl opacity-30" />
-            </div>
+    const [activeTab, setActiveTab] = useState(0);
 
-            <div className="max-w-7xl mx-auto px-6 relative z-10">
-                {/* Section Header - Clean & Direct */}
-                <div className="text-center mb-16">
+    return (
+        <section className="py-16 bg-slate-50" id="features">
+            <div className="max-w-7xl mx-auto px-6">
+
+                {/* Header */}
+                <div className="text-center mb-12">
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-white/80 backdrop-blur-sm rounded-full border border-gray-200/50 shadow-sm mb-6"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-6"
                     >
-                        <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse" />
-                        <span className="text-sm font-semibold text-gray-700">Key Features</span>
+                        <Layout className="w-4 h-4 text-blue-600" />
+                        <span className="text-sm font-semibold text-blue-600">Platform Capabilities</span>
                     </motion.div>
-                    <motion.h2
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="text-4xl md:text-5xl font-bold mb-4 tracking-tight"
-                    >
-                        <span className="text-[#003973]">Core</span>{' '}
-                        <span className="text-[#2ab6ea]">
-                            Capabilities
-                        </span>
-                    </motion.h2>
-                    <motion.p
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
-                        className="text-lg text-gray-500 max-w-2xl mx-auto"
-                    >
-                        Everything you need to manage your workforce efficiently.
-                    </motion.p>
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 tracking-tight text-[#003973]">
+                        Everything You Need to <span className="text-[#2ab6ea]">Scale</span>
+                    </h2>
+                    <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                        A complete suite of tools designed to manage your workforce from onboarding to exit, all in one unified platform.
+                    </p>
                 </div>
 
-                {/* Features Grid - 3 Columns, Compact */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {/* Features List */}
                     {features.map((feature, index) => (
-                        <motion.div
+                        <motion.button
                             key={index}
+                            onClick={() => setActiveTab(index)}
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.3, delay: index * 0.05 }}
-                            whileHover={{
-                                y: -6,
-                                transition: { duration: 0.2 }
-                            }}
-                            className="group relative h-full"
+                            transition={{ delay: index * 0.05 }}
+                            className={`group relative text-left p-6 rounded-2xl transition-all duration-300 border h-full flex flex-col ${activeTab === index
+                                ? 'bg-[#e6f0fa] border-[#2ab6ea] shadow-xl scale-[1.02] border'
+                                : 'bg-white border-gray-100 hover:border-[#2ab6ea] hover:shadow-lg hover:bg-[#f0f9ff]'
+                                }`}
                         >
-                            <div className={`
-                                relative bg-white rounded-2xl shadow-sm overflow-hidden
-                                border border-gray-100
-                                ${feature.borderColor}
-                                group-hover:shadow-xl group-hover:shadow-blue-500/10
-                                transition-all duration-300 
-                                cursor-default
-                                h-full
-                                flex flex-col
-                            `}>
-                                {/* Image Container */}
-                                <div className="h-48 overflow-hidden relative">
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent z-10" />
-                                    <img
-                                        src={feature.image}
-                                        alt={feature.title}
-                                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-                                    />
-                                    {/* Icon Badge */}
-                                    <div className={`absolute bottom-4 left-4 z-20 ${feature.bg} p-2 rounded-lg shadow-lg`}>
-                                        <div className={`${feature.color}`}>
-                                            {feature.icon}
-                                        </div>
-                                    </div>
-                                </div>
 
-                                {/* Content */}
-                                <div className="p-6 flex-1 bg-white">
-                                    <h4 className={`text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-300`}>
-                                        {feature.title}
-                                    </h4>
-                                    <p className="text-gray-500 leading-relaxed text-sm md:text-base">
-                                        {feature.description}
-                                    </p>
+
+                            <div className="flex items-start justify-between mb-4">
+                                <div className={`
+                                    flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 shadow-sm
+                                    ${activeTab === index ? feature.activeColor : 'bg-[#e6f0fa] text-[#003973] group-hover:bg-[#2ab6ea] group-hover:text-white'}
+                                `}>
+                                    {feature.icon}
+                                </div>
+                                <div className={`opacity-0 group-hover:opacity-100 transition-opacity text-[#2ab6ea]`}>
+                                    <TrendingUp className="w-5 h-5" />
                                 </div>
                             </div>
-                        </motion.div>
+
+                            <div>
+                                <h3 className={`font-bold text-lg mb-2 transition-colors duration-200 ${activeTab === index ? 'text-[#003973]' : 'text-gray-800 group-hover:text-[#2ab6ea]'
+                                    }`}>
+                                    {feature.title}
+                                </h3>
+                                <p className={`text-sm leading-relaxed transition-colors duration-200 ${activeTab === index ? 'text-gray-600' : 'text-gray-600'
+                                    }`}>
+                                    {feature.description}
+                                </p>
+                            </div>
+                        </motion.button>
                     ))}
                 </div>
 
@@ -196,20 +202,20 @@ const FeaturesOverview: React.FC = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.3 }}
-                    className="mt-16 pt-8 border-t border-gray-100"
+                    className="mt-10 pt-10 border-t border-gray-200"
                 >
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                         {[
-                            { label: "Active Users", value: 200, suffix: "+", color: "text-blue-600" },
-                            { label: "Processed Payroll", value: 2, prefix: "₹", suffix: "Cr+", color: "text-emerald-600" },
-                            { label: "Companies", value: 5, color: "text-purple-600" },
-                            { label: "Support Score", value: 99, suffix: "%", color: "text-amber-600" }
+                            { label: "Active Users", value: 200, suffix: "+", color: "text-[#003973]" },
+                            { label: "Processed Payroll", value: 2, prefix: "₹", suffix: "Cr+", color: "text-[#2ab6ea]" },
+                            { label: "Companies", value: 5, color: "text-[#003973]" },
+                            { label: "Support Score", value: 99, suffix: "%", color: "text-[#2ab6ea]" }
                         ].map((stat, index) => (
                             <div key={index} className="text-center group cursor-default">
-                                <div className={`text-3xl font-bold ${stat.color} mb-2 transform group-hover:scale-110 transition-transform duration-300`}>
+                                <div className={`text-3xl md:text-4xl font-bold ${stat.color} mb-2 transform group-hover:scale-105 transition-transform duration-300`}>
                                     <CountUp to={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
                                 </div>
-                                <div className="text-sm text-gray-500 font-medium">
+                                <div className="text-sm text-gray-500 font-medium uppercase tracking-wide">
                                     {stat.label}
                                 </div>
                             </div>
@@ -221,12 +227,146 @@ const FeaturesOverview: React.FC = () => {
     );
 };
 
+const DetailedFeatures: React.FC = () => {
+    // Keeping this section mostly consistent but with updated colors for cohesion
+    const details = [
+        {
+            title: "Smart Recruitment & Onboarding",
+            subtitle: "Build Your Dream Team",
+            description: "Streamline your entire hiring process from job posting to offer letters. Our ATS helps you track applicants, schedule interviews, and onboard new hires with zero paperwork.",
+            points: ["Customizable career pages", "Automated interview scheduling", "Digital offer letter generation", "Paperless onboarding workflows"],
+            image: "/recruitment.jpg",
+            icon: <Briefcase className="w-5 h-5 text-white" />,
+            color: "bg-[#003973]",
+            direction: "lg:flex-row"
+        },
+        {
+            title: "Performance Management",
+            subtitle: "Drive Growth & Excellence",
+            description: "Align individual goals with company objectives. Conduct meaningful reviews, track real-time feedback, and identify top performers with data-driven insights.",
+            points: ["360-degree feedback loops", "OKR & KPI tracking", "Skill gap analysis", "Automated appraisal cycles"],
+            image: "/performance.jpg",
+            icon: <TrendingUp className="w-5 h-5 text-white" />,
+            color: "bg-[#2ab6ea]",
+            direction: "lg:flex-row-reverse"
+        },
+        {
+            title: "Mobile-First Experience",
+            subtitle: "HR in Your Pocket",
+            description: "Empower your workforce with a powerful mobile app. Employees can mark attendance, request leave, and view payslips anytime, anywhere.",
+            points: ["Geo-fenced attendance marking", "Instant leave notifications", "Mobile payslip download", "Team directory access"],
+            image: "/mobile_feature.jpg",
+            icon: <Smartphone className="w-5 h-5 text-white" />,
+            color: "bg-[#003973]",
+            direction: "lg:flex-row"
+        }
+    ];
 
+    return (
+        <section className="py-16 bg-gradient-to-b from-white to-[#f0f4f8] overflow-hidden">
+            <div className="max-w-7xl mx-auto px-6">
+                <div className="text-center mb-12">
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-6"
+                    >
+                        <TrendingUp className="w-4 h-4 text-blue-600" />
+                        <span className="text-sm font-semibold text-blue-600">Beyond the Basics</span>
+                    </motion.div>
+                    <motion.h2
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.1 }}
+                        className="mt-3 text-3xl md:text-4xl lg:text-5xl font-bold text-[#003973]"
+                    >
+                        Deep Dive into <span className="text-[#2ab6ea]">Advanced Features</span>
+                    </motion.h2>
+                </div>
+
+                <div className="space-y-16">
+                    {details.map((item, index) => (
+                        <motion.div
+                            key={index}
+                            initial={{ opacity: 0, y: 40 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-100px" }}
+                            transition={{ duration: 0.7, ease: "easeOut" }}
+                            className={`flex flex-col ${item.direction} items-center gap-8 lg:gap-12`}
+                        >
+                            {/* Image Side - SaaS Browser Style */}
+                            <div className="flex-1 w-full relative group">
+                                <div className="absolute inset-0 bg-gradient-to-br from-[#003973]/5 to-[#2ab6ea]/5 rounded-2xl transform rotate-2 scale-105 group-hover:rotate-1 transition-all duration-500" />
+
+                                <div className="relative rounded-xl overflow-hidden shadow-2xl bg-white border border-gray-200/60 ring-1 ring-gray-900/5">
+                                    {/* Browser Header */}
+
+
+                                    <div className="relative overflow-hidden bg-gray-50 transition-colors duration-500">
+                                        {/* Browser Dots Overlay - Clean */}
+                                        <div className="absolute top-4 left-4 flex gap-2 z-20 opacity-0 group-hover:opacity-100 transition-all duration-300 transform -translate-y-2 group-hover:translate-y-0">
+                                            <div className="w-2.5 h-2.5 rounded-full bg-[#fa5f57] shadow-sm ring-1 ring-black/10" />
+                                            <div className="w-2.5 h-2.5 rounded-full bg-[#febc2e] shadow-sm ring-1 ring-black/10" />
+                                            <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f] shadow-sm ring-1 ring-black/10" />
+                                        </div>
+                                        <img
+                                            src={item.image}
+                                            alt={item.title}
+                                            className="w-full h-auto object-contain transform group-hover:scale-105 transition-transform duration-700"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-[#003973]/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                    </div>
+                                </div>
+
+                                {/* Floating Badge */}
+                                <div className={`absolute -bottom-6 ${item.direction === 'lg:flex-row' ? 'right-0' : 'left-0'} w-16 h-16 ${item.color} rounded-2xl shadow-lg flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300 z-20 ring-4 ring-white`}>
+                                    {item.icon}
+                                </div>
+                            </div>
+
+                            {/* Content Side */}
+                            <div className="flex-1 w-full">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <span className="text-gray-500 font-bold uppercase tracking-wider text-xs">{item.subtitle}</span>
+                                </div>
+                                <h3 className="text-3xl md:text-4xl font-bold text-[#003973] mb-6 leading-tight">
+                                    {item.title}
+                                </h3>
+                                <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                                    {item.description}
+                                </p>
+                                <ul className="space-y-4">
+                                    {item.points.map((point, idx) => (
+                                        <li key={idx} className="flex items-start gap-3">
+                                            <div className={`mt-1 w-4 h-4 rounded-full ${item.color.replace('bg-', 'bg-opacity-10 bg-')} flex items-center justify-center flex-shrink-0`}>
+                                                <CheckCircle className={`w-2.5 h-2.5 ${item.color.replace('bg-', 'text-')}`} />
+                                            </div>
+                                            <span className="text-gray-700 font-medium">{point}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                                <motion.button
+                                    whileHover={{ x: 5 }}
+                                    className={`mt-10 flex items-center gap-2 font-bold ${item.color.replace('bg-', 'text-')} group px-0 py-2 border-b-2 border-transparent hover:border-current transition-all`}
+                                >
+                                    Learn More <Layout className="w-4 h-4" />
+                                </motion.button>
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+};
 
 const FeaturesPage: React.FC = () => {
     return (
-        <div className="pt-20">
+        <div className="pt-20 bg-white">
             <FeaturesOverview />
+            <DetailedFeatures />
         </div>
     );
 };

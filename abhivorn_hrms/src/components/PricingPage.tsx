@@ -54,9 +54,9 @@ const PricingCalculator: React.FC = () => {
         <div className="w-full max-w-5xl mx-auto px-4" id="pricing-container">
             {/* Section Header */}
             <div className="text-center mb-16">
-                <div className="inline-flex items-center gap-2 px-4 py-2.5 bg-white/80 backdrop-blur-sm rounded-full border border-gray-200/50 shadow-sm mb-6">
-                    <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse" />
-                    <span className="text-sm font-semibold text-gray-700">Flexible Plans</span>
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-6">
+                    <CreditCard className="w-4 h-4 text-blue-600" />
+                    <span className="text-sm font-semibold text-blue-600">Flexible Plans</span>
                 </div>
 
                 <motion.h2
@@ -359,9 +359,9 @@ const FAQ: React.FC = () => {
                     transition={{ duration: 0.5 }}
                     className="text-center mb-16"
                 >
-                    <div className="inline-flex items-center gap-2 px-4 py-2.5 bg-white/80 backdrop-blur-sm rounded-full border border-gray-200/50 shadow-sm mb-6">
-                        <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse" />
-                        <span className="text-sm font-semibold text-gray-700">Common Questions</span>
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-6">
+                        <HelpCircle className="w-4 h-4 text-blue-600" />
+                        <span className="text-sm font-semibold text-blue-600">Common Questions</span>
                     </div>
 
                     <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
