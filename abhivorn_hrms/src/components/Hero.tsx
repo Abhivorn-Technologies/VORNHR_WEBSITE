@@ -147,7 +147,7 @@ const Hero: React.FC = () => {
       {/* ================= UPDATED HERO SECTION ================= */}
       <section
         ref={section1Ref}
-        className="relative overflow-hidden pt-24 pb-12 lg:pt-28 lg:pb-20 bg-white"
+        className="relative overflow-hidden pt-24 pb-8 lg:pt-32 lg:pb-16 bg-white"
       >
         {/* Background Grid Pattern */}
         <div className="absolute inset-0 bg-grid-slate-50 [background-size:40px_40px] opacity-60 pointer-events-none" />
@@ -160,7 +160,7 @@ const Hero: React.FC = () => {
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div className="grid md:grid-cols-2 gap-6 lg:gap-12 items-center">
             {/* Left Column: Text Content */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -169,24 +169,24 @@ const Hero: React.FC = () => {
               className="max-w-2xl"
             >
 
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-8">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-4">
                 <Sparkles className="w-4 h-4 text-blue-600" />
                 <span className="text-sm font-semibold text-blue-600">Smart HR Automation</span>
               </div>
 
-              <h1 className="text-4xl lg:text-6xl font-bold tracking-tight mb-6 leading-[1.1]">
+              <h1 className="text-4xl lg:text-6xl font-bold tracking-tight mb-4 leading-[1.1]">
                 <span className="text-[#003973]">Simplifying</span>{' '}
                 <span className="text-[#2ab6ea]">
                   HR Management
                 </span>
               </h1>
 
-              <p className="text-xl text-slate-600 mb-10 leading-relaxed max-w-lg">
+              <p className="text-xl text-slate-600 mb-6 leading-relaxed max-w-lg">
                 Empower your workforce with an intelligent, data-driven HR platform.
                 From payroll to performance, we automate it all with precision and ease.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 mb-12 items-start">
+              <div className="flex flex-col sm:flex-row gap-4 mb-8 items-start">
                 <Link
                   to="/pricing"
                   className="group inline-flex items-center justify-center px-6 py-3 md:px-8 md:py-4 text-base font-bold text-white bg-gradient-to-r from-[#39a4de] to-[#2ab6ea] rounded-xl shadow-lg shadow-[#003973]/25 hover:shadow-[#003973]/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
@@ -240,12 +240,12 @@ const Hero: React.FC = () => {
             </motion.div>
 
             {/* Right Column: Visuals */}
-            <div className="relative lg:h-[600px] flex items-center justify-center">
+            <div className="relative lg:h-[500px] flex items-center justify-center">
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={isSection1InView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="relative w-full max-w-[550px] aspect-[4/5] md:aspect-square lg:aspect-auto h-full"
+                className="relative w-full max-w-[450px] aspect-[4/5] md:aspect-square lg:aspect-auto h-full"
               >
                 {/* Main Image Card */}
                 <div className="absolute inset-0 bg-gradient-to-tr from-[#39a4de]/20 to-[#b5a5fa]/20 rounded-[2.5rem] transform rotate-3 blur-3xl opacity-40" />
@@ -258,51 +258,9 @@ const Hero: React.FC = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/20 via-transparent to-transparent" />
                 </div>
 
-                {/* Floating Widget 1: Employee Satisfaction */}
-                <motion.div
-                  animate={{ y: [0, -15, 0] }}
-                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -top-[5%] left-0 md:top-[10%] md:-left-[10%] bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-white/50 w-64"
-                >
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
-                      <Star className="w-5 h-5 text-orange-600 fill-current" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-slate-900">Team Morale</p>
-                      <p className="text-xs text-slate-500">Weekly Pulse Check</p>
-                    </div>
-                  </div>
-                  <div className="flex items-end gap-2 h-16 justify-between px-1">
-                    {[40, 65, 50, 80, 60, 90, 85].map((h, i) => (
-                      <div key={i} className="w-2 bg-orange-500 rounded-t-sm" style={{ height: `${h}%`, opacity: i > 3 ? 1 : 0.4 }} />
-                    ))}
-                  </div>
-                </motion.div>
 
-                {/* Floating Widget 2: Payroll */}
-                <motion.div
-                  animate={{ y: [0, 15, 0] }}
-                  transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                  className="absolute -bottom-[5%] right-0 md:bottom-[10%] md:-right-[5%] bg-white/95 backdrop-blur-md p-5 rounded-2xl shadow-xl border border-white/50 w-56"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                      <TrendingUp className="w-5 h-5 text-green-600" />
-                    </div>
-                    <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">+12%</span>
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-slate-900 mb-1">$42,500</p>
-                    <p className="text-xs text-slate-500">Payroll Processed Today</p>
-                  </div>
-                  <div className="mt-4 flex -space-x-2">
-                    {[1, 2, 3].map(i => (
-                      <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-200" />
-                    ))}
-                    <div className="w-8 h-8 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-600">+8</div>
-                  </div>
-                </motion.div>
+
+
 
                 {/* Scroll Indicator */}
                 <motion.div

@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 const WhatsAppButton: React.FC = () => {
     return (
-        <div className="fixed bottom-8 right-8 z-50 flex items-center justify-center">
+        <div className="fixed bottom-20 right-8 z-50 flex items-center justify-center">
             {/* Ripple Animation */}
             <motion.div
                 className="absolute inset-0 bg-[#25D366] rounded-full opacity-50"
