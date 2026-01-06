@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { Link } from "react-router-dom";
+import QuickFeatures from './QuickFeatures';
 import { motion, useInView, useScroll, useTransform, useMotionValue, animate } from 'framer-motion';
 import { useEffect } from 'react';
 import {
@@ -278,6 +279,8 @@ const Hero: React.FC = () => {
           </div>
         </div>
       </section>
+
+      <QuickFeatures />
 
       {/* ================= FEATURES SECTION ================= */}
       <section

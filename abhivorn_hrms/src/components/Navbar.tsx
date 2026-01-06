@@ -10,7 +10,7 @@ const Navbar: React.FC = () => {
 
     useMotionValueEvent(scrollY, "change", (latest) => {
         const previous = scrollY.getPrevious();
-        if (latest > previous && latest > 150) {
+        if (previous !== undefined && latest > previous && latest > 150) {
             setHidden(true);
         } else {
             setHidden(false);
@@ -57,7 +57,7 @@ const Navbar: React.FC = () => {
                             <img
                                 src="/virnhrlogo.png"
                                 alt="Abhivorn Logo"
-                                className="h-8 md:h-9 w-auto object-contain transition-all duration-300 hover:scale-105 hover:brightness-110 hover:drop-shadow-md"
+                                className="h-8 md:h-9 w-auto object-contain transition-all duration-300 hover:scale-105"
                             />
                         </Link>
 

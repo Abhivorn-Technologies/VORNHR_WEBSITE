@@ -347,12 +347,7 @@ const DetailedFeatures: React.FC = () => {
                                         </li>
                                     ))}
                                 </ul>
-                                <motion.button
-                                    whileHover={{ x: 5 }}
-                                    className={`mt-10 flex items-center gap-2 font-bold ${item.color.replace('bg-', 'text-')} group px-0 py-2 border-b-2 border-transparent hover:border-current transition-all`}
-                                >
-                                    Learn More <Layout className="w-4 h-4" />
-                                </motion.button>
+
                             </div>
                         </motion.div>
                     ))}
