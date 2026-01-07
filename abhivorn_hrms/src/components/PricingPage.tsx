@@ -13,7 +13,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const plans = [
     {
         name: 'Starter',
-        price: '₹1,999',
+        price: '₹4,999',
         description: 'Up to 50 employees',
         features: [
             'Core HR Database',
@@ -26,7 +26,7 @@ const plans = [
     },
     {
         name: 'Professional',
-        price: '₹4,999',
+        price: '₹19,999',
         description: 'Up to 200 employees',
         features: [
             'Everything in Starter',
@@ -45,9 +45,9 @@ const PricingCalculator: React.FC = () => {
 
     const getPrice = (planName: string) => {
         if (billingCycle === 'monthly') {
-            return planName === 'Starter' ? '₹1,999' : '₹4,999';
+            return planName === 'Starter' ? '₹4,999' : '₹19,999';
         }
-        return planName === 'Starter' ? '₹1,799' : '₹4,499';
+        return planName === 'Starter' ? '₹54,000' : '₹2,05,200';
     };
 
     return (
