@@ -4,7 +4,7 @@ import {
     Users, Briefcase, Building2,
     CheckCircle2, Clock, RefreshCw,
     FileText, Smartphone, Shield,
-    BarChart3, Target, ArrowRight,
+    BarChart3, ArrowRight,
     TrendingUp, Lock, PieChart
 } from 'lucide-react';
 
