@@ -47,7 +47,10 @@ const PricingCalculator: React.FC = () => {
         if (billingCycle === 'monthly') {
             return planName === 'Starter' ? '₹4,999' : '₹19,999';
         }
-        return planName === 'Starter' ? '₹54,000' : '₹2,05,200';
+        // Show monthly equivalent for annual plans
+        // Starter: ₹54,000 / 12 = ₹4,500
+        // Professional: ₹2,05,200 / 12 = ₹17,100
+        return planName === 'Starter' ? '₹4,500' : '₹17,100';
     };
 
     return (
@@ -137,12 +140,21 @@ const PricingCalculator: React.FC = () => {
                             <div className={`p-6 pb-4 border-b ${isPopular ? 'bg-brand-primary/5 border-brand-primary/20' : 'bg-[#f9fbfd] border-brand-border'}`}>
                                 <h3 className={`text-lg font-bold ${isPopular ? 'text-brand-primary' : 'text-gray-900'}`}>{plan.name}</h3>
                                 <div className="mt-3 flex items-baseline gap-1">
-                                    <span className="text-4xl font-extrabold text-gray-900 tracking-tight">{getPrice(plan.name)}</span>
-                                    <span className="text-gray-500 text-sm font-medium">/month</span>
+                                    <span className="text-4xl font-extrabold text-gray-900 tracking-tight">
+                                        {billingCycle === 'monthly'
+                                            ? (plan.name === 'Starter' ? '₹4,999' : '₹19,999')
+                                            : (plan.name === 'Starter' ? '₹53,989' : '₹2,15,989')}
+                                    </span>
+                                    <span className="text-gray-500 text-sm font-medium">/{billingCycle === 'monthly' ? 'month' : 'year'}</span>
                                 </div>
                                 <p className="text-sm text-gray-500 mt-2 font-medium">{plan.description}</p>
                                 {billingCycle === 'yearly' && (
-                                    <p className="text-xs text-emerald-600 mt-2 font-bold">Billed annually</p>
+                                    <div className="mt-3">
+                                        <p className="text-xs text-gray-500 font-medium mb-2">Billed annually with 10% discount</p>
+                                        <span className="bg-emerald-100/80 text-emerald-700 text-xs font-bold px-2 py-1 rounded border border-emerald-200">
+                                            {plan.name === 'Starter' ? 'Save ₹5,999 per year' : 'Save ₹24,000 per year'}
+                                        </span>
+                                    </div>
                                 )}
                             </div>
 
