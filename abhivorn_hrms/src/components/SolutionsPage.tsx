@@ -492,8 +492,8 @@ const SocialProof: React.FC = () => {
             color: "rose",
             gradient: "from-rose-500 to-pink-500",
             quote: "Abhivorn helps us stay compliant and organized across multiple locations. It's truly a game changer.",
-            author: "Priya Sharma",
-            role: "HR Manager",
+            author: "Sriverchan",
+            role: "Founder & CEO",
             metrics: [
                 { label: "Efficiency", value: "40%", icon: <Activity className="w-4 h-4" />, color: "bg-white/10 text-rose-200" },
                 { label: "Stability", value: "100%", icon: <Shield className="w-4 h-4" />, color: "bg-white/10 text-pink-200" },

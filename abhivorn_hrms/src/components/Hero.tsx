@@ -4,10 +4,10 @@ import QuickFeatures from './QuickFeatures';
 import { motion, useInView, useScroll, useTransform, useMotionValue, animate } from 'framer-motion';
 import { useEffect } from 'react';
 import {
-  ArrowRight, CheckCircle, ShieldCheck, Users, Building2,
+  ArrowRight, CheckCircle, ShieldCheck, Users,
   Clock, Calendar, CreditCard, BarChart, MapPin,
   FileText, Globe, Lock, Zap, Star, TrendingUp,
-  ChevronRight, Sparkles, Award, Target, Users2,
+  ChevronRight, Sparkles, Award, Users2,
   Briefcase, PieChart, Shield, Database,
   Smartphone, Laptop, Headphones, MessageSquare,
   Download, Bell, Settings,
@@ -23,7 +23,7 @@ import {
   Grid, List, Columns, Layout,
   Bold, Italic, AlignLeft, AlignCenter,
   AlignRight, CheckSquare, Circle,
-  Slider, BarChart2,
+  BarChart2,
   TrendingUp as TrendingIcon, TrendingDown,
   Watch, Timer, Map, Navigation,
   Compass, Flag, Trophy,
@@ -67,10 +67,10 @@ const Hero: React.FC = () => {
   const opacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.1], [1, 0.95]);
 
-  const section1Ref = useRef(null);
-  const section2Ref = useRef(null);
-  const section3Ref = useRef(null);
-  const section4Ref = useRef(null);
+  const section1Ref = useRef<HTMLElement>(null);
+  const section2Ref = useRef<HTMLElement>(null);
+  const section3Ref = useRef<HTMLElement>(null);
+  const section4Ref = useRef<HTMLElement>(null);
 
   const isSection1InView = useInView(section1Ref, { once: true, amount: 0.3 });
   const isSection2InView = useInView(section2Ref, { once: true, amount: 0.2 });
