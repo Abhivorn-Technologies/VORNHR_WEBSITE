@@ -12,6 +12,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const plans = [
     {
+        name: '7-Day Free Trial',
+        price: 'Free',
+        description: 'Full access for 7 days',
+        features: [
+            'All premium modules unlocked',
+            'No credit card required',
+            'Onboarding specialist included',
+            'Unlimited employees during trial',
+            'Cancel anytime in one click'
+        ]
+    },
+    {
         name: 'Starter',
         price: '₹4,999',
         description: 'Up to 50 employees',
@@ -42,6 +54,44 @@ const plans = [
 
 const PricingCalculator: React.FC = () => {
     const [billingCycle, setBillingCycle] = React.useState<'monthly' | 'yearly'>('monthly');
+
+    // Trial form state
+    const [trialForm, setTrialForm] = useState({
+        name: '',
+        email: '',
+        phone: '',
+        company_name: '',
+        company_domain: '',
+        message: ''
+    });
+    const [submitting, setSubmitting] = useState(false);
+    const [submissionStatus, setSubmissionStatus] = useState<'idle' | 'success' | 'error'>('idle');
+    const [submissionError, setSubmissionError] = useState<string | null>(null);
+    const [showTrialModal, setShowTrialModal] = useState(false);
+    const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+    const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+    const validateTrialForm = () => {
+        const errors: Record<string, string> = {};
+        if (!trialForm.name.trim()) errors.name = 'Full name is required';
+        if (!trialForm.email.trim()) {
+            errors.email = 'Work email is required';
+        } else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(trialForm.email.trim())) {
+            errors.email = 'Enter a valid email';
+        }
+        if (!trialForm.phone.trim()) {
+            errors.phone = 'Phone is required';
+        } else if (!/^[0-9+\-\s]{7,15}$/.test(trialForm.phone.trim())) {
+            errors.phone = 'Enter a valid phone number';
+        }
+        if (!trialForm.company_name.trim()) errors.company_name = 'Company name is required';
+        if (!trialForm.company_domain.trim()) {
+            errors.company_domain = 'Company domain is required';
+        } else if (!/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(trialForm.company_domain.trim())) {
+            errors.company_domain = 'Enter a valid domain (e.g., company.com)';
+        }
+        return errors;
+    };
 
     const getPrice = (planName: string) => {
         if (billingCycle === 'monthly') {
@@ -81,7 +131,7 @@ const PricingCalculator: React.FC = () => {
                     transition={{ delay: 0.1 }}
                     className="text-lg text-gray-600 max-w-2xl mx-auto"
                 >
-                    Start with a 30-day free trial. No credit card needed. Cancel anytime.
+                    Start with a 7-day free trial. No credit card needed. Cancel anytime.
                 </motion.p>
 
                 {/* Billing Toggle */}
@@ -107,9 +157,10 @@ const PricingCalculator: React.FC = () => {
             </div>
 
             {/* Pricing Grid */}
-            <div className="grid md:grid-cols-3 gap-4 mb-8">
+            <div className="grid md:grid-cols-4 gap-4 mb-8">
                 {plans.map((plan, index) => {
                     const isPopular = plan.name === 'Professional';
+                    const isTrial = plan.name === '7-Day Free Trial';
                     return (
                         <motion.div
                             key={plan.name}
@@ -130,7 +181,7 @@ const PricingCalculator: React.FC = () => {
                             )}
 
                             {/* 10% OFF Badge */}
-                            {billingCycle === 'yearly' && (
+                            {billingCycle === 'yearly' && !isTrial && (
                                 <div className={`absolute top-4 ${isPopular ? 'right-2' : 'right-4'} bg-[#f9fbfd] text-emerald-600 text-xs font-bold px-2 py-1 rounded-full border border-emerald-100`}>
                                     10% OFF
                                 </div>
@@ -141,14 +192,18 @@ const PricingCalculator: React.FC = () => {
                                 <h3 className={`text-lg font-bold ${isPopular ? 'text-brand-primary' : 'text-gray-900'}`}>{plan.name}</h3>
                                 <div className="mt-3 flex items-baseline gap-1">
                                     <span className="text-4xl font-extrabold text-gray-900 tracking-tight">
-                                        {billingCycle === 'monthly'
-                                            ? (plan.name === 'Starter' ? '₹4,999' : '₹19,999')
-                                            : (plan.name === 'Starter' ? '₹53,989' : '₹2,15,989')}
+                                        {isTrial
+                                            ? 'Free'
+                                            : billingCycle === 'monthly'
+                                                ? (plan.name === 'Starter' ? '₹4,999' : '₹19,999')
+                                                : (plan.name === 'Starter' ? '₹53,989' : '₹2,15,989')}
                                     </span>
-                                    <span className="text-gray-500 text-sm font-medium">/{billingCycle === 'monthly' ? 'month' : 'year'}</span>
+                                    {!isTrial && (
+                                        <span className="text-gray-500 text-sm font-medium">/{billingCycle === 'monthly' ? 'month' : 'year'}</span>
+                                    )}
                                 </div>
                                 <p className="text-sm text-gray-500 mt-2 font-medium">{plan.description}</p>
-                                {billingCycle === 'yearly' && (
+                                {billingCycle === 'yearly' && !isTrial && (
                                     <div className="mt-3">
                                         <p className="text-xs text-gray-500 font-medium mb-2">Billed annually with 10% discount</p>
                                         <span className="bg-emerald-100/80 text-emerald-700 text-xs font-bold px-2 py-1 rounded border border-emerald-200">
@@ -173,11 +228,26 @@ const PricingCalculator: React.FC = () => {
                             </div>
 
                             {/* Card Footer */}
-                            <div className="p-5 border-t border-brand-border bg-[#fbfbfc] z-10 mt-auto">
-                                <Link to="/contact" className="w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 transition-all duration-300 active:scale-[0.98] bg-[#2ab6ea] border-2 border-[#2ab6ea] text-white hover:bg-[#003973] hover:border-[#003973] hover:text-white hover:shadow-brand-sm hover:shadow-[#003973]/20 hover:scale-[1.02] group">
-                                    Get Started
-                                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                                </Link>
+                            <div className="p-5 border-t border-brand-border bg-[#fbfbfc] z-10 mt-auto space-y-3">
+                                {isTrial ? (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setShowTrialModal(true);
+                                            setSubmissionStatus('idle');
+                                            setSubmissionError(null);
+                                        }}
+                                        className="w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 transition-all duration-300 active:scale-[0.98] bg-[#2ab6ea] border-2 border-[#2ab6ea] text-white hover:bg-[#003973] hover:border-[#003973] hover:text-white hover:shadow-brand-sm hover:shadow-[#003973]/20 hover:scale-[1.02]"
+                                    >
+                                        Start Free Trial
+                                        <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                                    </button>
+                                ) : (
+                                    <Link to="/contact" className="w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 transition-all duration-300 active:scale-[0.98] bg-[#2ab6ea] border-2 border-[#2ab6ea] text-white hover:bg-[#003973] hover:border-[#003973] hover:text-white hover:shadow-brand-sm hover:shadow-[#003973]/20 hover:scale-[1.02] group">
+                                        Get Started
+                                        <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                                    </Link>
+                                )}
                             </div>
                         </motion.div>
                     );
@@ -210,6 +280,206 @@ const PricingCalculator: React.FC = () => {
                     </div>
                 </motion.div>
             </div>
+
+            {/* Trial modal */}
+            <AnimatePresence>
+                {showTrialModal && (
+                    <motion.div
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setShowTrialModal(false)}
+                    >
+                        <motion.div
+                            className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl p-6 relative overflow-hidden"
+                            initial={{ scale: 0.95, y: 20, opacity: 0 }}
+                            animate={{ scale: 1, y: 0, opacity: 1 }}
+                            exit={{ scale: 0.97, y: -10, opacity: 0 }}
+                            transition={{ type: 'spring', stiffness: 260, damping: 24 }}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <button
+                                aria-label="Close"
+                                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+                                onClick={() => setShowTrialModal(false)}
+                            >
+                                ✕
+                            </button>
+                            <h3 className="text-2xl font-bold text-gray-900 mb-2">Start your 7-day free trial</h3>
+                            <p className="text-sm text-gray-500 mb-4">No card required. We’ll reach out after you submit.</p>
+
+                            <form
+                                className="space-y-3"
+                                onSubmit={async (e) => {
+                                    e.preventDefault();
+                                    const errors = validateTrialForm();
+                                    setFieldErrors(errors);
+                                    if (Object.keys(errors).length > 0) return;
+                                    setSubmitting(true);
+                                    setSubmissionStatus('idle');
+                                    setSubmissionError(null);
+                                    const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+                                    try {
+                                        const res = await fetch(`${API_BASE}/api/v1/core/public/register/`, {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json'
+                                                },
+                                            body: JSON.stringify(trialForm)
+                                            });
+                                        if (res.status === 201) {
+                                            setSubmissionStatus('success');
+                                            setTrialForm({
+                                                name: '',
+                                                email: '',
+                                                phone: '',
+                                                company_name: '',
+                                                company_domain: '',
+                                                message: ''
+                                            });
+                                            setShowTrialModal(false);
+                                            setToastMessage('Registration request submitted successfully. We will contact you shortly.');
+                                            setTimeout(() => setToastMessage(null), 4000);
+                                        } else {
+                                            const data = await res.json();
+                                            const backendErrors: Record<string, string> = {};
+                                            if (data && typeof data === 'object') {
+                                                Object.entries(data).forEach(([key, val]) => {
+                                                    if (Array.isArray(val) && val.length) {
+                                                        backendErrors[key] = String(val[0]);
+                                                    }
+                                                });
+                                            }
+                                            setFieldErrors(backendErrors);
+                                            setSubmissionStatus('error');
+                                            setSubmissionError(
+                                                Object.keys(backendErrors).length
+                                                    ? 'Please fix the highlighted fields.'
+                                                    : 'Unable to submit. Please verify your details.'
+                                            );
+                                            }
+                                        } catch (err) {
+                                            setSubmissionStatus('error');
+                                            setSubmissionError('Network error. Please try again.');
+                                        } finally {
+                                        setSubmitting(false);
+                                    }
+                                }}
+                            >
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div className="flex flex-col gap-1">
+                                        <label htmlFor="trial-name" className="text-xs font-semibold text-gray-600">Full Name <span className="text-red-500">*</span></label>
+                                        <input
+                                            id="trial-name"
+                                            required
+                                            className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${fieldErrors.name ? 'border-red-400 focus:ring-red-200' : 'border-brand-border focus:ring-[#2ab6ea]'}`}
+                                            placeholder="Full Name"
+                                            value={trialForm.name}
+                                            onChange={(e) => setTrialForm({ ...trialForm, name: e.target.value })}
+                                        />
+                                        {fieldErrors.name && <span className="text-xs text-red-600">{fieldErrors.name}</span>}
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <label htmlFor="trial-email" className="text-xs font-semibold text-gray-600">Work Email <span className="text-red-500">*</span></label>
+                                        <input
+                                            id="trial-email"
+                                            required
+                                            type="email"
+                                            className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${fieldErrors.email ? 'border-red-400 focus:ring-red-200' : 'border-brand-border focus:ring-[#2ab6ea]'}`}
+                                            placeholder="Work Email"
+                                            value={trialForm.email}
+                                            onChange={(e) => setTrialForm({ ...trialForm, email: e.target.value })}
+                                        />
+                                        {fieldErrors.email && <span className="text-xs text-red-600">{fieldErrors.email}</span>}
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <label htmlFor="trial-phone" className="text-xs font-semibold text-gray-600">Phone <span className="text-red-500">*</span></label>
+                                        <input
+                                            id="trial-phone"
+                                            required
+                                            className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${fieldErrors.phone ? 'border-red-400 focus:ring-red-200' : 'border-brand-border focus:ring-[#2ab6ea]'}`}
+                                            placeholder="Phone"
+                                            value={trialForm.phone}
+                                            onChange={(e) => setTrialForm({ ...trialForm, phone: e.target.value })}
+                                        />
+                                        {fieldErrors.phone && <span className="text-xs text-red-600">{fieldErrors.phone}</span>}
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <label htmlFor="trial-company" className="text-xs font-semibold text-gray-600">Company Name <span className="text-red-500">*</span></label>
+                                        <input
+                                            id="trial-company"
+                                            required
+                                            className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${fieldErrors.company_name ? 'border-red-400 focus:ring-red-200' : 'border-brand-border focus:ring-[#2ab6ea]'}`}
+                                            placeholder="Company Name"
+                                            value={trialForm.company_name}
+                                            onChange={(e) => setTrialForm({ ...trialForm, company_name: e.target.value })}
+                                        />
+                                        {fieldErrors.company_name && <span className="text-xs text-red-600">{fieldErrors.company_name}</span>}
+                                    </div>
+                                    <div className="flex flex-col gap-1 sm:col-span-2">
+                                        <label htmlFor="trial-domain" className="text-xs font-semibold text-gray-600">Company Domain <span className="text-red-500">*</span></label>
+                                        <input
+                                            id="trial-domain"
+                                            required
+                                            className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${fieldErrors.company_domain ? 'border-red-400 focus:ring-red-200' : 'border-brand-border focus:ring-[#2ab6ea]'}`}
+                                            placeholder="e.g., company.com"
+                                            value={trialForm.company_domain}
+                                            onChange={(e) => setTrialForm({ ...trialForm, company_domain: e.target.value })}
+                                        />
+                                        {fieldErrors.company_domain && <span className="text-xs text-red-600">{fieldErrors.company_domain}</span>}
+                                    </div>
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                    <label htmlFor="trial-message" className="text-xs font-semibold text-gray-600">Message (optional)</label>
+                                    <textarea
+                                        id="trial-message"
+                                        className="w-full border border-brand-border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2ab6ea]"
+                                        placeholder="Message (optional)"
+                                        rows={3}
+                                        value={trialForm.message}
+                                        onChange={(e) => setTrialForm({ ...trialForm, message: e.target.value })}
+                                    />
+                                </div>
+                                <button
+                                    type="submit"
+                                    disabled={submitting}
+                                    className="w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 transition-all duration-300 active:scale-[0.98] bg-[#2ab6ea] border-2 border-[#2ab6ea] text-white hover:bg-[#003973] hover:border-[#003973] hover:text-white hover:shadow-brand-sm hover:shadow-[#003973]/20 hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed"
+                                >
+                                    {submitting ? 'Submitting…' : 'Submit Request'}
+                                    {!submitting && <ArrowRight className="w-4 h-4" />}
+                                </button>
+                                <AnimatePresence>
+                                    {submissionStatus === 'error' && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 6 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -6 }}
+                                            className="text-sm text-red-700 font-semibold bg-red-50 border border-red-200 rounded-xl px-3 py-2 break-words"
+                                        >
+                                            {submissionError || 'Something went wrong. Please try again.'}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </form>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Toast */}
+            <AnimatePresence>
+                {toastMessage && (
+                    <motion.div
+                        className="fixed top-6 right-6 z-[60] bg-emerald-600 text-white px-4 py-3 rounded-xl shadow-xl"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                    >
+                        {toastMessage}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };
