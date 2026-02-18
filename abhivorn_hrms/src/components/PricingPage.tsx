@@ -507,8 +507,8 @@ const FAQ: React.FC = () => {
                 icon: <HelpCircle className="w-5 h-5" />
             },
             {
-                question: "How does the 30-day free trial work?",
-                answer: "Start with a complete 30-day free trial with access to all premium features. No credit card required during trial. You can invite unlimited team members, set up workflows, configure attendance rules, test payroll processing, and explore every feature. We provide dedicated onboarding support and you can cancel anytime before trial ends.",
+                question: "How does the 7-days free trial work?",
+                answer: "Start with a complete 7-day free trial with access to all premium features. No credit card required during trial. You can invite unlimited team members, set up workflows, configure attendance rules, test payroll processing, and explore every feature. We provide dedicated onboarding support and you can cancel anytime before trial ends.",
                 icon: <Zap className="w-5 h-5" />
             },
             {

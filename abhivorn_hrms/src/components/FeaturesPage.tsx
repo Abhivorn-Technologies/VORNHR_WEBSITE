@@ -206,8 +206,8 @@ const FeaturesOverview: React.FC = () => {
                 >
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                         {[
-                            { label: "Active Users", value: 200, suffix: "+", color: "text-[#003973]" },
-                            { label: "Processed Payroll", value: 2, prefix: "₹", suffix: "Cr+", color: "text-[#2ab6ea]" },
+                            { label: "Active Users", value: 100, suffix: "+", color: "text-[#003973]" },
+                            { label: "Processed Payroll", value: 25, prefix: "₹", suffix: "L+", color: "text-[#2ab6ea]" },
                             { label: "Companies", value: 5, color: "text-[#003973]" },
                             { label: "Support Score", value: 99, suffix: "%", color: "text-[#2ab6ea]" }
                         ].map((stat, index) => (

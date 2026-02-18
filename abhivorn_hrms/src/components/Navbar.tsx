@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
 
@@ -7,6 +7,7 @@ const Navbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [hidden, setHidden] = useState(false);
     const { scrollY } = useScroll();
+    const location = useLocation();
 
     useMotionValueEvent(scrollY, "change", (latest) => {
         const previous = scrollY.getPrevious();
@@ -34,6 +35,13 @@ const Navbar: React.FC = () => {
         { name: 'Pricing', href: '/pricing' },
         { name: 'Contact', href: '/contact' },
     ];
+
+    const handleNavClick = (href: string) => {
+        if (location.pathname === href) {
+            window.location.reload();
+        }
+        setIsOpen(false);
+    };
 
     return (
         <>
@@ -68,6 +76,7 @@ const Navbar: React.FC = () => {
                                 <Link
                                     key={link.name}
                                     to={link.href}
+                                    onClick={() => handleNavClick(link.href)}
                                     className="relative px-4 py-2 text-[15px] font-medium text-slate-600 transition-all duration-300 rounded-full hover:text-[#003973] hover:bg-blue-50/80 hover:shadow-sm"
                                 >
                                     {link.name}
@@ -79,6 +88,7 @@ const Navbar: React.FC = () => {
                         <div className="hidden md:flex items-center gap-4">
                             <Link
                                 to="/pricing"
+                                onClick={() => handleNavClick('/pricing')}
                                 className="group relative inline-flex items-center justify-center px-6 py-2.5 text-sm font-bold text-white transition-all duration-300 bg-gradient-to-r from-[#2ab6ea] to-[#0093E9] rounded-full shadow-lg shadow-blue-400/30 hover:shadow-blue-500/50 hover:scale-[1.02] active:scale-[0.98]"
                             >
                                 <span className="relative z-10 flex items-center">
@@ -117,7 +127,7 @@ const Navbar: React.FC = () => {
                                 <Link
                                     key={link.name}
                                     to={link.href}
-                                    onClick={() => setIsOpen(false)}
+                                    onClick={() => handleNavClick(link.href)}
                                     className="text-2xl font-semibold text-gray-900 hover:text-brand-primary transition-colors border-b border-gray-100 pb-4"
                                 >
                                     {link.name}
@@ -128,7 +138,7 @@ const Navbar: React.FC = () => {
                                 <Link
                                     to="/pricing"
                                     onClick={() => {
-                                        setIsOpen(false);
+                                        handleNavClick('/pricing');
                                     }}
                                     className="w-full py-3 text-center text-lg font-bold text-white bg-[#2ab6ea] rounded-xl shadow-lg shadow-[#003973]/20 hover:bg-[#003973] transition-colors"
                                 >

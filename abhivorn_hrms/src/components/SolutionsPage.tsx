@@ -697,9 +697,9 @@ const SocialProof: React.FC = () => {
                 <div className="border-t border-gray-200 pt-8">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {[
-                            { label: "Active Users", value: 200, suffix: "+", color: "text-blue-600" },
-                            { label: "Payroll Processed", value: 2, prefix: "₹", suffix: "Cr+", color: "text-emerald-600" },
-                            { label: "Hours Saved", value: 50, suffix: "k+", color: "text-amber-600" },
+                            { label: "Active Users", value: 100, suffix: "+", color: "text-blue-600" },
+                            { label: "Payroll Processed", value: 25, prefix: "₹", suffix: "L+", color: "text-emerald-600" },
+                            { label: "Hours Saved", value: 15, suffix: "k+", color: "text-amber-600" },
                             { label: "Uptime SLA", value: 99.9, suffix: "%", decimals: 1, color: "text-purple-600" },
                         ].map((stat, i) => (
                             <div key={i} className="group cursor-default p-3 hover:bg-white rounded-lg transition-colors">

@@ -91,9 +91,10 @@ const Hero: React.FC = () => {
       category: "Time & Attendance",
       items: [
         { name: "GPS Tracking", icon: <MapPin className="w-5 h-5" /> },
-        { name: "Biometric Integration", icon: <Key className="w-5 h-5" /> },
+
         { name: "Shift Management", icon: <Clock className="w-5 h-5" /> },
         { name: "Overtime Calculation", icon: <Timer className="w-5 h-5" /> },
+        { name: "Leave Management", icon: <CalendarDays className="w-5 h-5" /> },
       ]
     },
     {
@@ -211,7 +212,12 @@ const Hero: React.FC = () => {
               <div className="flex items-center gap-8 py-6 border-t border-slate-100">
                 <div className="flex -space-x-3">
                   {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-slate-200 shadow-sm" />
+                    <img
+                      key={i}
+                      src={`https://i.pravatar.cc/100?img=${i + 10}`}
+                      alt={`User ${i}`}
+                      className="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm"
+                    />
                   ))}
                 </div>
                 <div className="h-8 w-px bg-slate-300" />
@@ -226,7 +232,7 @@ const Hero: React.FC = () => {
               {/* Live Stats */}
               <div className="grid grid-cols-3 gap-8 pt-6 border-t border-slate-100">
                 {[
-                  { value: 200, suffix: "+", label: 'Active Users' },
+                  { value: 100, suffix: "+", label: 'Active Users' },
                   { value: 99.9, suffix: "%", decimals: 1, label: 'Uptime SLA' },
                   { value: 4.9, suffix: "/5", decimals: 1, label: 'Rating' }
                 ].map((stat, i) => (
@@ -550,7 +556,7 @@ const Hero: React.FC = () => {
                 to="/pricing"
                 className="group inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-gradient-to-r from-[#39a4de] to-[#2ab6ea] rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300"
               >
-                Start Free 30-Day Trial
+                Start Free 7-Days Trial
                 <ArrowRight className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </motion.div>
