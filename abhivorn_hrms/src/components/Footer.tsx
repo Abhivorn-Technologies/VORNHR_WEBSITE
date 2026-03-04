@@ -49,7 +49,7 @@ const Footer: React.FC = () => {
                             className="inline-flex items-center gap-2 mb-6 group transition-all duration-300 hover:scale-105 hover:brightness-110 hover:drop-shadow-[0_0_15px_rgba(42,182,234,0.4)]"
                             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                         >
-                            <img src="/virnhrlogo.png" alt="Abhivorn Logo" className="h-10 md:h-12 w-auto object-contain" />
+                            <img src="/virnhrlogo.webp" alt="Abhivorn Logo" className="h-10 md:h-12 w-auto object-contain" />
                         </Link>
                         <p className="text-slate-400 mb-6 max-w-sm leading-relaxed">
                             Simplifying HR management for modern businesses. Automate payroll, track attendance, and manage your workforce with ease.
@@ -102,7 +102,7 @@ const Footer: React.FC = () => {
                             rel="noopener noreferrer"
                             className="flex items-center gap-2.5 hover:text-blue-500 transition-colors font-medium "
                         >
-                            <img src="/abhivorn.png" alt="Abhivorn" className="h-9 w-auto object-contain" />
+                            <img src="/abhivorn.webp" alt="Abhivorn" className="h-9 w-auto object-contain" />
                             <span>Abhivorn Technologies Pvt. Ltd.</span>
                         </a>
                     </div>
