@@ -38,7 +38,7 @@ const Navbar: React.FC = () => {
 
     const handleNavClick = (href: string) => {
         if (location.pathname === href) {
-            window.location.reload();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         setIsOpen(false);
     };
@@ -63,7 +63,7 @@ const Navbar: React.FC = () => {
                             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                         >
                             <img
-                                src="/virnhrlogo.png"
+                                src="/virnhrlogo.webp"
                                 alt="Abhivorn Logo"
                                 className="h-8 md:h-9 w-auto object-contain transition-all duration-300 hover:scale-105"
                             />

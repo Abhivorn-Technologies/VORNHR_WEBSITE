@@ -35,7 +35,7 @@ const FeaturesOverview: React.FC = () => {
             description: "Centralized profiles, document management, and complete lifecycle tracking.",
             activeColor: "bg-[#003973] text-white",
             inactiveIcon: "text-[#003973]",
-            image: "/teamlead.jpg"
+            image: "/teamlead.webp"
         },
         {
             icon: <Clock className="w-6 h-6" />,
@@ -43,7 +43,7 @@ const FeaturesOverview: React.FC = () => {
             description: "AI-powered GPS and biometric tracking with geo-fencing support.",
             activeColor: "bg-[#2ab6ea] text-white",
             inactiveIcon: "text-[#2ab6ea]",
-            image: "/timetracking.png"
+            image: "/timetracking.webp"
         },
         {
             icon: <Calendar className="w-6 h-6" />,
@@ -51,7 +51,7 @@ const FeaturesOverview: React.FC = () => {
             description: "Automated leave workflows, multi-type balance tracking, and holiday calendars.",
             activeColor: "bg-[#003973] text-white",
             inactiveIcon: "text-[#003973]",
-            image: "/leavemanagement.png"
+            image: "/leavemanagement.webp"
         },
         {
             icon: <DollarSign className="w-6 h-6" />,
@@ -59,7 +59,7 @@ const FeaturesOverview: React.FC = () => {
             description: "Tax-compliant salary processing, one-click payslips, and compliance.",
             activeColor: "bg-[#2ab6ea] text-white",
             inactiveIcon: "text-[#2ab6ea]",
-            image: "/automatedpayroll.png"
+            image: "/automatedpayroll.webp"
         },
         {
             icon: <FileText className="w-6 h-6" />,
@@ -67,7 +67,7 @@ const FeaturesOverview: React.FC = () => {
             description: "Streamlined chains for assets, certificates, and employee requests.",
             activeColor: "bg-[#003973] text-white",
             inactiveIcon: "text-[#003973]",
-            image: "/feature.png"
+            image: "/feature.webp"
         },
         // Advanced
         {
@@ -76,7 +76,7 @@ const FeaturesOverview: React.FC = () => {
             description: "Real-time insights into trends, performance, and payroll expenses.",
             activeColor: "bg-[#2ab6ea] text-white",
             inactiveIcon: "text-[#2ab6ea]",
-            image: "/hranalytics.png"
+            image: "/hranalytics.webp"
         },
         {
             icon: <Smartphone className="w-6 h-6" />,
@@ -84,7 +84,7 @@ const FeaturesOverview: React.FC = () => {
             description: "Mobile-first self-service for leaves, payslips, and profiles.",
             activeColor: "bg-[#003973] text-white",
             inactiveIcon: "text-[#003973]",
-            image: "/employeeportal.png"
+            image: "/employeeportal.webp"
         },
         {
             icon: <Shield className="w-6 h-6" />,
@@ -92,7 +92,7 @@ const FeaturesOverview: React.FC = () => {
             description: "Bank-grade encryption, RBAC, and comprehensive audit logs.",
             activeColor: "bg-[#2ab6ea] text-white",
             inactiveIcon: "text-[#2ab6ea]",
-            image: "/EnterpriseSecurity.png"
+            image: "/EnterpriseSecurity.webp"
         },
         {
             icon: <MapPin className="w-6 h-6" />,
@@ -100,7 +100,7 @@ const FeaturesOverview: React.FC = () => {
             description: "Validate remote work with IP-based tracking and location verification for hybrid teams.",
             activeColor: "bg-[#003973] text-white",
             inactiveIcon: "text-[#003973]",
-            image: "/hr_with_laptop.png"
+            image: "/hr_with_laptop.webp"
         },
         // Admin
         {
@@ -109,7 +109,7 @@ const FeaturesOverview: React.FC = () => {
             description: "A centralized command center for workforce overview, alerts, and vital company stats.",
             activeColor: "bg-[#2ab6ea] text-white",
             inactiveIcon: "text-[#2ab6ea]",
-            image: "/reports.jpg"
+            image: "/reports.webp"
         },
         {
             icon: <Users className="w-6 h-6" />,
@@ -117,7 +117,7 @@ const FeaturesOverview: React.FC = () => {
             description: "Flexible configuration for departments, designations, and complex reporting hierarchies.",
             activeColor: "bg-[#003973] text-white",
             inactiveIcon: "text-[#003973]",
-            image: "/hr.jpg"
+            image: "/hr.webp"
         },
         {
             icon: <Bell className="w-6 h-6" />,
@@ -125,7 +125,7 @@ const FeaturesOverview: React.FC = () => {
             description: "Automated alerts, announcements, and push notifications to keep teams aligned.",
             activeColor: "bg-[#2ab6ea] text-white",
             inactiveIcon: "text-[#2ab6ea]",
-            image: "/employees.jpg"
+            image: "/employees.webp"
         }
     ];
 
@@ -227,6 +227,26 @@ const FeaturesOverview: React.FC = () => {
     );
 };
 
+const SmoothImage = ({ src, alt, className }: { src: string, alt: string, className?: string }) => {
+    const [isLoaded, setIsLoaded] = useState(false);
+    return (
+        <div className="relative w-full h-full flex items-center justify-center min-h-[250px]">
+            {!isLoaded && (
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-50/80 z-10 transition-opacity duration-500">
+                    <div className="w-8 h-8 border-4 border-[#2ab6ea] border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            )}
+            <img
+                loading="lazy"
+                src={src}
+                alt={alt}
+                onLoad={() => setIsLoaded(true)}
+                className={`${className} transition-all duration-1000 ${isLoaded ? 'opacity-100 blur-0 scale-100' : 'opacity-0 blur-md scale-[0.98]'}`}
+            />
+        </div>
+    );
+};
+
 const DetailedFeatures: React.FC = () => {
     // Keeping this section mostly consistent but with updated colors for cohesion
     const details = [
@@ -235,7 +255,7 @@ const DetailedFeatures: React.FC = () => {
             subtitle: "Build Your Dream Team",
             description: "Streamline your entire hiring process from job posting to offer letters. Our ATS helps you track applicants, schedule interviews, and onboard new hires with zero paperwork.",
             points: ["Customizable career pages", "Automated interview scheduling", "Digital offer letter generation", "Paperless onboarding workflows"],
-            image: "/recruitment.jpg",
+            image: "/recruitment.webp",
             icon: <Briefcase className="w-5 h-5 text-white" />,
             color: "bg-[#003973]",
             direction: "lg:flex-row"
@@ -245,7 +265,7 @@ const DetailedFeatures: React.FC = () => {
             subtitle: "Drive Growth & Excellence",
             description: "Align individual goals with company objectives. Conduct meaningful reviews, track real-time feedback, and identify top performers with data-driven insights.",
             points: ["360-degree feedback loops", "OKR & KPI tracking", "Skill gap analysis", "Automated appraisal cycles"],
-            image: "/performance.jpg",
+            image: "/performance.webp",
             icon: <TrendingUp className="w-5 h-5 text-white" />,
             color: "bg-[#2ab6ea]",
             direction: "lg:flex-row-reverse"
@@ -255,7 +275,7 @@ const DetailedFeatures: React.FC = () => {
             subtitle: "HR in Your Pocket",
             description: "Empower your workforce with a powerful mobile app. Employees can mark attendance, request leave, and view payslips anytime, anywhere.",
             points: ["Geo-fenced attendance marking", "Instant leave notifications", "Mobile payslip download", "Team directory access"],
-            image: "/mobile_feature.jpg",
+            image: "/mobile_feature.webp",
             icon: <Smartphone className="w-5 h-5 text-white" />,
             color: "bg-[#003973]",
             direction: "lg:flex-row"
@@ -298,9 +318,17 @@ const DetailedFeatures: React.FC = () => {
                         >
                             {/* Image Side - SaaS Browser Style */}
                             <div className="flex-1 w-full relative group">
-                                <div className="absolute inset-0 bg-gradient-to-br from-[#003973]/5 to-[#2ab6ea]/5 rounded-2xl transform rotate-2 scale-105 group-hover:rotate-1 transition-all duration-500" />
+                                <motion.div
+                                    className="absolute inset-0 bg-gradient-to-br from-[#003973]/5 to-[#2ab6ea]/5 rounded-2xl transform scale-105 transition-all duration-500"
+                                    animate={{ y: [0, -8, 0] }}
+                                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: index * 0.2 }}
+                                />
 
-                                <div className="relative rounded-xl overflow-hidden shadow-2xl bg-white border border-gray-200/60 ring-1 ring-gray-900/5">
+                                <motion.div
+                                    className="relative rounded-xl overflow-hidden shadow-2xl bg-white border border-gray-200/60 ring-1 ring-gray-900/5"
+                                    animate={{ y: [0, -8, 0] }}
+                                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: index * 0.2 }}
+                                >
                                     {/* Browser Header */}
 
 
@@ -311,14 +339,14 @@ const DetailedFeatures: React.FC = () => {
                                             <div className="w-2.5 h-2.5 rounded-full bg-[#febc2e] shadow-sm ring-1 ring-black/10" />
                                             <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f] shadow-sm ring-1 ring-black/10" />
                                         </div>
-                                        <img
+                                        <SmoothImage
                                             src={item.image}
                                             alt={item.title}
                                             className="w-full h-auto object-contain transform group-hover:scale-105 transition-transform duration-700"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-[#003973]/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                     </div>
-                                </div>
+                                </motion.div>
 
                                 {/* Floating Badge */}
                                 <div className={`absolute -bottom-6 ${item.direction === 'lg:flex-row' ? 'right-0' : 'left-0'} w-16 h-16 ${item.color} rounded-2xl shadow-lg flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300 z-20 ring-4 ring-white`}>

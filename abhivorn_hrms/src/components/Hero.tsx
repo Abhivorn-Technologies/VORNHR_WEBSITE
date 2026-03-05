@@ -1,8 +1,7 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import QuickFeatures from './QuickFeatures';
 import { motion, useInView, useScroll, useTransform, useMotionValue, animate } from 'framer-motion';
-import { useEffect } from 'react';
 import {
   ArrowRight, CheckCircle, ShieldCheck, Users,
   Clock, Calendar, CreditCard, BarChart, MapPin,
@@ -55,6 +54,26 @@ const CountUp = ({ to, prefix = "", suffix = "", decimals = 0 }: { to: number, p
   }, [inView, to, count]);
 
   return <motion.span ref={ref}>{rounded}</motion.span>;
+};
+
+// Smooth Image Loader
+const SmoothHeroImage = ({ src, alt, className }: { src: string, alt: string, className?: string }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  return (
+    <>
+      {!isLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center bg-slate-100/50 backdrop-blur-sm z-10 transition-opacity duration-500">
+          <div className="w-10 h-10 border-4 border-[#39a4de] border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
+      <img
+        src={src}
+        alt={alt}
+        onLoad={() => setIsLoaded(true)}
+        className={`${className} transition-all duration-1000 ${isLoaded ? 'opacity-100 blur-0 scale-100' : 'opacity-0 blur-md scale-[1.02]'}`}
+      />
+    </>
+  );
 };
 
 const Hero: React.FC = () => {
@@ -255,15 +274,23 @@ const Hero: React.FC = () => {
                 className="relative w-full max-w-[450px] aspect-[4/5] md:aspect-square lg:aspect-auto h-full"
               >
                 {/* Main Image Card */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-[#39a4de]/20 to-[#b5a5fa]/20 rounded-[2.5rem] transform rotate-3 blur-3xl opacity-40" />
-                <div className="relative h-full rounded-[2rem] overflow-hidden shadow-2xl border-[6px] border-white ring-1 ring-slate-100">
-                  <img
-                    src="/hr_with_laptop.png"
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-tr from-[#39a4de]/20 to-[#b5a5fa]/20 rounded-[2.5rem] blur-3xl opacity-40"
+                  animate={{ scale: [1, 1.05, 1], opacity: [0.4, 0.6, 0.4] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                />
+                <motion.div
+                  className="relative h-full rounded-[2rem] overflow-hidden shadow-2xl border-[6px] border-white ring-1 ring-slate-100"
+                  animate={{ y: [0, -12, 0] }}
+                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <SmoothHeroImage
+                    src="/hr_with_laptop.webp"
                     alt="Dashboard Preview"
                     className="w-full h-full object-cover object-top"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/20 via-transparent to-transparent" />
-                </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/20 via-transparent to-transparent pointer-events-none" />
+                </motion.div>
 
 
 

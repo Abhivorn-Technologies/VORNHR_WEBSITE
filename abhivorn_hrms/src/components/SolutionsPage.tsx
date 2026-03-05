@@ -96,7 +96,7 @@ const RoleBenefits: React.FC = () => {
                 { value: "500+", label: "HR Teams", change: "Using Now" }
             ],
             cta: "Schedule HR Demo",
-            image: "/hr.jpg"
+            image: "/hr.webp"
         },
         [UserRole.EMPLOYEE]: {
             title: "Intuitive Employee Experience Platform",
@@ -130,7 +130,7 @@ const RoleBenefits: React.FC = () => {
                 { value: "85%", label: "Mobile Adoption", change: "+30%" }
             ],
             cta: "Try Employee Portal",
-            image: "/employees.jpg"
+            image: "/employees.webp"
         },
         [UserRole.TEAM_LEAD]: {
             title: "Advanced Team Management Tools",
@@ -164,7 +164,7 @@ const RoleBenefits: React.FC = () => {
                 { value: "88%", label: "Team Satisfaction", change: "+15%" }
             ],
             cta: "Explore Team Tools",
-            image: "/teamlead.jpg"
+            image: "/teamlead.webp"
         },
         [UserRole.PAYROLL_MANAGER]: {
             title: "Intelligent Payroll & Finance Suite",
@@ -198,7 +198,7 @@ const RoleBenefits: React.FC = () => {
                 { value: "100%", label: "Compliance", change: "Always" }
             ],
             cta: "View Finance Features",
-            image: "/payroll.jpg"
+            image: "/payroll.webp"
         }
     };
 
@@ -420,7 +420,7 @@ const SocialProof: React.FC = () => {
             company: "Abhivorn",
             fullCompany: "Abhivorn Technologies",
             industry: "Technology",
-            logo: "/abhivorn.png",
+            logo: "/abhivorn.webp",
             color: "blue",
             gradient: "from-blue-500 to-cyan-500",
             quote: "We reduced our payroll processing time from 3 days to just under 2 hours. The ROI was immediate.",
@@ -437,7 +437,7 @@ const SocialProof: React.FC = () => {
             company: "Sai Sharanya",
             fullCompany: "Sai Sharanya Hospital",
             industry: "Healthcare",
-            logo: "/ss_hospital.jpeg",
+            logo: "/ss_hospital.webp",
             color: "emerald",
             gradient: "from-emerald-500 to-teal-500",
             quote: "Managing shifts for 500+ hospital staff was a nightmare. Abhivorn made it automated and seamless.",
@@ -454,7 +454,7 @@ const SocialProof: React.FC = () => {
             company: "Next Gen",
             fullCompany: "Next Gen Hiring",
             industry: "Recruitment",
-            logo: "/nextgen.jpeg",
+            logo: "/nextgen.webp",
             color: "violet",
             gradient: "from-violet-500 to-purple-500",
             quote: "The automated onboarding workflows helped us scale our recruitment drive without adding HR headcount.",
@@ -471,7 +471,7 @@ const SocialProof: React.FC = () => {
             company: "Cred Marg",
             fullCompany: "Cred Marg",
             industry: "Fintech",
-            logo: "/cred.jpeg",
+            logo: "/cred.webp",
             color: "amber",
             gradient: "from-amber-500 to-orange-500",
             quote: "A distinct competitive advantage. Our employees love the transparency of the self-service portal.",
@@ -488,7 +488,7 @@ const SocialProof: React.FC = () => {
             company: "Elevate Rootz",
             fullCompany: "Elevate Rootz",
             industry: "Corporate Services",
-            logo: "/elevaterootz.png",
+            logo: "/elevaterootz.webp",
             color: "rose",
             gradient: "from-rose-500 to-pink-500",
             quote: "Abhivorn helps us stay compliant and organized across multiple locations. It's truly a game changer.",
