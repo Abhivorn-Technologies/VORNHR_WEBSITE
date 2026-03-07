@@ -110,7 +110,7 @@ const UpdatesPage: React.FC = () => {
         <h2 className="text-2xl font-bold text-slate-900 mb-8">Recent Updates</h2>
         
         <div className="space-y-8">
-          {updates.map((update, index) => (
+          {updates.map((update) => (
             <div 
               key={update.id} 
               className={`relative bg-white rounded-2xl p-6 md:p-8 border ${
