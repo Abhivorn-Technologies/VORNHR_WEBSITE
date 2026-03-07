@@ -246,8 +246,6 @@ const PricingCalculator: React.FC = () => {
     const [submissionError, setSubmissionError] = useState<string | null>(null);
     const [showTrialModal, setShowTrialModal] = useState(false);
     const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof TrialFormState, string>>>({});
-    const [toastMessage, setToastMessage] = useState<string | null>(null);
-
     const openTrialModal = (selectedPlan: string) => {
         setTrialForm(prev => ({ ...prev, selected_plan: selectedPlan }));
         setShowTrialModal(true);
@@ -316,9 +314,6 @@ const PricingCalculator: React.FC = () => {
             if (response.status === 201) {
                 setSubmissionStatus('success');
                 setTrialForm(prev => ({ ...defaultTrialForm, selected_plan: prev.selected_plan }));
-                setShowTrialModal(false);
-                setToastMessage('Registration request submitted successfully. We will contact you shortly.');
-                setTimeout(() => setToastMessage(null), 5000);
                 return;
             }
 
@@ -547,140 +542,153 @@ const PricingCalculator: React.FC = () => {
                                 ✕
                             </button>
 
-                            <h3 className="text-2xl font-bold text-gray-900 mb-2">Start your 7-day free trial</h3>
-                            <p className="text-sm text-gray-500 mb-4">
-                                You selected the <strong className="text-[#2ab6ea] uppercase">{trialForm.selected_plan}</strong> plan.
-                            </p>
-
-                            <form className="space-y-3" onSubmit={handleSubmit}>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <div className="flex flex-col gap-1">
-                                        <label htmlFor="trial-name" className="text-xs font-semibold text-gray-600">
-                                            Full Name <span className="text-red-500">*</span>
-                                        </label>
-                                        <input
-                                            id="trial-name"
-                                            required
-                                            className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${fieldErrors.name ? 'border-red-400 focus:ring-red-200' : 'border-gray-200 focus:ring-[#2ab6ea]'}`}
-                                            placeholder="Full Name"
-                                            value={trialForm.name}
-                                            onChange={event => setTrialForm({ ...trialForm, name: event.target.value })}
-                                        />
-                                        {fieldErrors.name && <span className="text-xs text-red-600">{fieldErrors.name}</span>}
+                            {submissionStatus === 'success' ? (
+                                <div className="py-6 sm:py-8 text-center">
+                                    <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                                        <Check className="w-8 h-8" />
                                     </div>
-
-                                    <div className="flex flex-col gap-1">
-                                        <label htmlFor="trial-email" className="text-xs font-semibold text-gray-600">
-                                            Work Email <span className="text-red-500">*</span>
-                                        </label>
-                                        <input
-                                            id="trial-email"
-                                            required
-                                            type="email"
-                                            className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${fieldErrors.email ? 'border-red-400 focus:ring-red-200' : 'border-gray-200 focus:ring-[#2ab6ea]'}`}
-                                            placeholder="Work Email"
-                                            value={trialForm.email}
-                                            onChange={event => setTrialForm({ ...trialForm, email: event.target.value })}
-                                        />
-                                        {fieldErrors.email && <span className="text-xs text-red-600">{fieldErrors.email}</span>}
+                                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                                        Registration request submitted successfully.
+                                    </h3>
+                                    <p className="text-sm text-gray-600 max-w-md mx-auto leading-6">
+                                        Your application is under admin review. You will receive an email once the review is complete.
+                                    </p>
+                                    <div className="mt-5 rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
+                                        Selected plan: <span className="font-bold uppercase">{trialForm.selected_plan}</span>
                                     </div>
-
-                                    <div className="flex flex-col gap-1">
-                                        <label htmlFor="trial-phone" className="text-xs font-semibold text-gray-600">
-                                            Phone <span className="text-red-500">*</span>
-                                        </label>
-                                        <input
-                                            id="trial-phone"
-                                            required
-                                            className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${fieldErrors.phone ? 'border-red-400 focus:ring-red-200' : 'border-gray-200 focus:ring-[#2ab6ea]'}`}
-                                            placeholder="Phone"
-                                            value={trialForm.phone}
-                                            onChange={event => setTrialForm({ ...trialForm, phone: event.target.value })}
-                                        />
-                                        {fieldErrors.phone && <span className="text-xs text-red-600">{fieldErrors.phone}</span>}
-                                    </div>
-
-                                    <div className="flex flex-col gap-1">
-                                        <label htmlFor="trial-company" className="text-xs font-semibold text-gray-600">
-                                            Company Name <span className="text-red-500">*</span>
-                                        </label>
-                                        <input
-                                            id="trial-company"
-                                            required
-                                            className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${fieldErrors.company_name ? 'border-red-400 focus:ring-red-200' : 'border-gray-200 focus:ring-[#2ab6ea]'}`}
-                                            placeholder="Company Name"
-                                            value={trialForm.company_name}
-                                            onChange={event => setTrialForm({ ...trialForm, company_name: event.target.value })}
-                                        />
-                                        {fieldErrors.company_name && <span className="text-xs text-red-600">{fieldErrors.company_name}</span>}
-                                    </div>
-
-                                    <div className="flex flex-col gap-1 sm:col-span-2">
-                                        <label htmlFor="trial-domain" className="text-xs font-semibold text-gray-600">
-                                            Company Domain <span className="text-red-500">*</span>
-                                        </label>
-                                        <input
-                                            id="trial-domain"
-                                            required
-                                            className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${fieldErrors.company_domain ? 'border-red-400 focus:ring-red-200' : 'border-gray-200 focus:ring-[#2ab6ea]'}`}
-                                            placeholder="e.g. company.com"
-                                            value={trialForm.company_domain}
-                                            onChange={event => setTrialForm({ ...trialForm, company_domain: event.target.value })}
-                                        />
-                                        {fieldErrors.company_domain && <span className="text-xs text-red-600">{fieldErrors.company_domain}</span>}
-                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowTrialModal(false)}
+                                        className="mt-6 inline-flex items-center justify-center rounded-2xl bg-[#003973] px-6 py-3 text-sm font-bold text-white transition-colors duration-300 hover:bg-[#002b57]"
+                                    >
+                                        Close
+                                    </button>
                                 </div>
+                            ) : (
+                                <>
+                                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Start your 7-day free trial</h3>
+                                    <p className="text-sm text-gray-500 mb-4">
+                                        You selected the <strong className="text-[#2ab6ea] uppercase">{trialForm.selected_plan}</strong> plan.
+                                    </p>
 
-                                <div className="flex flex-col gap-1">
-                                    <label htmlFor="trial-message" className="text-xs font-semibold text-gray-600">
-                                        Message (optional)
-                                    </label>
-                                    <textarea
-                                        id="trial-message"
-                                        rows={3}
-                                        className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2ab6ea]"
-                                        placeholder="Tell us a bit about your team"
-                                        value={trialForm.message}
-                                        onChange={event => setTrialForm({ ...trialForm, message: event.target.value })}
-                                    />
-                                </div>
+                                    <form className="space-y-3" onSubmit={handleSubmit}>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                            <div className="flex flex-col gap-1">
+                                                <label htmlFor="trial-name" className="text-xs font-semibold text-gray-600">
+                                                    Full Name <span className="text-red-500">*</span>
+                                                </label>
+                                                <input
+                                                    id="trial-name"
+                                                    required
+                                                    className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${fieldErrors.name ? 'border-red-400 focus:ring-red-200' : 'border-gray-200 focus:ring-[#2ab6ea]'}`}
+                                                    placeholder="Full Name"
+                                                    value={trialForm.name}
+                                                    onChange={event => setTrialForm({ ...trialForm, name: event.target.value })}
+                                                />
+                                                {fieldErrors.name && <span className="text-xs text-red-600">{fieldErrors.name}</span>}
+                                            </div>
 
-                                <button
-                                    type="submit"
-                                    disabled={submitting}
-                                    className="w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 transition-all duration-300 active:scale-[0.98] bg-[#2ab6ea] border-2 border-[#2ab6ea] text-white hover:bg-[#003973] hover:border-[#003973] disabled:opacity-60 disabled:cursor-not-allowed"
-                                >
-                                    {submitting ? 'Submitting...' : 'Submit Request'}
-                                    {!submitting && <ArrowRight className="w-4 h-4" />}
-                                </button>
+                                            <div className="flex flex-col gap-1">
+                                                <label htmlFor="trial-email" className="text-xs font-semibold text-gray-600">
+                                                    Work Email <span className="text-red-500">*</span>
+                                                </label>
+                                                <input
+                                                    id="trial-email"
+                                                    required
+                                                    type="email"
+                                                    className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${fieldErrors.email ? 'border-red-400 focus:ring-red-200' : 'border-gray-200 focus:ring-[#2ab6ea]'}`}
+                                                    placeholder="Work Email"
+                                                    value={trialForm.email}
+                                                    onChange={event => setTrialForm({ ...trialForm, email: event.target.value })}
+                                                />
+                                                {fieldErrors.email && <span className="text-xs text-red-600">{fieldErrors.email}</span>}
+                                            </div>
 
-                                <AnimatePresence>
-                                    {submissionStatus === 'error' && (
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 6 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            exit={{ opacity: 0, y: -6 }}
-                                            className="text-sm text-red-700 font-semibold bg-red-50 border border-red-200 rounded-xl px-3 py-2 break-words"
+                                            <div className="flex flex-col gap-1">
+                                                <label htmlFor="trial-phone" className="text-xs font-semibold text-gray-600">
+                                                    Phone <span className="text-red-500">*</span>
+                                                </label>
+                                                <input
+                                                    id="trial-phone"
+                                                    required
+                                                    className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${fieldErrors.phone ? 'border-red-400 focus:ring-red-200' : 'border-gray-200 focus:ring-[#2ab6ea]'}`}
+                                                    placeholder="Phone"
+                                                    value={trialForm.phone}
+                                                    onChange={event => setTrialForm({ ...trialForm, phone: event.target.value })}
+                                                />
+                                                {fieldErrors.phone && <span className="text-xs text-red-600">{fieldErrors.phone}</span>}
+                                            </div>
+
+                                            <div className="flex flex-col gap-1">
+                                                <label htmlFor="trial-company" className="text-xs font-semibold text-gray-600">
+                                                    Company Name <span className="text-red-500">*</span>
+                                                </label>
+                                                <input
+                                                    id="trial-company"
+                                                    required
+                                                    className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${fieldErrors.company_name ? 'border-red-400 focus:ring-red-200' : 'border-gray-200 focus:ring-[#2ab6ea]'}`}
+                                                    placeholder="Company Name"
+                                                    value={trialForm.company_name}
+                                                    onChange={event => setTrialForm({ ...trialForm, company_name: event.target.value })}
+                                                />
+                                                {fieldErrors.company_name && <span className="text-xs text-red-600">{fieldErrors.company_name}</span>}
+                                            </div>
+
+                                            <div className="flex flex-col gap-1 sm:col-span-2">
+                                                <label htmlFor="trial-domain" className="text-xs font-semibold text-gray-600">
+                                                    Company Domain <span className="text-red-500">*</span>
+                                                </label>
+                                                <input
+                                                    id="trial-domain"
+                                                    required
+                                                    className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${fieldErrors.company_domain ? 'border-red-400 focus:ring-red-200' : 'border-gray-200 focus:ring-[#2ab6ea]'}`}
+                                                    placeholder="e.g. company.com"
+                                                    value={trialForm.company_domain}
+                                                    onChange={event => setTrialForm({ ...trialForm, company_domain: event.target.value })}
+                                                />
+                                                {fieldErrors.company_domain && <span className="text-xs text-red-600">{fieldErrors.company_domain}</span>}
+                                            </div>
+                                        </div>
+
+                                        <div className="flex flex-col gap-1">
+                                            <label htmlFor="trial-message" className="text-xs font-semibold text-gray-600">
+                                                Message (optional)
+                                            </label>
+                                            <textarea
+                                                id="trial-message"
+                                                rows={3}
+                                                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2ab6ea]"
+                                                placeholder="Tell us a bit about your team"
+                                                value={trialForm.message}
+                                                onChange={event => setTrialForm({ ...trialForm, message: event.target.value })}
+                                            />
+                                        </div>
+
+                                        <button
+                                            type="submit"
+                                            disabled={submitting}
+                                            className="w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 transition-all duration-300 active:scale-[0.98] bg-[#2ab6ea] border-2 border-[#2ab6ea] text-white hover:bg-[#003973] hover:border-[#003973] disabled:opacity-60 disabled:cursor-not-allowed"
                                         >
-                                            {submissionError || 'Something went wrong. Please try again.'}
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-                            </form>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                                            {submitting ? 'Submitting...' : 'Submit Request'}
+                                            {!submitting && <ArrowRight className="w-4 h-4" />}
+                                        </button>
 
-            <AnimatePresence>
-                {toastMessage && (
-                    <motion.div
-                        className="fixed top-6 right-6 z-[60] bg-emerald-600 text-white px-4 py-3 rounded-xl shadow-xl"
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                    >
-                        {toastMessage}
+                                        <AnimatePresence>
+                                            {submissionStatus === 'error' && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 6 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0, y: -6 }}
+                                                    className="text-sm text-red-700 font-semibold bg-red-50 border border-red-200 rounded-xl px-3 py-2 break-words"
+                                                >
+                                                    {submissionError || 'Something went wrong. Please try again.'}
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </form>
+                                </>
+                            )}
+                        </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>
