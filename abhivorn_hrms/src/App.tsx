@@ -7,6 +7,18 @@ import FeaturesPage from "./components/FeaturesPage";
 import SolutionsPage from "./components/SolutionsPage";
 import PricingPage from "./components/PricingPage";
 import ContactPage from "./components/ContactPage";
+import PrivacyPolicy from "./components/PrivacyPolicy";
+import TermsOfService from "./components/TermsOfService";
+import CookiePolicy from "./components/CookiePolicy";
+import SecurityPage from "./components/SecurityPage";
+import UpdatesPage from "./components/UpdatesPage";
+import AIPage from "./components/AIPage";
+import ChatPage from "./components/ChatPage";
+import AdvancedAnalyticsPage from "./components/AdvancedAnalyticsPage";
+import NotificationsPage from "./components/NotificationsPage";
+import RealTimeChatPage from "./components/RealTimeChatPage";
+import AboutUsPage from "./components/AboutUsPage";
+import BlogPage from "./components/BlogPage";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -51,6 +63,18 @@ const AnimatedRoutes = () => {
           <Route path="solutions" element={<PageTransition><SolutionsPage /></PageTransition>} />
           <Route path="pricing" element={<PageTransition><PricingPage /></PageTransition>} />
           <Route path="contact" element={<PageTransition><ContactPage /></PageTransition>} />
+          <Route path="privacy-policy" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
+          <Route path="terms-of-service" element={<PageTransition><TermsOfService /></PageTransition>} />
+          <Route path="cookie-policy" element={<PageTransition><CookiePolicy /></PageTransition>} />
+          <Route path="security" element={<PageTransition><SecurityPage /></PageTransition>} />
+          <Route path="updates" element={<PageTransition><UpdatesPage /></PageTransition>} />
+          <Route path="ai" element={<PageTransition><AIPage /></PageTransition>} />
+          <Route path="chat" element={<PageTransition><ChatPage /></PageTransition>} />
+          <Route path="analytics" element={<PageTransition><AdvancedAnalyticsPage /></PageTransition>} />
+          <Route path="notifications" element={<PageTransition><NotificationsPage /></PageTransition>} />
+          <Route path="realtime-chat" element={<PageTransition><RealTimeChatPage /></PageTransition>} />
+          <Route path="about" element={<PageTransition><AboutUsPage /></PageTransition>} />
+          <Route path="blog" element={<PageTransition><BlogPage /></PageTransition>} />
         </Route>
       </Routes>
     </AnimatePresence>

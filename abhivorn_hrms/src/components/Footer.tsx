@@ -15,25 +15,34 @@ const Footer: React.FC = () => {
                 { name: "Features", href: "/features" },
                 { name: "Solutions", href: "/solutions" },
                 { name: "Pricing", href: "/pricing" },
-                { name: "Updates", href: "#" },
+                { name: "Updates", href: "/updates" },
+                { name: "AI", href: "/ai" },
             ]
         },
         {
             title: "Company",
             links: [
-                { name: "About Us", href: "#" },
-                { name: "Careers", href: "#" },
-                { name: "Blog", href: "#" },
+                { name: "About Us", href: "/about" },
+                { name: "Blog", href: "/blog" },
                 { name: "Contact", href: "/contact" },
             ]
         },
         {
             title: "Legal",
             links: [
-                { name: "Privacy Policy", href: "#" },
-                { name: "Terms of Service", href: "#" },
-                { name: "Cookie Policy", href: "#" },
-                { name: "Security", href: "#" },
+                { name: "Privacy Policy", href: "/privacy-policy" },
+                { name: "Terms of Service", href: "/terms-of-service" },
+                { name: "Cookie Policy", href: "/cookie-policy" },
+                { name: "Security", href: "/security" },
+            ]
+        },
+        {
+            title: "Features",
+            links: [
+                { name: "Chat", href: "/chat" },
+                { name: "Analytics", href: "/analytics" },
+                { name: "Notifications", href: "/notifications" },
+                { name: "Real-time Chat", href: "/realtime-chat" },
             ]
         }
     ];
