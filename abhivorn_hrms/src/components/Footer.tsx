@@ -28,6 +28,15 @@ const Footer: React.FC = () => {
             ]
         },
         {
+            title: "Features",
+            links: [
+                { name: "Chat", href: "/chat" },
+                { name: "Analytics", href: "/analytics" },
+                { name: "Notifications", href: "/notifications" },
+                { name: "Real-time Chat", href: "/realtime-chat" },
+            ]
+        },
+        {
             title: "Legal",
             links: [
                 { name: "Privacy Policy", href: "/privacy-policy" },
@@ -36,23 +45,14 @@ const Footer: React.FC = () => {
                 { name: "Security", href: "/security" },
             ]
         },
-        {
-            title: "Features",
-            links: [
-                { name: "Chat", href: "/chat" },
-                { name: "Analytics", href: "/analytics" },
-                { name: "Notifications", href: "/notifications" },
-                { name: "Real-time Chat", href: "/realtime-chat" },
-            ]
-        }
     ];
 
     return (
-        <footer className="bg-slate-950 pt-10 md:pt-16 pb-8 border-t border-slate-900">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-12 mb-8 md:mb-12">
+        <footer className="bg-slate-950 pt-16 pb-12 border-t border-slate-900">
+            <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1fr_1fr] gap-10 mb-12 items-start">
                     {/* Brand Column */}
-                    <div className="col-span-2 lg:col-span-2">
+                    <div className="flex flex-col">
                         <Link
                             to="/"
                             className="inline-flex items-center gap-2 mb-6 group transition-all duration-300 hover:scale-105 hover:brightness-110 hover:drop-shadow-[0_0_15px_rgba(42,182,234,0.4)]"
@@ -60,7 +60,7 @@ const Footer: React.FC = () => {
                         >
                             <img src="/virnhrlogo.webp" alt="Abhivorn Logo" className="h-10 md:h-12 w-auto object-contain" />
                         </Link>
-                        <p className="text-slate-400 mb-6 max-w-sm leading-relaxed">
+                        <p className="text-slate-400 mt-3 max-w-[280px] leading-[1.6] text-sm">
                             Simplifying HR management for modern businesses. Automate payroll, track attendance, and manage your workforce with ease.
                         </p>
                         <div className="flex gap-4">
@@ -82,12 +82,12 @@ const Footer: React.FC = () => {
                             <h3 className="text-sm font-bold text-white tracking-wider uppercase mb-4">
                                 {column.title}
                             </h3>
-                            <ul className="space-y-3">
+                            <ul className="space-y-2">
                                 {column.links.map((link, linkIndex) => (
                                     <li key={linkIndex}>
                                         <Link
                                             to={link.href}
-                                            className="text-slate-400 hover:text-blue-400 transition-colors text-sm"
+                                            className="text-slate-400 hover:text-blue-400 hover:translate-x-1 transition-all duration-300 text-sm inline-block"
                                         >
                                             {link.name}
                                         </Link>

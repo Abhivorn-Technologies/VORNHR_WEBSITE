@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
     AlertCircle,
     ArrowRight,
     BarChart,
+    Trash2,
+    X,
     Calendar,
     Check,
     ChevronDown,
@@ -115,7 +117,7 @@ const defaultTrialForm: TrialFormState = {
     phone: '',
     company_name: '',
     company_domain: '',
-    selected_plan: 'starter',
+    selected_plan: 'growth',
     message: ''
 };
 
@@ -239,14 +241,35 @@ const faqsByCategory: Record<Category, FaqItem[]> = {
 };
 
 const PricingCalculator: React.FC = () => {
-    const [billingCycle, setBillingCycle] = useState<BillingCycle>('monthly');
+    const [billingCycle, setBillingCycle] = useState<BillingCycle>(() => {
+        return (localStorage.getItem('vorn_hr_billing_cycle') as BillingCycle) || 'monthly';
+    });
+    const [selectedPlanId, setSelectedPlanId] = useState<string | null>(() => {
+        return localStorage.getItem('vorn_hr_selected_plan') || 'growth';
+    });
     const [trialForm, setTrialForm] = useState<TrialFormState>(defaultTrialForm);
     const [submitting, setSubmitting] = useState(false);
     const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>('idle');
     const [submissionError, setSubmissionError] = useState<string | null>(null);
     const [showTrialModal, setShowTrialModal] = useState(false);
     const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof TrialFormState, string>>>({});
+
+    useEffect(() => {
+        localStorage.setItem('vorn_hr_billing_cycle', billingCycle);
+    }, [billingCycle]);
+
+    useEffect(() => {
+        if (selectedPlanId) {
+            localStorage.setItem('vorn_hr_selected_plan', selectedPlanId);
+        }
+    }, [selectedPlanId]);
+
+    const handlePlanSelect = (planId: string) => {
+        setSelectedPlanId(planId);
+    };
+
     const openTrialModal = (selectedPlan: string) => {
+        setSelectedPlanId(selectedPlan);
         setTrialForm(prev => ({ ...prev, selected_plan: selectedPlan }));
         setShowTrialModal(true);
         setSubmissionStatus('idle');
@@ -365,8 +388,32 @@ const PricingCalculator: React.FC = () => {
                     viewport={{ once: true }}
                     className="text-4xl md:text-5xl font-bold mb-4 tracking-tight"
                 >
-                    <span className="text-[#003973]">Simple,</span>{' '}
-                    <span className="text-[#2ab6ea]">Transparent Pricing</span>
+                    <AnimatePresence mode="wait">
+                        {selectedPlanId ? (
+                            <motion.div
+                                key="selected-header"
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 1.05 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <span className="text-[#003973]">You've Selected the</span>{' '}
+                                <span className="text-[#2ab6ea] capitalize">{selectedPlanId}</span>{' '}
+                                <span className="text-[#003973]">Plan</span>
+                            </motion.div>
+                        ) : (
+                            <motion.div
+                                key="default-header"
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 1.05 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <span className="text-[#003973]">Simple,</span>{' '}
+                                <span className="text-[#2ab6ea]">Transparent Pricing</span>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </motion.h2>
 
                 <motion.p
@@ -410,23 +457,31 @@ const PricingCalculator: React.FC = () => {
             </div>
 
             <div className="grid md:grid-cols-4 gap-4 mb-16">
-                {plans.map((plan, index) => {
+                {plans.map((plan) => {
                     const isPopular = plan.id === 'growth';
+                    const isSelected = selectedPlanId === plan.id;
 
                     return (
                         <motion.div
                             key={plan.id}
-                            initial={{ opacity: 0, y: 10 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.1 }}
-                            className={`relative rounded-3xl flex flex-col overflow-hidden h-full group transition-all duration-300 ${isPopular
-                                ? 'bg-white border-2 border-[#2ab6ea] shadow-xl z-10 scale-[1.02]'
-                                : 'bg-[#fbfbfc] border border-gray-200 shadow-sm hover:shadow-md hover:-translate-y-1'
-                                }`}
+                            whileHover={{ 
+                                y: -12,
+                                borderColor: "#003973",
+                                boxShadow: "0 25px 40px -12px rgba(0, 57, 115, 0.12)",
+                                transition: { duration: 0.3, ease: "easeOut" }
+                            }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => handlePlanSelect(plan.id)}
+                            className={`relative rounded-3xl flex flex-col overflow-hidden h-full group cursor-pointer border-2 transition-colors duration-300 ${
+                                isSelected 
+                                    ? 'bg-white border-[#003973] shadow-2xl z-20 scale-[1.05] ring-4 ring-[#2ab6ea]/20'
+                                    : isPopular
+                                        ? 'bg-white border-[#2ab6ea] shadow-xl z-10 scale-[1.02]'
+                                        : 'bg-[#fbfbfc] border-gray-200 shadow-sm'
+                            }`}
                         >
                             {isPopular && (
-                                <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-[#2ab6ea] text-white text-[10px] uppercase font-bold px-3 py-1 rounded-b-lg tracking-widest shadow-md">
+                                <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-[#2ab6ea] text-white text-[10px] uppercase font-bold px-3 py-1 rounded-b-lg tracking-widest shadow-md z-30">
                                     Best Value
                                 </div>
                             )}
@@ -470,8 +525,9 @@ const PricingCalculator: React.FC = () => {
                             </div>
 
                             <div className="p-5 mt-auto">
-                                <button
+                                <motion.button
                                     type="button"
+                                    whileHover="hover"
                                     onClick={() => openTrialModal(plan.id)}
                                     className={`w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 transition-all duration-300 active:scale-[0.98] ${isPopular
                                         ? 'bg-[#2ab6ea] text-white hover:bg-[#003973]'
@@ -479,19 +535,30 @@ const PricingCalculator: React.FC = () => {
                                         }`}
                                 >
                                     Start 7-Day Trial
-                                    <ArrowRight className="w-4 h-4" />
-                                </button>
+                                    <motion.span
+                                        variants={{
+                                            hover: { x: 5 }
+                                        }}
+                                        transition={{ type: "spring", stiffness: 400 }}
+                                    >
+                                        <ArrowRight className="w-4 h-4" />
+                                    </motion.span>
+                                </motion.button>
                             </div>
                         </motion.div>
                     );
                 })}
 
                 <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.3 }}
-                    className="relative rounded-3xl flex flex-col overflow-hidden h-full group bg-[#fbfbfc] border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300"
+                    whileHover={{ 
+                        y: -12, 
+                        borderColor: "#003973",
+                        boxShadow: "0 25px 40px -12px rgba(0, 57, 115, 0.12)",
+                        transition: { duration: 0.3, ease: "easeOut" } 
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    className="relative rounded-3xl flex flex-col overflow-hidden h-full group bg-[#fbfbfc] border-2 border-gray-200 shadow-sm transition-all duration-300 cursor-pointer"
+                    onClick={() => window.location.href = '/contact'}
                 >
                     <div className="relative p-8 flex-1 flex flex-col justify-center text-center">
                         <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
@@ -504,13 +571,25 @@ const PricingCalculator: React.FC = () => {
                         </p>
 
                         <div className="mt-auto">
-                            <Link
-                                to="/contact"
-                                className="w-full bg-gray-900 border-2 border-gray-900 text-white hover:bg-black py-4 rounded-xl text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2"
+                            <motion.div
+                                whileHover="hover"
+                                className="w-full"
                             >
-                                Contact Sales
-                                <ArrowRight className="w-4 h-4" />
-                            </Link>
+                                <Link
+                                    to="/contact"
+                                    className="w-full bg-gray-900 border-2 border-gray-900 text-white hover:bg-black py-4 rounded-xl text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2"
+                                >
+                                    Contact Sales
+                                    <motion.span
+                                        variants={{
+                                            hover: { x: 5 }
+                                        }}
+                                        transition={{ type: "spring", stiffness: 400 }}
+                                    >
+                                        <ArrowRight className="w-4 h-4" />
+                                    </motion.span>
+                                </Link>
+                            </motion.div>
                         </div>
                     </div>
                 </motion.div>
@@ -679,16 +758,93 @@ const PricingCalculator: React.FC = () => {
                                                     initial={{ opacity: 0, y: 6 }}
                                                     animate={{ opacity: 1, y: 0 }}
                                                     exit={{ opacity: 0, y: -6 }}
-                                                    className="text-sm text-red-700 font-semibold bg-red-50 border border-red-200 rounded-xl px-3 py-2 break-words"
+                                                    className="text-sm text-red-700 font-semibold bg-red-50 border border-red-200 rounded-xl px-3 py-2 break-words mt-4"
                                                 >
                                                     {submissionError || 'Something went wrong. Please try again.'}
                                                 </motion.div>
                                             )}
                                         </AnimatePresence>
+
                                     </form>
                                 </>
                             )}
                         </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {selectedPlanId && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        className="mt-20 border-t pt-16"
+                    >
+                        <div className="text-center mb-12">
+                            <h3 className="text-3xl font-bold text-[#003973]">Feature Comparison</h3>
+                            <p className="text-gray-500 mt-2">Detailed breakdown of what's included in your selected plan</p>
+                        </div>
+                        <div className="overflow-x-auto pb-8">
+                            <table className="w-full text-left border-collapse min-w-[600px]">
+                                <thead>
+                                    <tr className="border-b">
+                                        <th className="py-4 px-6 text-sm font-bold text-gray-500 uppercase tracking-wider">Features</th>
+                                        {plans.map(p => (
+                                            <th 
+                                                key={p.id} 
+                                                className={`py-4 px-6 text-sm font-bold uppercase tracking-wider text-center transition-all duration-300 ${selectedPlanId === p.id ? 'text-[#2ab6ea] bg-blue-50/50 rounded-t-xl scale-105' : 'text-gray-500'}`}
+                                            >
+                                                {p.name}
+                                            </th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {[
+                                        { name: 'Employee Management', bold: true },
+                                        { name: 'Attendance & Leave', bold: true },
+                                        { name: 'Payroll & Payslips', plans: ['growth', 'business'] },
+                                        { name: 'HR Analytics', plans: ['business'] },
+                                        { name: 'Role-Based Controls', plans: ['business'] },
+                                        { name: 'Employee Self-Service', plans: ['growth', 'business'] },
+                                        { name: 'Priority Support', plans: ['business'] },
+                                        { name: 'AI Credits', dynamic: true }
+                                    ].map((feature, i) => (
+                                        <motion.tr 
+                                            key={i} 
+                                            initial={{ opacity: 0, x: -10 }}
+                                            whileInView={{ opacity: 1, x: 0 }}
+                                            viewport={{ once: true }}
+                                            transition={{ delay: i * 0.05 }}
+                                            className="border-b hover:bg-gray-50/50 transition-colors"
+                                        >
+                                            <td className="py-5 px-6 font-medium text-gray-700">{feature.name}</td>
+                                            {plans.map(p => {
+                                                const hasFeature = feature.plans ? feature.plans.includes(p.id) : true;
+                                                const isSelected = selectedPlanId === p.id;
+                                                
+                                                let content;
+                                                if (feature.dynamic && feature.name === 'AI Credits') {
+                                                    content = p.id === 'starter' ? '100' : p.id === 'growth' ? '150' : '500';
+                                                } else {
+                                                    content = hasFeature ? <Check className="w-5 h-5 text-emerald-500 mx-auto" /> : <X className="w-4 h-4 text-gray-300 mx-auto" />;
+                                                }
+
+                                                return (
+                                                    <td 
+                                                        key={p.id} 
+                                                        className={`py-5 px-6 text-center transition-all duration-300 ${isSelected ? 'bg-blue-50/30 font-bold scale-105' : ''}`}
+                                                    >
+                                                        {content}
+                                                    </td>
+                                                );
+                                            })}
+                                        </motion.tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
