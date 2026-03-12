@@ -456,7 +456,7 @@ const PricingCalculator: React.FC = () => {
                 </div>
             </div>
 
-            <div className="grid md:grid-cols-4 gap-4 mb-16">
+            <div className="grid md:grid-cols-4 gap-10 mb-16">
                 {plans.map((plan) => {
                     const isPopular = plan.id === 'growth';
                     const isSelected = selectedPlanId === plan.id;
@@ -465,16 +465,16 @@ const PricingCalculator: React.FC = () => {
                         <motion.div
                             key={plan.id}
                             whileHover={{ 
-                                y: -12,
+                                scale: 1.02,
                                 borderColor: "#003973",
-                                boxShadow: "0 25px 40px -12px rgba(0, 57, 115, 0.12)",
-                                transition: { duration: 0.3, ease: "easeOut" }
+                                boxShadow: "0 20px 30px -10px rgba(0, 57, 115, 0.1)",
+                                transition: { type: "spring", stiffness: 300, damping: 25 }
                             }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => handlePlanSelect(plan.id)}
-                            className={`relative rounded-3xl flex flex-col overflow-hidden h-full group cursor-pointer border-2 transition-colors duration-300 ${
+                            className={`relative rounded-3xl flex flex-col overflow-hidden h-full group cursor-pointer border-2 transition-all duration-300 ${
                                 isSelected 
-                                    ? 'bg-white border-[#003973] shadow-2xl z-20 scale-[1.05] ring-4 ring-[#2ab6ea]/20'
+                                    ? 'bg-white border-[#003973] shadow-2xl z-20 scale-[1.03] ring-4 ring-[#2ab6ea]/20'
                                     : isPopular
                                         ? 'bg-white border-[#2ab6ea] shadow-xl z-10 scale-[1.02]'
                                         : 'bg-[#fbfbfc] border-gray-200 shadow-sm'
@@ -551,10 +551,10 @@ const PricingCalculator: React.FC = () => {
 
                 <motion.div
                     whileHover={{ 
-                        y: -12, 
+                        scale: 1.02, 
                         borderColor: "#003973",
-                        boxShadow: "0 25px 40px -12px rgba(0, 57, 115, 0.12)",
-                        transition: { duration: 0.3, ease: "easeOut" } 
+                        boxShadow: "0 20px 30px -10px rgba(0, 57, 115, 0.1)",
+                        transition: { type: "spring", stiffness: 300, damping: 25 } 
                     }}
                     whileTap={{ scale: 0.98 }}
                     className="relative rounded-3xl flex flex-col overflow-hidden h-full group bg-[#fbfbfc] border-2 border-gray-200 shadow-sm transition-all duration-300 cursor-pointer"
