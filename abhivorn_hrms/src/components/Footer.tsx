@@ -1,8 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Linkedin, Instagram } from 'lucide-react';
 
 const Footer: React.FC = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const handleFooterLinkClick = (e: React.MouseEvent, href: string) => {
+        if (location.pathname === href) {
+            e.preventDefault();
+            window.location.reload();
+            window.scrollTo({ top: 0, behavior: 'instant' });
+        }
+    };
+
     const socialLinks = [
         { icon: <Linkedin className="w-5 h-5" />, href: "https://www.linkedin.com/company/abhivorn-technologies/" },
         { icon: <Instagram className="w-5 h-5" />, href: "https://www.instagram.com/abhivorn_technologies?igsh=amh3bWw2d2N1bDVq" },
@@ -28,7 +39,7 @@ const Footer: React.FC = () => {
             ]
         },
         {
-            title: "Features",
+            title: "Capabilities",
             links: [
                 { name: "Chat", href: "/chat" },
                 { name: "Analytics", href: "/analytics" },
@@ -56,9 +67,9 @@ const Footer: React.FC = () => {
                         <Link
                             to="/"
                             className="inline-flex items-center gap-2 mb-6 group transition-all duration-300 hover:scale-105 hover:brightness-110 hover:drop-shadow-[0_0_15px_rgba(42,182,234,0.4)]"
-                            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                            onClick={(e) => handleFooterLinkClick(e, '/')}
                         >
-                            <img src="/virnhrlogo.webp" alt="Abhivorn Logo" className="h-10 md:h-12 w-auto object-contain" />
+                            <img src="/vornhrlogo.webp" alt="vornhr Logo" className="h-10 md:h-12 w-auto object-contain" />
                         </Link>
                         <p className="text-slate-400 mt-3 max-w-[280px] leading-[1.6] text-sm">
                             Simplifying HR management for modern businesses. Automate payroll, track attendance, and manage your workforce with ease.
@@ -87,6 +98,7 @@ const Footer: React.FC = () => {
                                     <li key={linkIndex}>
                                         <Link
                                             to={link.href}
+                                            onClick={(e) => handleFooterLinkClick(e, link.href)}
                                             className="text-slate-400 hover:text-blue-400 hover:translate-x-1 transition-all duration-300 text-sm inline-block"
                                         >
                                             {link.name}

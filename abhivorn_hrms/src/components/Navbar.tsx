@@ -6,11 +6,13 @@ import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-
 const Navbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [hidden, setHidden] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
     const { scrollY } = useScroll();
     const location = useLocation();
     const navigate = useNavigate();
 
     useMotionValueEvent(scrollY, "change", (latest) => {
+        setIsScrolled(latest > 20);
         const previous = scrollY.getPrevious();
         if (previous !== undefined && latest > previous && latest > 150) {
             setHidden(true);
@@ -56,9 +58,16 @@ const Navbar: React.FC = () => {
                 }}
                 animate={hidden ? "hidden" : "visible"}
                 transition={{ duration: 0.35, ease: "easeInOut" }}
-                className="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm top-0"
+                className={`fixed w-full z-50 transition-all duration-300 top-0 bg-white border-b ${
+                    isScrolled 
+                        ? "border-gray-100 shadow-md" 
+                        : "border-transparent"
+                }`}
             >
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Subtle top accent line */}
+                <div className="absolute top-0 left-0 w-full h-[1px] bg-gray-100" />
+
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="flex justify-between items-center h-20">
                         {/* Logo */}
                         <Link
@@ -67,8 +76,8 @@ const Navbar: React.FC = () => {
                             onClick={(e) => handleNavClick(e, '/')}
                         >
                             <img
-                                src="/virnhrlogo.webp"
-                                alt="Abhivorn Logo"
+                                src="/vornhrlogo.webp"
+                                alt="vornhr Logo"
                                 className="h-8 md:h-9 w-auto object-contain transition-all duration-300 hover:scale-105"
                             />
                         </Link>
