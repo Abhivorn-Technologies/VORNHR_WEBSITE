@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import QuickFeatures from './QuickFeatures';
 import { motion, useInView, useScroll, useTransform, useMotionValue, animate } from 'framer-motion';
+import ScrollReveal from './ScrollReveal';
 import {
   ArrowRight, CheckCircle, ShieldCheck, Users,
   Clock, Calendar, CreditCard, BarChart, MapPin,
@@ -43,7 +44,7 @@ import {
 // CountUp Component
 const CountUp = ({ to, prefix = "", suffix = "", decimals = 0 }: { to: number, prefix?: string, suffix?: string, decimals?: number }) => {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true });
+  const inView = useInView(ref, { });
   const count = useMotionValue(0);
   const rounded = useTransform(count, (latest) => `${prefix}${latest.toFixed(decimals)}${suffix}`);
 
@@ -70,6 +71,8 @@ const SmoothHeroImage = ({ src, alt, className }: { src: string, alt: string, cl
         src={src}
         alt={alt}
         onLoad={() => setIsLoaded(true)}
+        fetchPriority="high"
+        decoding="sync" 
         className={`${className} transition-all duration-1000 ${isLoaded ? 'opacity-100 blur-0 scale-100' : 'opacity-0 blur-md scale-[1.02]'}`}
       />
     </>
@@ -91,10 +94,10 @@ const Hero: React.FC = () => {
   const section3Ref = useRef<HTMLElement>(null);
   const section4Ref = useRef<HTMLElement>(null);
 
-  const isSection1InView = useInView(section1Ref, { once: true, amount: 0.3 });
-  const isSection2InView = useInView(section2Ref, { once: true, amount: 0.2 });
-  const isSection3InView = useInView(section3Ref, { once: true, amount: 0.2 });
-  const isSection4InView = useInView(section4Ref, { once: true, amount: 0.2 });
+  const isSection1InView = useInView(section1Ref, {  amount: 0.3 });
+  const isSection2InView = useInView(section2Ref, {  amount: 0.2 });
+  const isSection3InView = useInView(section3Ref, {  amount: 0.2 });
+  const isSection4InView = useInView(section4Ref, {  amount: 0.2 });
 
   const modules = [
     {
@@ -168,7 +171,7 @@ const Hero: React.FC = () => {
       {/* ================= UPDATED HERO SECTION ================= */}
       <section
         ref={section1Ref}
-        className="relative overflow-hidden pt-24 pb-8 lg:pt-32 lg:pb-16 bg-white"
+        className="relative overflow-hidden min-h-[85vh] lg:min-h-[90vh] flex items-center pt-40 pb-12 bg-white"
       >
         {/* Background Grid Pattern */}
         <div className="absolute inset-0 bg-grid-slate-50 [background-size:40px_40px] opacity-60 pointer-events-none" />
@@ -180,7 +183,7 @@ const Hero: React.FC = () => {
           <div className="absolute bottom-[-20%] left-[20%] w-[600px] h-[600px] bg-[#39a4de]/10 rounded-full blur-[100px] mix-blend-multiply opacity-50 animate-blob animation-delay-4000" />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="grid md:grid-cols-2 gap-6 lg:gap-12 items-center">
             {/* Left Column: Text Content */}
             <motion.div
@@ -202,30 +205,46 @@ const Hero: React.FC = () => {
                 </span>
               </h1>
 
-              <p className="text-xl text-slate-600 mb-6 leading-relaxed max-w-lg">
-                Empower your workforce with an intelligent, data-driven HR platform.
-                From payroll to performance, we automate it all with precision and ease.
-              </p>
+              <ScrollReveal delay={0.2}>
+                <p className="text-xl text-slate-600 mb-6 leading-relaxed max-w-lg">
+                  Empower your workforce with an intelligent, data-driven HR platform.
+                  From payroll to performance, we automate it all with precision and ease.
+                </p>
+              </ScrollReveal>
 
-              <div className="flex flex-col sm:flex-row gap-4 mb-8 items-start">
-                <Link
-                  to="/pricing"
-                  className="group inline-flex items-center justify-center px-6 py-3 md:px-8 md:py-4 text-base font-bold text-white bg-gradient-to-r from-[#39a4de] to-[#2ab6ea] rounded-xl shadow-lg shadow-[#003973]/25 hover:shadow-[#003973]/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
-                >
-                  Get Started Free
-                  <ArrowRight className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
-                <Link
-                  to="/contact"
-                  className="group relative inline-flex items-center justify-center px-6 py-3 md:px-8 md:py-4 text-base font-bold text-slate-700 bg-white border border-slate-200/60 rounded-xl shadow-sm hover:shadow-xl hover:shadow-blue-500/10 hover:border-[#39a4de]/30 hover:text-[#39a4de] transition-all duration-300 overflow-hidden"
-                >
-                  <span className="absolute inset-0 bg-gradient-to-tr from-[#39a4de]/5 to-[#b5a5fa]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <span className="relative flex items-center gap-2">
-                    <Video className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
-                    Book Demo
-                  </span>
-                </Link>
-              </div>
+              <ScrollReveal delay={0.3} direction="up">
+                <div className="flex flex-col sm:flex-row gap-4 mb-8 items-start">
+                  <motion.div
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                  >
+                      <Link
+                        to="/pricing?trial=true"
+                      className="group inline-flex items-center justify-center px-6 py-3 md:px-8 md:py-4 text-base font-bold text-white bg-gradient-to-r from-[#39a4de] to-[#2ab6ea] rounded-xl shadow-lg shadow-[#003973]/25 transition-all duration-300"
+                    >
+                      Get Started Free
+                      <ArrowRight className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
+                    </Link>
+                  </motion.div>
+                  <motion.div
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                  >
+                    <Link
+                      to="/contact"
+                      className="group relative inline-flex items-center justify-center px-6 py-3 md:px-8 md:py-4 text-base font-bold text-slate-700 bg-white border border-slate-200/60 rounded-xl shadow-sm hover:border-[#39a4de]/30 hover:text-[#39a4de] transition-all duration-300 overflow-hidden"
+                    >
+                      <span className="absolute inset-0 bg-gradient-to-tr from-[#39a4de]/5 to-[#b5a5fa]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <span className="relative flex items-center gap-2">
+                        <Video className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
+                        Book Demo
+                      </span>
+                    </Link>
+                  </motion.div>
+                </div>
+              </ScrollReveal>
 
               {/* Social Proof & Stats */}
               <div className="flex items-center gap-8 py-6 border-t border-slate-100">
@@ -235,6 +254,8 @@ const Hero: React.FC = () => {
                       key={i}
                       src={`https://i.pravatar.cc/100?img=${i + 10}`}
                       alt={`User ${i}`}
+                      loading="lazy"
+                      decoding="async"
                       className="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm"
                     />
                   ))}
@@ -244,14 +265,14 @@ const Hero: React.FC = () => {
                   <div className="flex text-yellow-400 gap-0.5">
                     {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-4 h-4 fill-current" />)}
                   </div>
-                  <span className="text-sm font-semibold text-slate-700">5+ Companies</span>
+                  <span className="text-sm font-semibold text-slate-700">15+ Companies</span>
                 </div>
               </div>
 
               {/* Live Stats */}
               <div className="grid grid-cols-3 gap-8 pt-6 border-t border-slate-100">
                 {[
-                  { value: 100, suffix: "+", label: 'Active Users' },
+                  { value: 5000, suffix: "+", label: 'Active Users' },
                   { value: 99.9, suffix: "%", decimals: 1, label: 'Uptime SLA' },
                   { value: 4.9, suffix: "/5", decimals: 1, label: 'Rating' }
                 ].map((stat, i) => (
@@ -352,33 +373,42 @@ const Hero: React.FC = () => {
           >
             <div className="grid md:grid-cols-3 gap-8">
               {modules.map((module, index) => (
-                <motion.div
+                <ScrollReveal
                   key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={isSection2InView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                  whileHover={{ y: -5 }}
-                  className="bg-white rounded-2xl p-8 border border-slate-100 shadow-lg hover:shadow-2xl transition-all duration-300"
+                  delay={0.1 + index * 0.1}
+                  direction="up"
                 >
-                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-[#39a4de]/10 to-[#b5a5fa]/10 mb-6">
-                    {index === 0 && <Users2 className="w-7 h-7 text-[#39a4de]" />}
-                    {index === 1 && <Clock className="w-7 h-7 text-[#39a4de]" />}
-                    {index === 2 && <CreditCard className="w-7 h-7 text-[#39a4de]" />}
-                  </div>
-                  <h3 className="text-xl font-bold mb-6 text-slate-900">{module.category}</h3>
-                  <div className="space-y-5">
-                    {module.items.map((item, idx) => (
-                      <div key={idx} className="flex items-center gap-4 group">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#39a4de]/5 to-[#b5a5fa]/5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                          <div className="text-[#39a4de]">
-                            {item.icon}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={isSection2InView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+                    whileHover={{ 
+                        y: -8,
+                        scale: 1.02,
+                        boxShadow: "0 20px 40px -15px rgba(0, 57, 115, 0.1)"
+                    }}
+                    className="bg-white rounded-2xl p-8 border border-slate-100 shadow-lg transition-all duration-300 h-full"
+                  >
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-[#39a4de]/10 to-[#b5a5fa]/10 mb-6">
+                      {index === 0 && <Users2 className="w-7 h-7 text-[#39a4de]" />}
+                      {index === 1 && <Clock className="w-7 h-7 text-[#39a4de]" />}
+                      {index === 2 && <CreditCard className="w-7 h-7 text-[#39a4de]" />}
+                    </div>
+                    <h3 className="text-xl font-bold mb-6 text-slate-900">{module.category}</h3>
+                    <div className="space-y-5">
+                      {module.items.map((item, idx) => (
+                        <div key={idx} className="flex items-center gap-4 group">
+                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#39a4de]/5 to-[#b5a5fa]/5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <div className="text-[#39a4de]">
+                              {item.icon}
+                            </div>
                           </div>
+                          <span className="font-medium text-slate-700">{item.name}</span>
                         </div>
-                        <span className="font-medium text-slate-700">{item.name}</span>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+                </ScrollReveal>
               ))}
             </div>
           </motion.div>
@@ -401,29 +431,38 @@ const Hero: React.FC = () => {
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
               {performanceMetrics.map((metric, index) => (
-                <motion.div
+                <ScrollReveal
                   key={index}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={isSection2InView ? { opacity: 1, scale: 1 } : {}}
-                  transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
-                  whileHover={{ scale: 1.03 }}
-                  className="bg-white rounded-2xl p-6 border border-slate-100 shadow-lg hover:shadow-xl transition-all duration-300"
+                  delay={0.4 + index * 0.1}
+                  direction="up"
                 >
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#39a4de]/10 to-[#b5a5fa]/10 flex items-center justify-center">
-                      <div className="text-[#39a4de]">
-                        {metric.icon}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={isSection2InView ? { opacity: 1, scale: 1 } : {}}
+                    transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
+                    whileHover={{ 
+                        scale: 1.05,
+                        y: -5,
+                        boxShadow: "0 15px 30px -10px rgba(0, 57, 115, 0.1)"
+                    }}
+                    className="bg-white rounded-2xl p-6 border border-slate-100 shadow-lg transition-all duration-300 h-full"
+                  >
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#39a4de]/10 to-[#b5a5fa]/10 flex items-center justify-center">
+                        <div className="text-[#39a4de]">
+                          {metric.icon}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-slate-900">
+                          <CountUp to={metric.value} suffix={metric.suffix} decimals={1} />
+                        </div>
+                        <p className="text-sm font-semibold text-slate-900">{metric.label}</p>
                       </div>
                     </div>
-                    <div>
-                      <div className="text-2xl font-bold text-slate-900">
-                        <CountUp to={metric.value} suffix={metric.suffix} decimals={1} />
-                      </div>
-                      <p className="text-sm font-semibold text-slate-900">{metric.label}</p>
-                    </div>
-                  </div>
-                  <p className="text-sm text-slate-600">{metric.description}</p>
-                </motion.div>
+                    <p className="text-sm text-slate-600">{metric.description}</p>
+                  </motion.div>
+                </ScrollReveal>
               ))}
             </div>
           </motion.div>
@@ -441,11 +480,7 @@ const Hero: React.FC = () => {
           <div className="bg-gradient-to-br from-white to-slate-50 rounded-3xl border border-slate-100 p-8 lg:p-12 shadow-xl">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={isSection3InView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.6 }}
-                >
+                <ScrollReveal direction="right">
                   <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-6">
                     <ShieldCheck className="w-4 h-4 text-blue-600" />
                     <span className="text-sm font-semibold text-blue-600">Enterprise Security</span>
@@ -473,24 +508,23 @@ const Hero: React.FC = () => {
                       </div>
                     ))}
                   </div>
-                </motion.div>
+                </ScrollReveal>
               </div>
 
               <div>
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={isSection3InView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                >
-                  <div className="grid grid-cols-2 gap-6">
-                    {securityFeatures.map((item, index) => (
+                <div className="grid grid-cols-2 gap-6">
+                  {securityFeatures.map((item, index) => (
+                    <ScrollReveal
+                      key={index}
+                      delay={0.2 + index * 0.1}
+                      direction="left"
+                    >
                       <motion.div
-                        key={index}
                         initial={{ opacity: 0, y: 20 }}
                         animate={isSection3InView ? { opacity: 1, y: 0 } : {}}
                         transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
                         whileHover={{ scale: 1.05 }}
-                        className="bg-white rounded-2xl p-6 border border-slate-100 shadow-lg"
+                        className="bg-white rounded-2xl p-6 border border-slate-100 shadow-lg h-full"
                       >
                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#39a4de]/10 to-[#b5a5fa]/10 flex items-center justify-center mb-4">
                           <div className="text-[#39a4de]">
@@ -500,9 +534,9 @@ const Hero: React.FC = () => {
                         <p className="text-sm font-semibold text-slate-900 mb-2">{item.label}</p>
                         <p className="text-lg font-bold text-slate-900">{item.value}</p>
                       </motion.div>
-                    ))}
-                  </div>
-                </motion.div>
+                    </ScrollReveal>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -520,107 +554,96 @@ const Hero: React.FC = () => {
         </div>
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={isSection4InView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.6 }}
-            className="text-center"
-          >
-            {/* Badge */}
-            <div className="flex justify-center mb-8">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full">
-                <TrendingUp className="w-4 h-4 text-blue-600" />
-                <span className="text-sm font-semibold text-blue-600">Unlock Efficiency</span>
-              </div>
-            </div>
-
-            {/* Header with Icon Side-by-Side */}
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              >
-                <Sparkles className="w-8 h-8 text-[#39a4de]" />
-              </motion.div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#003973]">
-                Ready to <span className="text-[#2ab6ea]">Simplify HR?</span>
-              </h2>
-            </div>
-
-            <p className="text-lg lg:text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-              Join 5+ forward-thinking organizations that have streamlined HR operations,
-              reduced costs, and significantly improved employee satisfaction.
-            </p>
-
-            {/* Feature Highlights */}
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
-              {ctaFeatures.map((feature, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={isSection4InView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.3, delay: 0.1 + index * 0.05 }}
-                  className="flex items-center gap-3 justify-center"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#39a4de]/10 to-[#b5a5fa]/10 flex items-center justify-center">
-                    <div className="text-[#39a4de]">
-                      {feature.icon}
-                    </div>
-                  </div>
-                  <span className="text-sm font-medium text-slate-700">{feature.text}</span>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isSection4InView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
-            >
-              <Link
-                to="/pricing"
-                className="group inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-gradient-to-r from-[#39a4de] to-[#2ab6ea] rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300"
-              >
-                Start Free 7-Days Trial
-                <ArrowRight className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
-              </Link>
-            </motion.div>
-
-            {/* Trust Indicators */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={isSection4InView ? { opacity: 1 } : {}}
-              transition={{ duration: 0.5, delay: 0.6 }}
-              className="flex flex-wrap items-center justify-center gap-8 pt-8 border-t border-slate-200"
-            >
-              {trustIndicators.map((item, index) => (
-                <div key={index} className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#39a4de]/10 to-[#b5a5fa]/10 flex items-center justify-center">
-                    <div className="text-[#39a4de]">
-                      {item.icon}
-                    </div>
-                  </div>
-                  <span className="text-sm font-medium text-slate-700">{item.text}</span>
+          <ScrollReveal direction="up" distance={40}>
+            <div className="text-center">
+              {/* Badge */}
+              <div className="flex justify-center mb-8">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full">
+                  <TrendingUp className="w-4 h-4 text-blue-600" />
+                  <span className="text-sm font-semibold text-blue-600">Unlock Efficiency</span>
                 </div>
-              ))}
-            </motion.div>
+              </div>
 
-            {/* Final Note */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={isSection4InView ? { opacity: 1 } : {}}
-              transition={{ duration: 0.5, delay: 0.8 }}
-              className="mt-8 text-slate-500 text-sm"
-            >
-              Have questions?{" "}
-              <Link to="/contact" className="text-[#39a4de] font-semibold hover:text-[#2ab6ea] transition-colors">
-                Contact our sales team
-              </Link>{" "}
-              or call us at 1-800-HRMS-NOW
-            </motion.p>
-          </motion.div>
+              {/* Header with Icon Side-by-Side */}
+              <div className="flex items-center justify-center gap-4 mb-6">
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                >
+                  <Sparkles className="w-8 h-8 text-[#39a4de]" />
+                </motion.div>
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#003973]">
+                  Ready to <span className="text-[#2ab6ea]">Simplify HR?</span>
+                </h2>
+              </div>
+
+              <p className="text-lg lg:text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+                Join 15+ forward-thinking organizations that have streamlined HR operations,
+                reduced costs, and significantly improved employee satisfaction.
+              </p>
+
+              {/* Feature Highlights */}
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
+                {ctaFeatures.map((feature, index) => (
+                  <ScrollReveal
+                    key={index}
+                    delay={0.2 + index * 0.1}
+                    direction="up"
+                    distance={10}
+                  >
+                    <div className="flex items-center gap-3 justify-center">
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#39a4de]/10 to-[#b5a5fa]/10 flex items-center justify-center">
+                        <div className="text-[#39a4de]">
+                          {feature.icon}
+                        </div>
+                      </div>
+                      <span className="text-sm font-medium text-slate-700">{feature.text}</span>
+                    </div>
+                  </ScrollReveal>
+                ))}
+              </div>
+
+              {/* CTA Buttons */}
+              <ScrollReveal delay={0.6} direction="up">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                  <Link
+                    to="/pricing?trial=true"
+                    className="group inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-gradient-to-r from-[#39a4de] to-[#2ab6ea] rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300"
+                  >
+                    Start Free 7-Days Trial
+                    <ArrowRight className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
+                  </Link>
+                </div>
+              </ScrollReveal>
+
+              {/* Trust Indicators */}
+              <ScrollReveal delay={0.8} direction="up" distance={0}>
+                <div className="flex flex-wrap items-center justify-center gap-8 pt-8 border-t border-slate-200">
+                  {trustIndicators.map((item, index) => (
+                    <div key={index} className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#39a4de]/10 to-[#b5a5fa]/10 flex items-center justify-center">
+                        <div className="text-[#39a4de]">
+                          {item.icon}
+                        </div>
+                      </div>
+                      <span className="text-sm font-medium text-slate-700">{item.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </ScrollReveal>
+
+              {/* Final Note */}
+              <ScrollReveal delay={1} direction="up" distance={0}>
+                <p className="mt-8 text-slate-500 text-sm">
+                  Have questions?{" "}
+                  <Link to="/contact" className="text-[#39a4de] font-semibold hover:text-[#2ab6ea] transition-colors">
+                    Contact our sales team
+                  </Link>{" "}
+                  or call us at +91 9966629766
+                </p>
+              </ScrollReveal>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
     </div>

@@ -7,6 +7,7 @@ import {
     Calendar, Star, Quote, Activity, DollarSign, ArrowUpRight
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useMotionValue, useTransform, animate } from 'framer-motion';
+import ScrollReveal from './ScrollReveal';
 import { UserRole } from '../types';
 
 
@@ -14,7 +15,7 @@ import { UserRole } from '../types';
 
 const CountUp = ({ to, prefix = "", suffix = "", decimals = 0 }: { to: number, prefix?: string, suffix?: string, decimals?: number }) => {
     const ref = useRef(null);
-    const inView = useInView(ref, { once: true });
+    const inView = useInView(ref, { });
     const count = useMotionValue(0);
     const rounded = useTransform(count, (latest) => `${prefix}${latest.toFixed(decimals)}${suffix}`);
 
@@ -28,179 +29,206 @@ const CountUp = ({ to, prefix = "", suffix = "", decimals = 0 }: { to: number, p
 };
 
 
+// Smooth Image Loader with Placeholder
+const SmoothHeroImage = ({ src, alt, className, style }: { src: string, alt: string, className?: string, style?: React.CSSProperties }) => {
+    const [isLoaded, setIsLoaded] = useState(false);
+    return (
+        <>
+            {!isLoaded && (
+                <div className="absolute inset-0 flex items-center justify-center bg-slate-100 animate-pulse z-10 transition-opacity duration-500">
+                    <div className="w-8 h-8 border-2 border-[#2ab6ea] border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            )}
+            <img
+                src={src}
+                alt={alt}
+                onLoad={() => setIsLoaded(true)}
+                loading="lazy"
+                decoding="async"
+                className={`${className} transition-all duration-700 ${isLoaded ? 'opacity-100 blur-0' : 'opacity-0 blur-sm'}`}
+                style={style}
+            />
+        </>
+    );
+};
+
+const roles = [
+    {
+        id: UserRole.HR_ADMIN,
+        label: 'HR Manager',
+        icon: <LayoutDashboard size={20} />,
+        color: 'from-blue-500 to-cyan-400',
+        stat: '85% time saved',
+        image: '/hr.webp'
+    },
+    {
+        id: UserRole.EMPLOYEE,
+        label: 'Employee',
+        icon: <Users size={20} />,
+        color: 'from-blue-500 to-cyan-400',
+        stat: '94% satisfaction',
+        image: '/employees.webp'
+    },
+    {
+        id: UserRole.TEAM_LEAD,
+        label: 'Team Lead',
+        icon: <BarChart3 size={20} />,
+        color: 'from-blue-500 to-cyan-400',
+        stat: '40% productivity boost',
+        image: '/teamlead.webp'
+    },
+    {
+        id: UserRole.PAYROLL_MANAGER,
+        label: 'Finance',
+        icon: <CreditCard size={20} />,
+        color: 'from-blue-500 to-cyan-400',
+        stat: '99.9% accuracy',
+        image: '/payroll.webp'
+    },
+];
+
+const benefitsByRole = {
+    [UserRole.HR_ADMIN]: {
+        title: "Modern HR Management Suite",
+        subtitle: "Transform your HR operations with intelligent automation and powerful insights",
+        icon: <Shield className="w-6 h-6" />,
+        features: [
+            {
+                title: "Unified Workforce Hub",
+                description: "Centralized employee data management with AI-powered analytics",
+                icon: <Users className="w-5 h-5" />
+            },
+            {
+                title: "Smart Compliance Engine",
+                description: "Automated regulatory compliance with real-time updates and alerts",
+                icon: <Shield className="w-5 h-5" />
+            },
+            {
+                title: "Performance Analytics",
+                description: "Advanced people analytics with predictive insights and reporting",
+                icon: <TrendingUp className="w-5 h-5" />
+            },
+            {
+                title: "Talent Development",
+                description: "Integrated learning management and career path planning",
+                icon: <Target className="w-5 h-5" />
+            }
+        ],
+        metrics: [
+            { value: "85%", label: "Time Saved", change: "+15%" },
+            { value: "99.9%", label: "Accuracy", change: "+5%" },
+            { value: "500+", label: "HR Teams", change: "Using Now" }
+        ],
+        cta: "Schedule HR Demo",
+        image: "/hr.webp"
+    },
+    [UserRole.EMPLOYEE]: {
+        title: "Intuitive Employee Experience Platform",
+        subtitle: "Empower your workforce with seamless self-service and engagement tools",
+        icon: <Smartphone className="w-6 h-6" />,
+        features: [
+            {
+                title: "Mobile-First Portal",
+                description: "Access everything from any device with native mobile experience",
+                icon: <Smartphone className="w-5 h-5" />
+            },
+            {
+                title: "Instant Time Tracking",
+                description: "One-tap clock in/out with GPS verification and overtime alerts",
+                icon: <Clock className="w-5 h-5" />
+            },
+            {
+                title: "Smart Leave Management",
+                description: "AI-powered leave recommendations and instant approval workflows",
+                icon: <Calendar className="w-5 h-5" />
+            },
+            {
+                title: "Document Vault",
+                description: "Secure access to payslips, tax forms, and personal documents",
+                icon: <Lock className="w-5 h-5" />
+            }
+        ],
+        metrics: [
+            { value: "94%", label: "User Satisfaction", change: "+22%" },
+            { value: "70%", label: "Time Saved", change: "+25%" },
+            { value: "85%", label: "Mobile Adoption", change: "+30%" }
+        ],
+        cta: "Try Employee Portal",
+        image: "/employees.webp"
+    },
+    [UserRole.TEAM_LEAD]: {
+        title: "Advanced Team Management Tools",
+        subtitle: "Optimize team performance with real-time insights and automated workflows",
+        icon: <BarChart3 className="w-6 h-6" />,
+        features: [
+            {
+                title: "Team Performance Dashboard",
+                description: "Real-time KPI tracking with predictive analytics and alerts",
+                icon: <BarChart3 className="w-5 h-5" />
+            },
+            {
+                title: "Smart Scheduling",
+                description: "AI-powered shift planning with fatigue management and fairness scoring",
+                icon: <Clock className="w-5 h-5" />
+            },
+            {
+                title: "Goal Alignment",
+                description: "OKR tracking with team contribution analysis and progress insights",
+                icon: <Target className="w-5 h-5" />
+            },
+            {
+                title: "Resource Optimization",
+                description: "Capacity planning with skill matching and workload distribution",
+                icon: <PieChart className="w-5 h-5" />
+            }
+        ],
+        metrics: [
+            { value: "40%", label: "Productivity Boost", change: "+18%" },
+            { value: "65%", label: "Time Saved", change: "+20%" },
+            { value: "88%", label: "Team Satisfaction", change: "+15%" }
+        ],
+        cta: "Explore Team Tools",
+        image: "/teamlead.webp"
+    },
+    [UserRole.PAYROLL_MANAGER]: {
+        title: "Intelligent Payroll & Finance Suite",
+        subtitle: "Automated, accurate, and compliant financial operations",
+        icon: <CreditCard className="w-6 h-6" />,
+        features: [
+            {
+                title: "Automated Payroll Processing",
+                description: "End-to-end automation with tax compliance and audit trails",
+                icon: <Zap className="w-5 h-5" />
+            },
+            {
+                title: "Real-Time Integration",
+                description: "Seamless sync with attendance, benefits, and accounting systems",
+                icon: <TrendingUp className="w-5 h-5" />
+            },
+            {
+                title: "Advanced Reporting",
+                description: "Comprehensive financial analytics and statutory reporting",
+                icon: <FileText className="w-5 h-5" />
+            },
+            {
+                title: "Multi-Currency Support",
+                description: "Global payroll processing with local compliance and payments",
+                icon: <CreditCard className="w-5 h-5" />
+            }
+        ],
+        metrics: [
+            { value: "92%", label: "Faster Processing", change: "+35%" },
+            { value: "99.9%", label: "Accuracy", change: "+8%" },
+            { value: "100%", label: "Compliance", change: "Always" }
+        ],
+        cta: "View Finance Features",
+        image: "/payroll.webp"
+    }
+};
+
 const RoleBenefits: React.FC = () => {
     const navigate = useNavigate();
     const [activeRole, setActiveRole] = useState<UserRole>(UserRole.HR_ADMIN);
-
-    const roles = [
-        {
-            id: UserRole.HR_ADMIN,
-            label: 'HR Manager',
-            icon: <LayoutDashboard size={20} />,
-            color: 'from-blue-500 to-cyan-400',
-            stat: '85% time saved'
-        },
-        {
-            id: UserRole.EMPLOYEE,
-            label: 'Employee',
-            icon: <Users size={20} />,
-            color: 'from-blue-500 to-cyan-400',
-            stat: '94% satisfaction'
-        },
-        {
-            id: UserRole.TEAM_LEAD,
-            label: 'Team Lead',
-            icon: <BarChart3 size={20} />,
-            color: 'from-blue-500 to-cyan-400',
-            stat: '40% productivity boost'
-        },
-        {
-            id: UserRole.PAYROLL_MANAGER,
-            label: 'Finance',
-            icon: <CreditCard size={20} />,
-            color: 'from-blue-500 to-cyan-400',
-            stat: '99.9% accuracy'
-        },
-    ];
-
-    const benefitsByRole = {
-        [UserRole.HR_ADMIN]: {
-            title: "Modern HR Management Suite",
-            subtitle: "Transform your HR operations with intelligent automation and powerful insights",
-            icon: <Shield className="w-6 h-6" />,
-            features: [
-                {
-                    title: "Unified Workforce Hub",
-                    description: "Centralized employee data management with AI-powered analytics",
-                    icon: <Users className="w-5 h-5" />
-                },
-                {
-                    title: "Smart Compliance Engine",
-                    description: "Automated regulatory compliance with real-time updates and alerts",
-                    icon: <Shield className="w-5 h-5" />
-                },
-                {
-                    title: "Performance Analytics",
-                    description: "Advanced people analytics with predictive insights and reporting",
-                    icon: <TrendingUp className="w-5 h-5" />
-                },
-                {
-                    title: "Talent Development",
-                    description: "Integrated learning management and career path planning",
-                    icon: <Target className="w-5 h-5" />
-                }
-            ],
-            metrics: [
-                { value: "85%", label: "Time Saved", change: "+15%" },
-                { value: "99.9%", label: "Accuracy", change: "+5%" },
-                { value: "500+", label: "HR Teams", change: "Using Now" }
-            ],
-            cta: "Schedule HR Demo",
-            image: "/hr.webp"
-        },
-        [UserRole.EMPLOYEE]: {
-            title: "Intuitive Employee Experience Platform",
-            subtitle: "Empower your workforce with seamless self-service and engagement tools",
-            icon: <Smartphone className="w-6 h-6" />,
-            features: [
-                {
-                    title: "Mobile-First Portal",
-                    description: "Access everything from any device with native mobile experience",
-                    icon: <Smartphone className="w-5 h-5" />
-                },
-                {
-                    title: "Instant Time Tracking",
-                    description: "One-tap clock in/out with GPS verification and overtime alerts",
-                    icon: <Clock className="w-5 h-5" />
-                },
-                {
-                    title: "Smart Leave Management",
-                    description: "AI-powered leave recommendations and instant approval workflows",
-                    icon: <Calendar className="w-5 h-5" />
-                },
-                {
-                    title: "Document Vault",
-                    description: "Secure access to payslips, tax forms, and personal documents",
-                    icon: <Lock className="w-5 h-5" />
-                }
-            ],
-            metrics: [
-                { value: "94%", label: "User Satisfaction", change: "+22%" },
-                { value: "70%", label: "Time Saved", change: "+25%" },
-                { value: "85%", label: "Mobile Adoption", change: "+30%" }
-            ],
-            cta: "Try Employee Portal",
-            image: "/employees.webp"
-        },
-        [UserRole.TEAM_LEAD]: {
-            title: "Advanced Team Management Tools",
-            subtitle: "Optimize team performance with real-time insights and automated workflows",
-            icon: <BarChart3 className="w-6 h-6" />,
-            features: [
-                {
-                    title: "Team Performance Dashboard",
-                    description: "Real-time KPI tracking with predictive analytics and alerts",
-                    icon: <BarChart3 className="w-5 h-5" />
-                },
-                {
-                    title: "Smart Scheduling",
-                    description: "AI-powered shift planning with fatigue management and fairness scoring",
-                    icon: <Clock className="w-5 h-5" />
-                },
-                {
-                    title: "Goal Alignment",
-                    description: "OKR tracking with team contribution analysis and progress insights",
-                    icon: <Target className="w-5 h-5" />
-                },
-                {
-                    title: "Resource Optimization",
-                    description: "Capacity planning with skill matching and workload distribution",
-                    icon: <PieChart className="w-5 h-5" />
-                }
-            ],
-            metrics: [
-                { value: "40%", label: "Productivity Boost", change: "+18%" },
-                { value: "65%", label: "Time Saved", change: "+20%" },
-                { value: "88%", label: "Team Satisfaction", change: "+15%" }
-            ],
-            cta: "Explore Team Tools",
-            image: "/teamlead.webp"
-        },
-        [UserRole.PAYROLL_MANAGER]: {
-            title: "Intelligent Payroll & Finance Suite",
-            subtitle: "Automated, accurate, and compliant financial operations",
-            icon: <CreditCard className="w-6 h-6" />,
-            features: [
-                {
-                    title: "Automated Payroll Processing",
-                    description: "End-to-end automation with tax compliance and audit trails",
-                    icon: <Zap className="w-5 h-5" />
-                },
-                {
-                    title: "Real-Time Integration",
-                    description: "Seamless sync with attendance, benefits, and accounting systems",
-                    icon: <TrendingUp className="w-5 h-5" />
-                },
-                {
-                    title: "Advanced Reporting",
-                    description: "Comprehensive financial analytics and statutory reporting",
-                    icon: <FileText className="w-5 h-5" />
-                },
-                {
-                    title: "Multi-Currency Support",
-                    description: "Global payroll processing with local compliance and payments",
-                    icon: <CreditCard className="w-5 h-5" />
-                }
-            ],
-            metrics: [
-                { value: "92%", label: "Faster Processing", change: "+35%" },
-                { value: "99.9%", label: "Accuracy", change: "+8%" },
-                { value: "100%", label: "Compliance", change: "Always" }
-            ],
-            cta: "View Finance Features",
-            image: "/payroll.webp"
-        }
-    };
 
     const currentBenefits = benefitsByRole[activeRole];
 
@@ -219,73 +247,79 @@ const RoleBenefits: React.FC = () => {
                         <span className="text-sm font-semibold text-blue-600">Role Specific Benefits</span>
                     </div>
 
-                    <motion.h2
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight"
-                    >
-                        <span className="text-[#003973]">Built for</span>{' '}
-                        <span className="text-[#2ab6ea]">
-                            Every Role
-                        </span>
-                    </motion.h2>
+                    <ScrollReveal direction="down" duration={0.8}>
+                        <motion.h2
+                            initial={{ opacity: 0, y: 10 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ }}
+                            className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight"
+                        >
+                            <span className="text-[#003973]">Built for</span>{' '}
+                            <span className="text-[#2ab6ea]">
+                                Every Role
+                            </span>
+                        </motion.h2>
+                    </ScrollReveal>
 
-                    <motion.p
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
-                        className="text-lg text-gray-600 max-w-2xl mx-auto"
-                    >
-                        Tailored experiences that adapt to your team's needs.
-                    </motion.p>
+                    <ScrollReveal delay={0.2}>
+                        <motion.p
+                            initial={{ opacity: 0, y: 10 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ }}
+                            transition={{ delay: 0.1 }}
+                            className="text-lg text-gray-600 max-w-2xl mx-auto"
+                        >
+                            Tailored experiences that adapt to your team's needs.
+                        </motion.p>
+                    </ScrollReveal>
                 </div>
 
                 {/* Role Selector */}
-                <div className="grid grid-cols-2 md:flex md:flex-wrap justify-center gap-2 md:gap-3 mb-8">
-                    {roles.map((role) => {
-                        const isActive = activeRole === role.id;
-                        return (
-                            <motion.button
-                                key={role.id}
-                                onClick={() => setActiveRole(role.id)}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className={`relative flex items-center justify-center gap-2 md:gap-3 px-3 py-3 md:px-5 md:py-3 rounded-xl md:rounded-2xl font-medium text-xs md:text-base transition-all duration-300 w-full md:w-auto ${isActive
-                                    ? 'text-white shadow-xl'
-                                    : 'bg-white text-gray-600 hover:text-gray-900 border border-gray-200 shadow-sm hover:shadow-md'
-                                    }`}
-                            >
-                                {isActive && (
-                                    <motion.div
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        className={`absolute inset-0 bg-gradient-to-r ${role.color} rounded-xl md:rounded-2xl shadow-lg`}
-                                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                                    />
-                                )}
-                                <div className="relative z-10 flex items-center gap-2 md:gap-3">
-                                    <div className={`${isActive ? 'text-white' : 'text-gray-500'}`}>
-                                        {role.icon}
+                <ScrollReveal delay={0.2} direction="up" distance={20}>
+                    <div className="grid grid-cols-2 md:flex md:flex-wrap justify-center gap-3 md:gap-4 mb-12">
+                        {roles.map((role) => {
+                            const isActive = activeRole === role.id;
+                            return (
+                                <motion.button
+                                    key={role.id}
+                                    onClick={() => setActiveRole(role.id)}
+                                    whileHover={{ scale: 1.05, y: -2 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    className={`relative flex items-center justify-center gap-2 md:gap-3 px-4 py-3 md:px-6 md:py-4 rounded-xl md:rounded-2xl font-bold text-xs md:text-base transition-all duration-500 w-full md:w-auto ${isActive
+                                        ? 'text-white shadow-2xl'
+                                        : 'bg-white text-gray-500 hover:text-blue-600 border border-gray-100 shadow-sm hover:shadow-md'
+                                        }`}
+                                >
+                                    {isActive && (
+                                        <motion.div
+                                            layoutId="active-role-pill"
+                                            className={`absolute inset-0 bg-gradient-to-r ${role.color} rounded-xl md:rounded-2xl shadow-lg`}
+                                            transition={{ type: "spring", bounce: 0.2, duration: 0.8 }}
+                                        />
+                                    )}
+                                    <div className="relative z-10 flex items-center gap-2 md:gap-3">
+                                        <div className={`${isActive ? 'text-white' : 'text-gray-400 group-hover:text-blue-500'}`}>
+                                            {role.icon}
+                                        </div>
+                                        <span className="tracking-tight">{role.label}</span>
                                     </div>
-                                    <span className="font-semibold">{role.label}</span>
-                                </div>
-                            </motion.button>
-                        );
-                    })}
-                </div>
+                                </motion.button>
+                            );
+                        })}
+                    </div>
+                </ScrollReveal>
 
                 {/* Main Content */}
                 <div className="max-w-7xl mx-auto">
-                    <AnimatePresence mode="wait">
+                    <AnimatePresence mode="wait" initial={false}>
                         <motion.div
                             key={activeRole}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: 20 }}
-                            transition={{ duration: 0.4 }}
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -15 }}
+                            transition={{ duration: 0.4, ease: "easeOut" }}
                             className="space-y-6"
+                            style={{ transform: 'translate3d(0,0,0)' }}
                         >
                             {/* Content Grid */}
                             <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -310,27 +344,41 @@ const RoleBenefits: React.FC = () => {
                                     </div>
 
                                     {/* Metrics */}
-                                    <div className="grid grid-cols-3 gap-4">
+                                    <motion.div 
+                                        variants={{
+                                            show: { transition: { staggerChildren: 0.1, delayChildren: 0.3 } }
+                                        }}
+                                        initial="hidden"
+                                        animate="show"
+                                        className="grid grid-cols-3 gap-4"
+                                    >
                                         {currentBenefits.metrics.map((metric, index) => (
                                             <motion.div
                                                 key={index}
-                                                initial={{ opacity: 0, scale: 0.9 }}
-                                                animate={{ opacity: 1, scale: 1 }}
-                                                transition={{ delay: index * 0.1 + 0.2 }}
-                                                className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1"
+                                                variants={{
+                                                    hidden: { opacity: 0, scale: 0.8, y: 20 },
+                                                    show: { opacity: 1, scale: 1, y: 0 }
+                                                }}
+                                                whileHover={{ 
+                                                    scale: 1.05, 
+                                                    y: -10,
+                                                    boxShadow: "0 25px 50px -12px rgba(0, 57, 115, 0.15)",
+                                                    borderColor: "rgba(0, 57, 115, 0.2)"
+                                                }}
+                                                className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm transition-all duration-500 group cursor-default"
                                             >
-                                                <div className="text-2xl md:text-3xl font-bold text-brand-primary mb-1">
+                                                <div className="text-2xl md:text-3xl font-extrabold text-blue-600 mb-1 group-hover:scale-110 transition-transform duration-500 origin-left">
                                                     {metric.value}
                                                 </div>
-                                                <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
+                                                <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">
                                                     {metric.label}
                                                 </div>
-                                                <div className="text-xs text-emerald-600 font-medium bg-emerald-50 inline-block px-2 py-0.5 rounded-full">
+                                                <div className="text-[10px] text-emerald-600 font-bold bg-emerald-50 inline-block px-2 py-0.5 rounded-full border border-emerald-100">
                                                     {metric.change}
                                                 </div>
                                             </motion.div>
                                         ))}
-                                    </div>
+                                    </motion.div>
 
                                     <motion.button
                                         onClick={() => navigate('/contact')}
@@ -350,16 +398,17 @@ const RoleBenefits: React.FC = () => {
                                     transition={{ duration: 0.5, delay: 0.2 }}
                                     className="relative"
                                 >
-                                    <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-100 aspect-[4/3] group">
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10 opacity-60 transition-opacity duration-300 group-hover:opacity-40" />
-                                        <img
+                                    <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-blue-100/20 aspect-[4/3] group" style={{ transform: 'translate3d(0,0,0)', willChange: 'transform' }}>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent z-10 opacity-60 transition-opacity duration-300 group-hover:opacity-40" />
+                                        <SmoothHeroImage
                                             src={currentBenefits.image}
                                             alt={currentBenefits.title}
-                                            className="object-cover w-full h-full transform transition-transform duration-700 group-hover:scale-105"
+                                            className="object-cover w-full h-full transform transition-all duration-1000 bg-slate-100 group-hover:scale-105"
+                                            style={{ margin: 0, willChange: 'transform' }}
                                         />
 
                                         {/* Floating Badge */}
-                                        <div className="absolute top-4 left-4 md:top-auto md:bottom-4 md:left-6 z-20 bg-white/90 backdrop-blur-md px-4 py-3 rounded-xl border border-white/50 shadow-lg">
+                                        <div className="absolute top-4 left-4 md:top-auto md:bottom-4 md:left-6 z-20 bg-white/95 border border-white/50 px-4 py-3 rounded-2xl shadow-xl">
                                             <div className="flex items-center gap-3">
                                                 <div className="bg-brand-primary/10 p-2 rounded-lg text-brand-primary">
                                                     {currentBenefits.icon}
@@ -379,27 +428,41 @@ const RoleBenefits: React.FC = () => {
                             </div>
 
                             {/* Features Grid below */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-8">
+                            <motion.div 
+                                variants={{
+                                    show: { transition: { staggerChildren: 0.1 } }
+                                }}
+                                initial="hidden"
+                                animate="show"
+                                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-12"
+                            >
                                 {currentBenefits.features.map((feature, index) => (
                                     <motion.div
                                         key={index}
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: index * 0.05 + 0.4 }}
-                                        className="group bg-white border border-gray-100/50 rounded-xl p-5 shadow-sm hover:shadow-lg hover:border-brand-primary/20 transition-all duration-300"
+                                        variants={{
+                                            hidden: { opacity: 0, y: 20 },
+                                            show: { opacity: 1, y: 0 }
+                                        }}
+                                        whileHover={{ 
+                                            scale: 1.03, 
+                                            y: -8,
+                                            boxShadow: "0 25px 45px -15px rgba(0, 57, 115, 0.12)",
+                                            borderColor: "rgba(0, 57, 115, 0.15)"
+                                        }}
+                                        className="group bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-500 cursor-default"
                                     >
-                                        <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center mb-4 group-hover:bg-brand-primary group-hover:text-white transition-colors duration-300 text-brand-primary">
+                                        <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center mb-5 group-hover:bg-[#003973] group-hover:text-white group-hover:scale-110 transition-all duration-500 text-[#003973]">
                                             {feature.icon}
                                         </div>
-                                        <h4 className="font-semibold text-gray-900 mb-2 group-hover:text-brand-primary transition-colors">
+                                        <h4 className="font-bold text-gray-900 mb-3 group-hover:text-[#003973] transition-colors text-lg">
                                             {feature.title}
                                         </h4>
-                                        <p className="text-sm text-gray-600 leading-relaxed">
+                                        <p className="text-sm text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors">
                                             {feature.description}
                                         </p>
                                     </motion.div>
                                 ))}
-                            </div>
+                            </motion.div>
 
 
                         </motion.div>
@@ -410,97 +473,105 @@ const RoleBenefits: React.FC = () => {
     );
 };
 
+const clients = [
+    {
+        id: 0,
+        company: "Abhivorn",
+        fullCompany: "Abhivorn Technologies",
+        industry: "Technology",
+        logo: "/abhivorn.webp",
+        color: "blue",
+        gradient: "from-blue-500 to-cyan-500",
+        quote: "We reduced our payroll processing time from 3 days to just under 2 hours. The ROI was immediate.",
+        author: "Neelam Arun",
+        role: "CEO & Founder",
+        metrics: [
+            { label: "Time Saved", value: "95%", icon: <Clock className="w-4 h-4" />, color: "bg-white/10 text-blue-200" },
+            { label: "Efficiency", value: "3x", icon: <Activity className="w-4 h-4" />, color: "bg-white/10 text-cyan-200" },
+            { label: "Errors", value: "0%", icon: <ArrowUpRight className="w-4 h-4" />, color: "bg-white/10 text-emerald-200" }
+        ]
+    },
+    {
+        id: 1,
+        company: "Sai Sharanya",
+        fullCompany: "Sai Sharanya Hospital",
+        industry: "Healthcare",
+        logo: "/ss_hospital.webp",
+        color: "emerald",
+        gradient: "from-emerald-500 to-teal-500",
+        quote: "Managing shifts for 500+ hospital staff was a nightmare. Abhivorn made it automated and seamless.",
+        author: "Dr. Ravikanth",
+        role: "Administrator",
+        metrics: [
+            { label: "Staff Covered", value: "500+", icon: <Users className="w-4 h-4" />, color: "bg-white/10 text-emerald-200" },
+            { label: "Uptime", value: "99.9%", icon: <Activity className="w-4 h-4" />, color: "bg-white/10 text-teal-200" },
+            { label: "Compliance", value: "100%", icon: <Shield className="w-4 h-4" />, color: "bg-white/10 text-purple-200" }
+        ]
+    },
+    {
+        id: 2,
+        company: "Next Gen",
+        fullCompany: "Next Gen Hiring",
+        industry: "Recruitment",
+        logo: "/nextgen.webp",
+        color: "violet",
+        gradient: "from-violet-500 to-purple-500",
+        quote: "The automated onboarding workflows helped us scale our recruitment drive without adding HR headcount.",
+        author: "Sampath Nomula",
+        role: "HR Director",
+        metrics: [
+            { label: "Onboarding", value: "10min", icon: <Clock className="w-4 h-4" />, color: "bg-white/10 text-violet-200" },
+            { label: "Growth", value: "200%", icon: <ArrowUpRight className="w-4 h-4" />, color: "bg-white/10 text-purple-200" },
+            { label: "Paperwork", value: "None", icon: <FileText className="w-4 h-4" />, color: "bg-white/10 text-pink-200" }
+        ]
+    },
+    {
+        id: 3,
+        company: "Cred Marg",
+        fullCompany: "Cred Marg",
+        industry: "Fintech",
+        logo: "/cred.webp",
+        color: "amber",
+        gradient: "from-amber-500 to-orange-500",
+        quote: "A distinct competitive advantage. Our employees love the transparency of the self-service portal.",
+        author: "Vishal Prathap",
+        role: "Operations Head",
+        metrics: [
+            { label: "Adoption", value: "98%", icon: <Users className="w-4 h-4" />, color: "bg-white/10 text-amber-200" },
+            { label: "Rating", value: "4.9/5", icon: <Star className="w-4 h-4" />, color: "bg-white/10 text-orange-200" },
+            { label: "Cost Saving", value: "25%", icon: <DollarSign className="w-4 h-4" />, color: "bg-white/10 text-red-200" }
+        ]
+    },
+    {
+        id: 4,
+        company: "Elevate Rootz",
+        fullCompany: "Elevate Rootz",
+        industry: "Corporate Services",
+        logo: "/elevaterootz.webp",
+        color: "rose",
+        gradient: "from-rose-500 to-pink-500",
+        quote: "Abhivorn helps us stay compliant and organized across multiple locations. It's truly a game changer.",
+        author: "Sriverchan",
+        role: "Founder & CEO",
+        metrics: [
+            { label: "Efficiency", value: "40%", icon: <Activity className="w-4 h-4" />, color: "bg-white/10 text-rose-200" },
+            { label: "Stability", value: "100%", icon: <Shield className="w-4 h-4" />, color: "bg-white/10 text-pink-200" },
+            { label: "Happier Teams", value: "9/10", icon: <Users className="w-4 h-4" />, color: "bg-white/10 text-red-200" }
+        ]
+    }
+];
+
+const gradientVariants: { [key: string]: string } = {
+    blue: "from-blue-900 via-blue-800 to-indigo-900",
+    emerald: "from-emerald-900 via-emerald-800 to-teal-900",
+    violet: "from-violet-900 via-purple-900 to-indigo-900",
+    amber: "from-amber-900 via-amber-800 to-orange-900",
+    rose: "from-rose-900 via-pink-900 to-red-900"
+};
+
 const SocialProof: React.FC = () => {
     const [activeTab, setActiveTab] = useState(0);
     const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-
-    const clients = [
-        {
-            id: 0,
-            company: "Abhivorn",
-            fullCompany: "Abhivorn Technologies",
-            industry: "Technology",
-            logo: "/abhivorn.webp",
-            color: "blue",
-            gradient: "from-blue-500 to-cyan-500",
-            quote: "We reduced our payroll processing time from 3 days to just under 2 hours. The ROI was immediate.",
-            author: "Neelam Arun",
-            role: "CEO & Founder",
-            metrics: [
-                { label: "Time Saved", value: "95%", icon: <Clock className="w-4 h-4" />, color: "bg-white/10 text-blue-200" },
-                { label: "Efficiency", value: "3x", icon: <Activity className="w-4 h-4" />, color: "bg-white/10 text-cyan-200" },
-                { label: "Errors", value: "0%", icon: <ArrowUpRight className="w-4 h-4" />, color: "bg-white/10 text-emerald-200" }
-            ]
-        },
-        {
-            id: 1,
-            company: "Sai Sharanya",
-            fullCompany: "Sai Sharanya Hospital",
-            industry: "Healthcare",
-            logo: "/ss_hospital.webp",
-            color: "emerald",
-            gradient: "from-emerald-500 to-teal-500",
-            quote: "Managing shifts for 500+ hospital staff was a nightmare. Abhivorn made it automated and seamless.",
-            author: "Dr. Ravikanth",
-            role: "Administrator",
-            metrics: [
-                { label: "Staff Covered", value: "500+", icon: <Users className="w-4 h-4" />, color: "bg-white/10 text-emerald-200" },
-                { label: "Uptime", value: "99.9%", icon: <Activity className="w-4 h-4" />, color: "bg-white/10 text-teal-200" },
-                { label: "Compliance", value: "100%", icon: <Shield className="w-4 h-4" />, color: "bg-white/10 text-purple-200" }
-            ]
-        },
-        {
-            id: 2,
-            company: "Next Gen",
-            fullCompany: "Next Gen Hiring",
-            industry: "Recruitment",
-            logo: "/nextgen.webp",
-            color: "violet",
-            gradient: "from-violet-500 to-purple-500",
-            quote: "The automated onboarding workflows helped us scale our recruitment drive without adding HR headcount.",
-            author: "Sampath Nomula",
-            role: "HR Director",
-            metrics: [
-                { label: "Onboarding", value: "10min", icon: <Clock className="w-4 h-4" />, color: "bg-white/10 text-violet-200" },
-                { label: "Growth", value: "200%", icon: <ArrowUpRight className="w-4 h-4" />, color: "bg-white/10 text-purple-200" },
-                { label: "Paperwork", value: "None", icon: <FileText className="w-4 h-4" />, color: "bg-white/10 text-pink-200" }
-            ]
-        },
-        {
-            id: 3,
-            company: "Cred Marg",
-            fullCompany: "Cred Marg",
-            industry: "Fintech",
-            logo: "/cred.webp",
-            color: "amber",
-            gradient: "from-amber-500 to-orange-500",
-            quote: "A distinct competitive advantage. Our employees love the transparency of the self-service portal.",
-            author: "Vishal Prathap",
-            role: "Operations Head",
-            metrics: [
-                { label: "Adoption", value: "98%", icon: <Users className="w-4 h-4" />, color: "bg-white/10 text-amber-200" },
-                { label: "Rating", value: "4.9/5", icon: <Star className="w-4 h-4" />, color: "bg-white/10 text-orange-200" },
-                { label: "Cost Saving", value: "25%", icon: <DollarSign className="w-4 h-4" />, color: "bg-white/10 text-red-200" }
-            ]
-        },
-        {
-            id: 4,
-            company: "Elevate Rootz",
-            fullCompany: "Elevate Rootz",
-            industry: "Corporate Services",
-            logo: "/elevaterootz.webp",
-            color: "rose",
-            gradient: "from-rose-500 to-pink-500",
-            quote: "Abhivorn helps us stay compliant and organized across multiple locations. It's truly a game changer.",
-            author: "Sriverchan",
-            role: "Founder & CEO",
-            metrics: [
-                { label: "Efficiency", value: "40%", icon: <Activity className="w-4 h-4" />, color: "bg-white/10 text-rose-200" },
-                { label: "Stability", value: "100%", icon: <Shield className="w-4 h-4" />, color: "bg-white/10 text-pink-200" },
-                { label: "Happier Teams", value: "9/10", icon: <Users className="w-4 h-4" />, color: "bg-white/10 text-red-200" }
-            ]
-        }
-    ];
 
     // Auto-rotation
     useEffect(() => {
@@ -513,14 +584,6 @@ const SocialProof: React.FC = () => {
         return () => clearInterval(interval);
     }, [isAutoPlaying, clients.length]);
 
-    const gradientVariants: { [key: string]: string } = {
-        blue: "from-blue-900 via-blue-800 to-indigo-900",
-        emerald: "from-emerald-900 via-emerald-800 to-teal-900",
-        violet: "from-violet-900 via-purple-900 to-indigo-900",
-        amber: "from-amber-900 via-amber-800 to-orange-900",
-        rose: "from-rose-900 via-pink-900 to-red-900"
-    };
-
     return (
         <section className="py-16 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
             {/* Enhanced Background - Tighter Blur */}
@@ -528,29 +591,25 @@ const SocialProof: React.FC = () => {
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Compact Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5 }}
-                    className="text-center mb-16"
-                >
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-6">
-                        <Star className="w-4 h-4 text-blue-600" />
-                        <span className="text-sm font-semibold text-blue-600">Trusted by Industry Leaders</span>
+                <ScrollReveal direction="down">
+                    <div className="text-center mb-16">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-6">
+                            <Star className="w-4 h-4 text-blue-600" />
+                            <span className="text-sm font-semibold text-blue-600">Trusted by Industry Leaders</span>
+                        </div>
+
+                        <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
+                            <span className="text-[#003973]">Real Stories.</span>{' '}
+                            <span className="text-[#2ab6ea]">
+                                Real Impact.
+                            </span>
+                        </h2>
+
+                        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                            See how companies are transforming their HR operations with Abhivorn.
+                        </p>
                     </div>
-
-                    <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
-                        <span className="text-[#003973]">Real Stories.</span>{' '}
-                        <span className="text-[#2ab6ea]">
-                            Real Impact.
-                        </span>
-                    </h2>
-
-                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                        See how companies are transforming their HR operations with Abhivorn.
-                    </p>
-                </motion.div>
+                </ScrollReveal>
 
                 {/* Interactive Success Stories Section - Optimized Height */}
                 <div className="grid lg:grid-cols-12 gap-6 h-auto lg:h-[400px] mb-10">
@@ -558,58 +617,65 @@ const SocialProof: React.FC = () => {
                     <div className="lg:col-span-4 flex flex-col h-full">
                         <div className="flex-1 overflow-y-auto pr-1 space-y-2 custom-scrollbar">
                             {clients.map((client, index) => (
-                                <motion.button
+                                <ScrollReveal
                                     key={index}
-                                    onClick={() => setActiveTab(index)}
-                                    onMouseEnter={() => setIsAutoPlaying(false)}
-                                    onMouseLeave={() => setIsAutoPlaying(true)}
-                                    className={`
-                                        w-full text-left p-2.5 rounded-lg transition-all duration-300 border
-                                        flex items-center gap-3 group relative overflow-hidden shrink-0
-                                        ${activeTab === index
-                                            ? 'bg-white border-blue-200 shadow-md scale-100 z-10 ring-1 ring-blue-100'
-                                            : 'bg-white/60 border-transparent hover:bg-white hover:border-gray-200 hover:shadow-sm'
-                                        }
-                                    `}
+                                    delay={index * 0.1}
+                                    direction="right"
+                                    distance={20}
                                 >
-                                    {/* Active Background */}
-                                    {activeTab === index && (
-                                        <motion.div
-                                            layoutId="active-tab-bg"
-                                            className="absolute inset-0 bg-gradient-to-r from-blue-50/50 to-white"
-                                            transition={{ type: "spring", bounce: 0, duration: 0.3 }}
-                                        />
-                                    )}
+                                    <motion.button
+                                        onClick={() => setActiveTab(index)}
+                                        onMouseEnter={() => setIsAutoPlaying(false)}
+                                        onMouseLeave={() => setIsAutoPlaying(true)}
+                                        whileHover={{ scale: 1.02, x: 5 }}
+                                        className={`
+                                            w-full text-left p-2.5 rounded-lg transition-all duration-300 border
+                                            flex items-center gap-3 group relative overflow-hidden shrink-0
+                                            ${activeTab === index
+                                                ? 'bg-white border-blue-200 shadow-md z-10 ring-1 ring-blue-100'
+                                                : 'bg-white/60 border-transparent hover:bg-white hover:border-gray-200'
+                                            }
+                                        `}
+                                    >
+                                        {/* Active Background */}
+                                        {activeTab === index && (
+                                            <motion.div
+                                                layoutId="active-tab-bg"
+                                                className="absolute inset-0 bg-gradient-to-r from-blue-50/50 to-white"
+                                                transition={{ type: "spring", bounce: 0, duration: 0.3 }}
+                                            />
+                                        )}
 
-                                    {/* Logo - Smaller */}
-                                    <div className={`
-                                        relative w-9 h-9 rounded-lg flex items-center justify-center p-1.5
-                                        transition-all duration-300 z-10 shrink-0
-                                        ${activeTab === index
-                                            ? 'bg-white shadow-sm border border-blue-100'
-                                            : 'bg-white shadow-sm border border-gray-100'
-                                        }
-                                    `}>
-                                        <img
-                                            src={client.logo}
-                                            alt={client.company}
-                                            className={`w-full h-full object-contain transition-all duration-300 ${activeTab === index ? 'grayscale-0' : 'grayscale'}`}
-                                        />
-                                    </div>
+                                        {/* Logo - Smaller */}
+                                        <div className={`
+                                            relative w-9 h-9 rounded-lg flex items-center justify-center p-1.5
+                                            transition-all duration-300 z-10 shrink-0
+                                            ${activeTab === index
+                                                ? 'bg-white shadow-sm border border-blue-100'
+                                                : 'bg-white shadow-sm border border-gray-100'
+                                            }
+                                        `}>
+                                            <SmoothHeroImage
+                                                src={client.logo}
+                                                alt={client.company}
+                                                className={`w-full h-full object-contain transition-all duration-300 ${activeTab === index ? 'grayscale-0' : 'grayscale'}`}
+                                            />
+                                        </div>
 
-                                    <div className="z-10 flex-1 min-w-0">
-                                        <h4 className={`font-bold text-sm truncate ${activeTab === index ? 'text-gray-900' : 'text-gray-600'}`}>
-                                            {client.company}
-                                        </h4>
-                                        <span className={`text-[10px] font-medium uppercase tracking-wider ${activeTab === index ? 'text-blue-600' : 'text-gray-400'}`}>
-                                            {client.industry}
-                                        </span>
-                                    </div>
+                                        <div className="z-10 flex-1 min-w-0">
+                                            <h4 className={`font-bold text-sm truncate ${activeTab === index ? 'text-gray-900' : 'text-gray-600'}`}>
+                                                {client.company}
+                                            </h4>
+                                            <span className={`text-[10px] font-medium uppercase tracking-wider ${activeTab === index ? 'text-blue-600' : 'text-gray-400'}`}>
+                                                {client.industry}
+                                            </span>
+                                        </div>
 
-                                    {activeTab === index && (
-                                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="z-10 w-1.5 h-1.5 rounded-full bg-blue-500" />
-                                    )}
-                                </motion.button>
+                                        {activeTab === index && (
+                                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="z-10 w-1.5 h-1.5 rounded-full bg-blue-500" />
+                                        )}
+                                    </motion.button>
+                                </ScrollReveal>
                             ))}
                         </div>
 
@@ -655,10 +721,10 @@ const SocialProof: React.FC = () => {
 
                                     {/* Top Row */}
                                     <div className="relative z-10 flex justify-between items-start mb-4">
-                                        <div className="bg-white/20 backdrop-blur-md p-2 rounded-lg border border-white/20">
-                                            <img src={clients[activeTab].logo} alt="logo" className="w-8 h-8 object-contain" />
+                                        <div className="bg-[#003973]/20 p-2 rounded-lg border border-white/20 relative overflow-hidden">
+                                            <SmoothHeroImage src={clients[activeTab].logo} alt="logo" className="w-8 h-8 object-contain" />
                                         </div>
-                                        <div className="px-2.5 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[10px] font-semibold uppercase tracking-wider">
+                                        <div className="px-2.5 py-1 rounded-full bg-white/20 border border-white/20 text-[10px] font-semibold uppercase tracking-wider">
                                             Success Story
                                         </div>
                                     </div>
@@ -697,7 +763,7 @@ const SocialProof: React.FC = () => {
                 <div className="border-t border-gray-200 pt-8">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {[
-                            { label: "Active Users", value: 100, suffix: "+", color: "text-blue-600" },
+                            { label: "Active Users", value: 5000, suffix: "+", color: "text-blue-600" },
                             { label: "Payroll Processed", value: 25, prefix: "₹", suffix: "L+", color: "text-emerald-600" },
                             { label: "Hours Saved", value: 15, suffix: "k+", color: "text-amber-600" },
                             { label: "Uptime SLA", value: 99.9, suffix: "%", decimals: 1, color: "text-purple-600" },

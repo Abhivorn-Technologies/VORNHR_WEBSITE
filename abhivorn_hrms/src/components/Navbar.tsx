@@ -7,6 +7,7 @@ const Navbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [hidden, setHidden] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
+    const [hoveredLink, setHoveredLink] = useState<string | null>(null);
     const { scrollY } = useScroll();
     const location = useLocation();
     const navigate = useNavigate();
@@ -58,10 +59,10 @@ const Navbar: React.FC = () => {
                 }}
                 animate={hidden ? "hidden" : "visible"}
                 transition={{ duration: 0.35, ease: "easeInOut" }}
-                className={`fixed w-full z-50 transition-all duration-300 top-0 bg-white border-b ${
+                className={`fixed w-full z-50 transition-all duration-500 top-0 border-b ${
                     isScrolled 
-                        ? "border-gray-100 shadow-md" 
-                        : "border-transparent"
+                        ? "bg-white/80 backdrop-blur-lg border-gray-100 shadow-sm py-2" 
+                        : "bg-white border-transparent py-4"
                 }`}
             >
                 {/* Subtle top accent line */}
@@ -83,22 +84,31 @@ const Navbar: React.FC = () => {
                         </Link>
 
                         {/* Desktop Navigation */}
-                        {/* Desktop Navigation - Centered & Clean */}
-                        <div className="hidden md:flex items-center space-x-8">
+                        <div className="hidden md:flex items-center space-x-2">
                             {navLinks.map((link) => (
                                 <NavLink
                                     key={link.name}
                                     to={link.href}
+                                    onMouseEnter={() => setHoveredLink(link.name)}
+                                    onMouseLeave={() => setHoveredLink(null)}
                                     onClick={(e) => handleNavClick(e, link.href)}
                                     className={({ isActive }) => `
-                                        relative px-4 py-2 text-[15px] font-medium transition-all duration-300 rounded-full
-                                        ${isActive 
-                                            ? "text-[#003973] bg-blue-50/80 shadow-sm" 
-                                            : "text-slate-600 hover:text-[#003973] hover:bg-blue-50/80 hover:shadow-sm"
-                                        }
+                                        relative px-5 py-2.5 text-[15px] font-semibold transition-colors duration-300 rounded-full
+                                        ${isActive ? "text-[#003973]" : "text-slate-600 hover:text-[#003973]"}
                                     `}
                                 >
-                                    {link.name}
+                                    {({ isActive }) => (
+                                        <>
+                                            {(hoveredLink === link.name || isActive) && (
+                                                <motion.div
+                                                    layoutId="nav-pill"
+                                                    transition={{ type: "spring", bounce: 0.25, duration: 0.5 }}
+                                                    className={`absolute inset-0 z-0 rounded-full ${isActive ? 'bg-blue-50' : 'bg-gray-50'}`}
+                                                />
+                                            )}
+                                            <span className="relative z-10">{link.name}</span>
+                                        </>
+                                    )}
                                 </NavLink>
                             ))}
                         </div>
@@ -106,12 +116,12 @@ const Navbar: React.FC = () => {
                         {/* Right Side Buttons - Premium CTA */}
                         <div className="hidden md:flex items-center gap-4">
                             <Link
-                                to="/pricing"
-                                onClick={(e) => handleNavClick(e, '/pricing')}
+                                to="/pricing?trial=true"
+                                onClick={(e) => handleNavClick(e, '/pricing?trial=true')}
                                 className="group relative inline-flex items-center justify-center px-6 py-2.5 text-sm font-bold text-white transition-all duration-300 bg-gradient-to-r from-[#2ab6ea] to-[#0093E9] rounded-full shadow-lg shadow-blue-400/30 hover:shadow-blue-500/50 hover:scale-[1.02] active:scale-[0.98]"
                             >
                                 <span className="relative z-10 flex items-center">
-                                    Get Started
+                                    Get Started Free
                                     <ChevronRight className="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1" />
                                 </span>
                             </Link>
@@ -131,42 +141,54 @@ const Navbar: React.FC = () => {
                 </div>
             </motion.nav>
 
-            {/* Mobile Menu Overlay */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "100vh" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="fixed inset-0 z-40 bg-white md:hidden pt-24 px-6 overflow-hidden"
+                        initial={{ opacity: 0, x: "100%" }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: "100%" }}
+                        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                        className="fixed inset-0 z-40 bg-white md:hidden pt-24 px-6 overflow-hidden flex flex-col"
                     >
-                        <div className="flex flex-col space-y-6">
-                            {navLinks.map((link) => (
-                                <NavLink
+                        <div className="flex flex-col space-y-2">
+                            {navLinks.map((link, index) => (
+                                <motion.div
                                     key={link.name}
-                                    to={link.href}
-                                    onClick={(e) => handleNavClick(e, link.href)}
-                                    className={({ isActive }) => `
-                                        text-2xl font-semibold transition-colors border-b border-gray-100 pb-4
-                                        ${isActive ? "text-[#003973]" : "text-gray-900 hover:text-brand-primary"}
-                                    `}
+                                    initial={{ opacity: 0, x: 20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: index * 0.1 }}
                                 >
-                                    {link.name}
-                                </NavLink>
+                                    <NavLink
+                                        to={link.href}
+                                        onClick={(e) => handleNavClick(e, link.href)}
+                                        className={({ isActive }) => `
+                                            flex items-center justify-between text-2xl font-bold p-4 rounded-2xl transition-all
+                                            ${isActive ? "text-[#003973] bg-blue-50" : "text-slate-600 active:bg-gray-50"}
+                                        `}
+                                    >
+                                    {({ isActive }) => (
+                                        <>
+                                            {link.name}
+                                            <ChevronRight className={`w-6 h-6 ${isActive ? 'text-[#003973]' : 'text-slate-300'}`} />
+                                        </>
+                                    )}
+                                    </NavLink>
+                                </motion.div>
                             ))}
-                            <div className="pt-6 flex flex-col gap-4">
-
+                            <motion.div 
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4 }}
+                                className="pt-8"
+                            >
                                 <Link
-                                    to="/pricing"
-                                    onClick={(e) => {
-                                        handleNavClick(e, '/pricing');
-                                    }}
-                                    className="w-full py-3 text-center text-lg font-bold text-white bg-[#2ab6ea] rounded-xl shadow-lg shadow-[#003973]/20 hover:bg-[#003973] transition-colors"
+                                    to="/pricing?trial=true"
+                                    onClick={(e) => handleNavClick(e, '/pricing?trial=true')}
+                                    className="w-full py-4 text-center text-lg font-bold text-white bg-gradient-to-r from-[#2ab6ea] to-[#0093E9] rounded-2xl shadow-xl shadow-blue-400/30 block transition-transform active:scale-95"
                                 >
                                     Get Started Free
                                 </Link>
-                            </div>
+                            </motion.div>
                         </div>
                     </motion.div>
                 )}

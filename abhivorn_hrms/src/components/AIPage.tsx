@@ -6,6 +6,7 @@ import {
   ArrowRight, Star, Globe, Search, Calendar, Lightbulb,
   Bot, Workflow, Target, TrendingUp
 } from 'lucide-react';
+import ScrollReveal from './ScrollReveal';
 
 const AIPage: React.FC = () => {
   const aiFeatures = [
@@ -57,28 +58,41 @@ const AIPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-violet-900 via-purple-900 to-violet-900 py-20 md:py-28">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2 text-violet-400 mb-4">
-            <Brain className="w-5 h-5" />
-            <span className="text-sm font-medium">Artificial Intelligence</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            AI-Powered HR Solutions
-          </h1>
-          <p className="text-lg text-slate-300 max-w-2xl">
-            Transform your HR operations with cutting-edge artificial intelligence. From recruitment to performance management, VornHR's AI capabilities revolutionize how you manage your workforce.
-          </p>
-          <p className="text-sm text-violet-400 mt-4 font-medium">
-            Powered by Advanced Machine Learning & NLP
-          </p>
+      <div className="relative bg-gradient-to-r from-[#003973] via-[#004e92] to-[#003973] pt-32 pb-20 md:pt-40 md:pb-28 min-h-[350px] md:min-h-[400px] flex flex-col items-center justify-center px-4 text-center overflow-hidden">
+        {/* Background Decorative Elements */}
+        <div className="absolute inset-0 bg-grid-white/[0.03] [background-size:40px_40px] pointer-events-none" />
+        
+        <div className="max-w-4xl mx-auto z-10">
+          <ScrollReveal direction="down">
+            <div className="flex items-center justify-center gap-2 text-sky-400 mb-6 font-semibold uppercase tracking-[0.2em] text-xs md:text-sm">
+              <Brain className="w-5 h-5" />
+              <span>Artificial Intelligence</span>
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={0.2}>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">
+              AI-Powered Excellence
+            </h1>
+          </ScrollReveal>
+          <ScrollReveal delay={0.3}>
+            <p className="text-lg md:text-xl text-slate-200 max-w-2xl mx-auto leading-relaxed opacity-90">
+              Transform your HR operations with cutting-edge artificial intelligence. From recruitment to performance management, VornHR's AI capabilities revolutionize how you manage your workforce.
+            </p>
+          </ScrollReveal>
+          <ScrollReveal delay={0.4} direction="up" distance={10}>
+            <div className="mt-8">
+              <p className="text-sm text-sky-400 font-bold uppercase tracking-widest">
+                Powered by Advanced Machine Learning & Precision NLP
+              </p>
+            </div>
+          </ScrollReveal>
         </div>
       </div>
 
       {/* AI Features Grid */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 md:pt-16 md:pb-24">
         <div className="text-center mb-12">
           <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-4">
             Intelligent HR Features
@@ -90,24 +104,25 @@ const AIPage: React.FC = () => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {aiFeatures.map((feature, index) => (
-            <div 
-              key={index} 
-              className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-violet-200 hover:shadow-lg hover:shadow-violet-100 transition-all duration-300"
-            >
-              <div className="w-12 h-12 bg-violet-100 rounded-xl flex items-center justify-center mb-4">
-                <feature.icon className="w-6 h-6 text-violet-600" />
+            <ScrollReveal key={index} delay={index * 0.1} direction="up">
+              <div 
+                className="group bg-white rounded-2xl p-6 border border-slate-200 hover:border-blue-400 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-500 h-full"
+              >
+                <div className="w-12 h-12 bg-blue-50 group-hover:bg-[#39a4de] rounded-xl flex items-center justify-center mb-4 transition-colors duration-300">
+                  <feature.icon className="w-6 h-6 text-[#39a4de] group-hover:text-white transition-colors duration-300" />
+                </div>
+                <h3 className="text-lg font-bold text-[#003973] mb-2">{feature.title}</h3>
+                <p className="text-slate-600 text-sm mb-4">{feature.description}</p>
+                <ul className="space-y-2">
+                  {feature.benefits.map((benefit, idx) => (
+                    <li key={idx} className="flex items-center gap-2 text-sm text-slate-600">
+                      <CheckCircle className="w-4 h-4 text-[#2ab6ea]" />
+                      {benefit}
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">{feature.title}</h3>
-              <p className="text-slate-600 text-sm mb-4">{feature.description}</p>
-              <ul className="space-y-2">
-                {feature.benefits.map((benefit, idx) => (
-                  <li key={idx} className="flex items-center gap-2 text-sm text-slate-600">
-                    <CheckCircle className="w-4 h-4 text-violet-500" />
-                    {benefit}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
       </div>
@@ -126,15 +141,17 @@ const AIPage: React.FC = () => {
 
           <div className="grid md:grid-cols-2 gap-4">
             {capabilities.map((cap, index) => (
-              <div key={index} className="bg-white rounded-xl p-5 border border-slate-200 flex items-start gap-4">
-                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <cap.icon className="w-5 h-5 text-purple-600" />
+              <ScrollReveal key={index} delay={index * 0.05} direction={index % 2 === 0 ? 'right' : 'left'} distance={20}>
+                <div className="bg-white rounded-xl p-5 border border-slate-200 flex items-start gap-4 h-full hover:border-[#39a4de] transition-colors group">
+                  <div className="w-10 h-10 bg-blue-50 group-hover:bg-[#39a4de] rounded-lg flex items-center justify-center flex-shrink-0 transition-colors">
+                    <cap.icon className="w-5 h-5 text-[#39a4de] group-hover:text-white transition-colors" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-[#003973]">{cap.title}</h3>
+                    <p className="text-sm text-slate-500">{cap.desc}</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-slate-900">{cap.title}</h3>
-                  <p className="text-sm text-slate-500">{cap.desc}</p>
-                </div>
-              </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -160,15 +177,17 @@ const AIPage: React.FC = () => {
             { step: 3, title: "Insights Generation", desc: "Actionable recommendations are generated" },
             { step: 4, title: "Continuous Learning", desc: "AI improves with more data and feedback" }
           ].map((item, index) => (
-            <div key={index} className="relative flex items-start gap-6 mb-8 last:mb-0">
-              <div className="w-16 h-16 bg-violet-600 rounded-full flex items-center justify-center flex-shrink-0 z-10">
-                <span className="text-white font-bold text-xl">{item.step}</span>
+            <ScrollReveal key={index} delay={index * 0.1} direction="right">
+              <div className="relative flex items-start gap-6 mb-8 last:mb-0">
+                <div className="w-16 h-16 bg-gradient-to-br from-[#003973] to-[#2ab6ea] rounded-full flex items-center justify-center flex-shrink-0 z-10 shadow-lg shadow-blue-200">
+                  <span className="text-white font-bold text-xl">{item.step}</span>
+                </div>
+                <div className="bg-white rounded-xl p-5 border border-slate-200 flex-1 hover:border-[#39a4de] transition-colors shadow-sm">
+                  <h3 className="font-bold text-[#003973] mb-1">{item.title}</h3>
+                  <p className="text-slate-600 text-sm">{item.desc}</p>
+                </div>
               </div>
-              <div className="bg-white rounded-xl p-5 border border-slate-200 flex-1">
-                <h3 className="font-bold text-slate-900 mb-1">{item.title}</h3>
-                <p className="text-slate-600 text-sm">{item.desc}</p>
-              </div>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
       </div>
@@ -176,32 +195,32 @@ const AIPage: React.FC = () => {
       {/* Security & Privacy */}
       <div className="bg-gradient-to-br from-violet-50 to-purple-50 py-12 md:py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-2xl p-8 border border-violet-200">
+          <div className="bg-white rounded-2xl p-8 border border-blue-100 shadow-xl shadow-blue-500/5">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                <Shield className="w-6 h-6 text-green-600" />
+              <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center">
+                <Shield className="w-6 h-6 text-emerald-600" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-slate-900">AI & Data Privacy</h3>
+                <h3 className="text-xl font-bold text-[#003973]">AI & Data Privacy</h3>
                 <p className="text-sm text-slate-500">Your data security is our priority</p>
               </div>
             </div>
             <div className="grid md:grid-cols-2 gap-4 mt-6">
               <div className="flex items-center gap-3">
-                <CheckCircle className="w-5 h-5 text-green-500" />
-                <span className="text-slate-700">GDPR Compliant</span>
+                <CheckCircle className="w-5 h-5 text-emerald-500" />
+                <span className="text-slate-700 font-medium">GDPR Compliant</span>
               </div>
               <div className="flex items-center gap-3">
-                <CheckCircle className="w-5 h-5 text-green-500" />
-                <span className="text-slate-700">Data Encrypted at Rest</span>
+                <CheckCircle className="w-5 h-5 text-emerald-500" />
+                <span className="text-slate-700 font-medium">Data Encrypted at Rest</span>
               </div>
               <div className="flex items-center gap-3">
-                <CheckCircle className="w-5 h-5 text-green-500" />
-                <span className="text-slate-700">No Third-Party AI Sharing</span>
+                <CheckCircle className="w-5 h-5 text-emerald-500" />
+                <span className="text-slate-700 font-medium">No Third-Party AI Sharing</span>
               </div>
               <div className="flex items-center gap-3">
-                <CheckCircle className="w-5 h-5 text-green-500" />
-                <span className="text-slate-700">Full Audit Trail</span>
+                <CheckCircle className="w-5 h-5 text-emerald-500" />
+                <span className="text-slate-700 font-medium">Full Audit Trail</span>
               </div>
             </div>
           </div>
@@ -210,30 +229,33 @@ const AIPage: React.FC = () => {
 
       {/* CTA Section */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-        <div className="bg-gradient-to-r from-violet-600 to-purple-600 rounded-2xl p-8 md:p-12 text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Sparkles className="w-6 h-6 text-white" />
-            <span className="text-violet-200 font-medium">Get Started with AI</span>
-          </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-            Ready to Transform Your HR?
-          </h2>
-          <p className="text-violet-100 mb-8 max-w-xl mx-auto">
-            Experience the power of AI in HR management. Book a demo today and see VornHR in action.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link 
-              to="/contact"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-violet-600 rounded-lg font-medium hover:bg-violet-50 transition-colors"
-            >
-              Book a Demo <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link 
-              to="/pricing"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-violet-700 text-white rounded-lg font-medium hover:bg-violet-800 transition-colors"
-            >
-              View Pricing
-            </Link>
+        <div className="bg-gradient-to-r from-[#003973] to-[#39a4de] rounded-2xl p-8 md:p-12 text-center shadow-2xl relative overflow-hidden">
+          <div className="absolute inset-0 bg-grid-white/10 [background-size:20px_20px] pointer-events-none" />
+          <div className="relative z-10">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Sparkles className="w-6 h-6 text-sky-300" />
+              <span className="text-sky-100 font-semibold uppercase tracking-wider text-sm">Experience the Future</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+              Ready to Transform Your HR?
+            </h2>
+            <p className="text-blue-100 mb-10 max-w-xl mx-auto text-lg">
+              Experience the power of AI in HR management. Book a demo today and see VornHR in action.
+            </p>
+            <div className="flex flex-wrap justify-center gap-5">
+              <Link 
+                to="/pricing?trial=true"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#003973] rounded-xl font-bold hover:bg-sky-50 transition-all hover:scale-105 active:scale-95 shadow-lg"
+              >
+                Get Started Free <ArrowRight className="w-5 h-5" />
+              </Link>
+              <Link 
+                to="/pricing"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-[#2ab6ea] text-white rounded-xl font-bold hover:bg-[#39a4de] transition-all hover:scale-105 active:scale-95 shadow-lg"
+              >
+                View Pricing
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -266,7 +288,7 @@ const AIPage: React.FC = () => {
           >
             <div className="flex items-center gap-3">
               <Globe className="w-5 h-5 text-violet-600" />
-              <span className="font-medium text-slate-900 group-hover:text-violet-600">Solutions</span>
+              <span className="font-semibold text-slate-800 group-hover:text-[#39a4de]">Solutions</span>
             </div>
           </Link>
         </div>

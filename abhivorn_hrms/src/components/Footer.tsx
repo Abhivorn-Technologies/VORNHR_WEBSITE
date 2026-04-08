@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Linkedin, Instagram } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Footer: React.FC = () => {
     const location = useLocation();
@@ -15,7 +16,7 @@ const Footer: React.FC = () => {
     };
 
     const socialLinks = [
-        { icon: <Linkedin className="w-5 h-5" />, href: "https://www.linkedin.com/company/abhivorn-technologies/" },
+        { icon: <Linkedin className="w-5 h-5" />, href: "https://www.linkedin.com/company/vorn-hr/" },
         { icon: <Instagram className="w-5 h-5" />, href: "https://www.instagram.com/abhivorn_technologies?igsh=amh3bWw2d2N1bDVq" },
     ];
 
@@ -64,25 +65,34 @@ const Footer: React.FC = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1fr_1fr] gap-10 mb-12 items-start">
                     {/* Brand Column */}
                     <div className="flex flex-col">
-                        <Link
-                            to="/"
-                            className="inline-flex items-center gap-2 mb-6 group transition-all duration-300 hover:scale-105 hover:brightness-110 hover:drop-shadow-[0_0_15px_rgba(42,182,234,0.4)]"
-                            onClick={(e) => handleFooterLinkClick(e, '/')}
+                        <motion.div
+                            whileHover={{ scale: 1.05, filter: "brightness(1.1) drop-shadow(0 0 15px rgba(42,182,234,0.4))" }}
+                            transition={{ type: "spring", stiffness: 400, damping: 10 }}
                         >
-                            <img src="/vornhrlogo.webp" alt="vornhr Logo" className="h-10 md:h-12 w-auto object-contain" />
-                        </Link>
+                            <Link
+                                to="/"
+                                className="inline-flex items-center gap-2 mb-6 group transition-all duration-300"
+                                onClick={(e) => handleFooterLinkClick(e, '/')}
+                            >
+                                <img src="/vornhrlogo.webp" alt="vornhr Logo" className="h-10 md:h-12 w-auto object-contain" />
+                            </Link>
+                        </motion.div>
                         <p className="text-slate-400 mt-3 max-w-[280px] leading-[1.6] text-sm">
                             Simplifying HR management for modern businesses. Automate payroll, track attendance, and manage your workforce with ease.
                         </p>
                         <div className="flex gap-4">
                             {socialLinks.map((social, index) => (
-                                <a
+                                <motion.a
                                     key={index}
                                     href={social.href}
-                                    className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-slate-400 hover:bg-blue-600 hover:text-white transition-all duration-300"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    whileHover={{ scale: 1.2, y: -5, backgroundColor: "#2563eb", color: "#ffffff" }}
+                                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                                    className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-slate-400 transition-colors duration-300"
                                 >
                                     {social.icon}
-                                </a>
+                                </motion.a>
                             ))}
                         </div>
                     </div>
@@ -95,15 +105,15 @@ const Footer: React.FC = () => {
                             </h3>
                             <ul className="space-y-2">
                                 {column.links.map((link, linkIndex) => (
-                                    <li key={linkIndex}>
+                                    <motion.li key={linkIndex} whileHover={{ x: 5 }}>
                                         <Link
                                             to={link.href}
                                             onClick={(e) => handleFooterLinkClick(e, link.href)}
-                                            className="text-slate-400 hover:text-blue-400 hover:translate-x-1 transition-all duration-300 text-sm inline-block"
+                                            className="text-slate-400 hover:text-blue-400 transition-all duration-300 text-sm inline-block"
                                         >
                                             {link.name}
                                         </Link>
-                                    </li>
+                                    </motion.li>
                                 ))}
                             </ul>
                         </div>

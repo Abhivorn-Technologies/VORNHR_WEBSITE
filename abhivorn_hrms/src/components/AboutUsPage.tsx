@@ -1,15 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Users, Target, Award, Heart, CheckCircle, ArrowRight,
-  Zap, Shield, Globe, Mail, Phone, MapPin, Star,
-  Lightbulb, Handshake, TrendingUp, Calendar, MessageSquare
+  Users, Target, Heart, CheckCircle, ArrowRight,
+  Shield, Mail, Phone, MapPin,
+  Lightbulb, Handshake, TrendingUp, Calendar, MessageSquare, Zap
 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import ScrollReveal from './ScrollReveal';
 
 const AboutUsPage: React.FC = () => {
   const stats = [
-    { value: "500+", label: "Clients Served", icon: Users },
-    { value: "50+", label: "Team Members", icon: Heart },
+    { value: "15+", label: "Clients Served", icon: Users },
+    { value: "20+", label: "Team Members", icon: Heart },
     { value: "99.9%", label: "Uptime SLA", icon: Shield },
     { value: "24/7", label: "Support", icon: MessageSquare }
   ];
@@ -37,53 +39,128 @@ const AboutUsPage: React.FC = () => {
     }
   ];
 
-  const team = [
-    {
-      name: "Abhishek Vorn",
-      role: "Founder & CEO",
-      image: "/abhivorn.webp",
-      bio: "Visionary leader with 10+ years in HR technology"
-    },
-    {
-      name: "Sarah Chen",
-      role: "Chief Technology Officer",
-      image: "/teamlead.webp",
-      bio: "Tech innovator specializing in enterprise solutions"
-    },
-    {
-      name: "Michael Ross",
-      role: "Head of Product",
-      image: "/employees.webp",
-      bio: "Product strategist focused on user experience"
-    },
-    {
-      name: "Emily Watson",
-      role: "VP of Customer Success",
-      image: "/hr.webp",
-      bio: "Customer advocate with deep HR expertise"
-    }
-  ];
 
   const timeline = [
-    { year: "2020", title: "Foundation", description: "VornHR was founded with a vision to transform HR management" },
-    { year: "2021", title: "Product Launch", description: "Launched our core HR platform with payroll & attendance" },
-    { year: "2022", title: "Scale Up", description: "Expanded to 100+ enterprise clients across industries" },
-    { year: "2023", title: "Innovation", description: "Introduced AI-powered recruitment & analytics" },
-    { year: "2024", title: "Global Reach", description: "Serving clients in 20+ countries worldwide" }
+    { year: "Oct 2025", title: "Company Founded", description: "Abhivorn Technologies Pvt Ltd established in Hyderabad" },
+    { year: "Nov 2025", title: "First HRMS Deployment", description: "Successfully deployed VORN HR for first client" },
+    { year: "Dec 2025", title: "15+ Companies Onboarded", description: "Steady growth with selected enterprise clients" },
+    { year: "Jan 2027", title: "5,000+ migrations", description: "Platform scaling with high user adoption" }
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-[#003973] via-[#00509E] to-[#003973] py-20 md:py-28">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              About VornHR
+      <div className="relative overflow-hidden bg-gradient-to-r from-[#003973] via-[#00509E] to-[#003973] min-h-[50vh] md:min-h-[60vh] flex items-center pt-40 pb-12 px-4 text-center">
+        {/* Animated Background Elements */}
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.2, 1],
+            x: [0, 50, 0],
+            opacity: [0.2, 0.4, 0.2]
+          }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          className="absolute -top-24 -right-24 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px]" 
+        />
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.3, 1],
+            rotate: [0, 90, 0],
+            opacity: [0.1, 0.3, 0.1]
+          }}
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          className="absolute -bottom-24 -left-24 w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-[120px]" 
+        />
+        
+        <div className="relative z-10 max-w-4xl mx-auto w-full">
+          <ScrollReveal direction="down">
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">
+              About Abhivorn Technologies
             </h1>
-            <p className="text-lg text-slate-300 max-w-2xl mx-auto">
-              Empowering businesses to build better workplaces through intelligent HR solutions. We're on a mission to transform how organizations manage their most valuable asset – their people.
-            </p>
+          </ScrollReveal>
+          <ScrollReveal delay={0.2}>
+            <h3 className="text-xl md:text-2xl font-bold text-[#2ab6ea] mb-8 uppercase tracking-[0.2em]">
+              Building the Future of Enterprise Software
+            </h3>
+            <div className="max-w-2xl mx-auto">
+              <p className="text-lg md:text-xl text-slate-200 italic leading-relaxed opacity-90"> 
+                Founded in 2025, headquartered in Hyderabad. We're a forward-thinking software company specializing in HR and healthcare solutions.
+              </p>
+            </div>
+          </ScrollReveal>
+        </div>
+      </div>
+
+      {/* Our Story Section */}
+      <div className="pt-12 pb-20 md:pt-16 md:pb-28 bg-white overflow-hidden">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <ScrollReveal direction="right">
+              <div>
+                <motion.div 
+                  whileHover={{ scale: 1.05 }}
+                  className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 rounded-full mb-6 border border-blue-100 cursor-default"
+                >
+                  <Shield className="w-4 h-4 text-[#003973]" />
+                  <span className="text-xs font-bold text-[#003973] uppercase tracking-wider">Our DNA</span>
+                </motion.div>
+                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6 underline decoration-[#2ab6ea]/30 underline-offset-8">Our Story</h2>
+                <div className="space-y-4 text-lg text-slate-600 leading-relaxed">
+                  <p>
+                    Abhivorn Technologies was founded with a clear vision: <span className="text-slate-900 font-medium">to make enterprise-grade software accessible to businesses of all sizes across India.</span>
+                  </p>
+                  <p>
+                    Starting with our flagship product <span className="text-[#003973] font-bold">VORN HR</span>, we've helped companies streamline their HR operations, reduce administrative overhead, and focus on what matters most—their people.
+                  </p>
+                  <p>
+                    Today, we're expanding into healthcare with <span className="text-[#00509E] font-bold italic">VorQard</span>, bringing the same commitment to quality and innovation to the medical industry.
+                  </p>
+                </div>
+                
+                <div className="mt-8 flex flex-wrap gap-4">
+                  <motion.div 
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    className="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl"
+                  >
+                    <CheckCircle className="w-5 h-5 text-[#2ab6ea]" />
+                    <span className="font-semibold text-slate-900">20+ Team Members</span>
+                  </motion.div>
+                  <motion.div 
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    className="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl"
+                  >
+                    <TrendingUp className="w-5 h-5 text-[#2ab6ea]" />
+                    <span className="font-semibold text-slate-900">Innovative Solutions</span>
+                  </motion.div>
+                </div>
+              </div>
+            </ScrollReveal>
+            
+            <ScrollReveal direction="left" delay={0.2}>
+              <div className="relative p-4">
+                <div className="absolute inset-0 bg-gradient-to-tr from-blue-100 to-indigo-50 rounded-3xl transform rotate-2 blur-2xl opacity-40"></div>
+                <div className="relative bg-white p-8 rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 text-center">
+                      <div className="text-4xl font-bold text-[#003973]">20+</div>
+                      <div className="text-xs text-slate-500 font-bold uppercase mt-1">Experts</div>
+                    </div>
+                    <div className="p-6 bg-[#003973] rounded-2xl text-white text-center">
+                      <div className="text-4xl font-bold">24/7</div>
+                      <div className="text-xs text-blue-200 font-bold uppercase mt-1">Support</div>
+                    </div>
+                    <div className="col-span-2 p-6 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl text-white relative">
+                      <h4 className="font-bold mb-2 flex items-center gap-2">
+                        <Zap className="w-4 h-4 text-yellow-400" />
+                        Our Commitment
+                      </h4>
+                      <p className="text-sm text-slate-300 leading-relaxed italic">
+                        "Bringing innovation to HR and Healthcare across South Asia."
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ScrollReveal>
           </div>
         </div>
       </div>
@@ -92,13 +169,18 @@ const AboutUsPage: React.FC = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {stats.map((stat, index) => (
-            <div key={index} className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200 text-center">
-              <div className="w-12 h-12 bg-[#003973]/10 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <stat.icon className="w-6 h-6 text-[#003973]" />
-              </div>
-              <div className="text-2xl md:text-3xl font-bold text-slate-900">{stat.value}</div>
-              <div className="text-sm text-slate-600">{stat.label}</div>
-            </div>
+            <ScrollReveal key={index} delay={0.1 * index} direction="up">
+              <motion.div 
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200 text-center h-full transition-shadow hover:shadow-xl"
+              >
+                <div className="w-12 h-12 bg-[#003973]/10 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <stat.icon className="w-6 h-6 text-[#003973]" />
+                </div>
+                <div className="text-2xl md:text-3xl font-bold text-slate-900">{stat.value}</div>
+                <div className="text-sm text-slate-600">{stat.label}</div>
+              </motion.div>
+            </ScrollReveal>
           ))}
         </div>
       </div>
@@ -106,20 +188,42 @@ const AboutUsPage: React.FC = () => {
       {/* Mission & Vision */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
         <div className="grid md:grid-cols-2 gap-12">
-          <div className="bg-gradient-to-br from-[#003973] to-[#00509E] rounded-2xl p-8 text-white">
-            <Target className="w-10 h-10 mb-4 text-blue-300" />
-            <h2 className="text-2xl font-bold mb-4">Our Mission</h2>
-            <p className="text-slate-200">
-              To democratize enterprise-grade HR management by providing accessible, intuitive, and powerful tools that enable businesses of all sizes to streamline their HR operations and focus on what matters most – their people.
-            </p>
-          </div>
-          <div className="bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl p-8 text-white">
-            <Lightbulb className="w-10 h-10 mb-4 text-emerald-300" />
-            <h2 className="text-2xl font-bold mb-4">Our Vision</h2>
-            <p className="text-emerald-100">
-              To become the global leader in intelligent HR solutions, pioneering the use of AI and automation to create workplaces where every employee can thrive and every organization can reach its full potential.
-            </p>
-          </div>
+          <ScrollReveal direction="right">
+            <motion.div 
+              whileHover={{ 
+                scale: 1.03, 
+                y: -10,
+                boxShadow: "0 20px 40px -20px rgba(0, 57, 115, 0.4)"
+              }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              className="bg-gradient-to-br from-[#003973] to-[#00509E] rounded-3xl p-10 text-white h-full relative overflow-hidden group border border-blue-400/20"
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 transition-transform duration-700 group-hover:scale-150" />
+              <Target className="w-12 h-12 mb-6 text-blue-300 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110" />
+              <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
+              <p className="text-blue-100 text-lg leading-relaxed">
+                To democratize enterprise-grade HR management by providing accessible, intuitive, and powerful tools that enable businesses of all sizes to streamline their HR operations and focus on what matters most – their people.
+              </p>
+            </motion.div>
+          </ScrollReveal>
+          <ScrollReveal direction="left">
+            <motion.div 
+              whileHover={{ 
+                scale: 1.03, 
+                y: -10,
+                boxShadow: "0 20px 40px -20px rgba(5, 150, 105, 0.4)"
+              }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              className="bg-gradient-to-br from-emerald-600 to-teal-700 rounded-3xl p-10 text-white h-full relative overflow-hidden group border border-emerald-400/20"
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 transition-transform duration-700 group-hover:scale-150" />
+              <Lightbulb className="w-12 h-12 mb-6 text-emerald-300 transition-transform duration-500 group-hover:-rotate-12 group-hover:scale-110" />
+              <h2 className="text-3xl font-bold mb-6">Our Vision</h2>
+              <p className="text-emerald-50 text-lg leading-relaxed">
+                To become the global leader in intelligent HR solutions, pioneering the use of AI and automation to create workplaces where every employee can thrive and every organization can reach its full potential.
+              </p>
+            </motion.div>
+          </ScrollReveal>
         </div>
       </div>
 
@@ -136,13 +240,18 @@ const AboutUsPage: React.FC = () => {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {values.map((value, index) => (
-              <div key={index} className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-[#003973]/20 hover:shadow-lg transition-all duration-300">
-                <div className="w-12 h-12 bg-[#003973]/10 rounded-xl flex items-center justify-center mb-4">
-                  <value.icon className="w-6 h-6 text-[#003973]" />
-                </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">{value.title}</h3>
-                <p className="text-slate-600 text-sm">{value.description}</p>
-              </div>
+              <ScrollReveal key={index} delay={index * 0.1} direction="up" distance={20}>
+                <motion.div 
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-[#003973]/20 hover:shadow-xl transition-all duration-300 h-full"
+                >
+                  <div className="w-12 h-12 bg-[#003973]/10 rounded-xl flex items-center justify-center mb-4">
+                    <value.icon className="w-6 h-6 text-[#003973]" />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-900 mb-2">{value.title}</h3>
+                  <p className="text-slate-600 text-sm">{value.description}</p>
+                </motion.div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -155,60 +264,42 @@ const AboutUsPage: React.FC = () => {
             Our Journey
           </h2>
           <p className="text-slate-600 max-w-2xl mx-auto">
-            From a bold idea to a leading HR solution provider
+            Key milestones in our growth story
           </p>
         </div>
         <div className="relative">
           <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-[#003973] to-[#00509E] hidden md:block"></div>
           <div className="space-y-8">
             {timeline.map((item, index) => (
-              <div key={index} className={`flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
-                <div className="flex-1 md:px-8">
-                  <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                    <span className="inline-block px-3 py-1 bg-[#003973] text-white text-sm font-medium rounded-full mb-2">
-                      {item.year}
-                    </span>
-                    <h3 className="text-lg font-bold text-slate-900 mb-1">{item.title}</h3>
-                    <p className="text-slate-600 text-sm">{item.description}</p>
+              <ScrollReveal
+                key={index}
+                direction={index % 2 === 0 ? 'right' : 'left'}
+                delay={0.1}
+              >
+                <div className={`flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
+                  <div className="flex-1 md:px-8">
+                    <motion.div 
+                      whileHover={{ scale: 1.03, x: index % 2 === 0 ? 5 : -5 }}
+                      className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all"
+                    >
+                      <span className="inline-block px-3 py-1 bg-[#003973] text-white text-sm font-medium rounded-full mb-2">
+                        {item.year}
+                      </span>
+                      <h3 className="text-lg font-bold text-slate-900 mb-1">{item.title}</h3>
+                      <p className="text-slate-600 text-sm">{item.description}</p>
+                    </motion.div>
                   </div>
+                  <div className="hidden md:flex w-8 h-8 bg-[#003973] rounded-full items-center justify-center z-10">
+                    <CheckCircle className="w-4 h-4 text-white" />
+                  </div>
+                  <div className="flex-1"></div>
                 </div>
-                <div className="hidden md:flex w-8 h-8 bg-[#003973] rounded-full items-center justify-center z-10">
-                  <CheckCircle className="w-4 h-4 text-white" />
-                </div>
-                <div className="flex-1"></div>
-              </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Team Section */}
-      <div className="bg-slate-50 py-16 md:py-24">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-4">
-              Meet Our Leadership
-            </h2>
-            <p className="text-slate-600 max-w-2xl mx-auto">
-              A team of passionate experts dedicated to transforming HR
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {team.map((member, index) => (
-              <div key={index} className="bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-lg transition-shadow duration-300">
-                <div className="h-48 bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
-                  <Users className="w-16 h-16 text-slate-400" />
-                </div>
-                <div className="p-5">
-                  <h3 className="text-lg font-bold text-slate-900">{member.name}</h3>
-                  <p className="text-[#003973] font-medium text-sm mb-2">{member.role}</p>
-                  <p className="text-slate-600 text-sm">{member.bio}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
 
       {/* CTA Section */}
       <div className="bg-gradient-to-r from-[#003973] to-[#00509E] py-16">
@@ -221,10 +312,10 @@ const AboutUsPage: React.FC = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              to="/contact"
+              to="/pricing?trial=true"
               className="inline-flex items-center justify-center px-6 py-3 text-base font-bold text-[#003973] bg-white rounded-xl hover:bg-slate-50 transition-colors"
             >
-              Get Started
+              Get Started Free
               <ArrowRight className="w-5 h-5 ml-2" />
             </Link>
             <Link
@@ -240,33 +331,43 @@ const AboutUsPage: React.FC = () => {
       {/* Contact Info */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid md:grid-cols-3 gap-6">
-          <div className="flex items-start gap-4">
+          <motion.div whileHover={{ scale: 1.05, y: -5 }} className="flex items-start gap-4 p-4 rounded-2xl transition-colors hover:bg-white hover:shadow-md">
             <div className="w-12 h-12 bg-[#003973]/10 rounded-xl flex items-center justify-center shrink-0">
               <Mail className="w-6 h-6 text-[#003973]" />
             </div>
             <div>
               <h3 className="font-bold text-slate-900 mb-1">Email</h3>
-              <p className="text-slate-600">contact@abhivorn.com</p>
+              <a 
+                href="mailto:hello@abhivorn.com" 
+                className="text-slate-600 hover:text-[#003973] transition-colors flex items-center gap-2 group"
+              >
+                hello@abhivorn.com
+              </a>
             </div>
-          </div>
-          <div className="flex items-start gap-4">
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.05, y: -5 }} className="flex items-start gap-4 p-4 rounded-2xl transition-colors hover:bg-white hover:shadow-md">
             <div className="w-12 h-12 bg-[#003973]/10 rounded-xl flex items-center justify-center shrink-0">
               <Phone className="w-6 h-6 text-[#003973]" />
             </div>
             <div>
               <h3 className="font-bold text-slate-900 mb-1">Phone</h3>
-              <p className="text-slate-600">+1 (555) 123-4567</p>
+              <a 
+                href="tel:+919966629766" 
+                className="text-slate-600 hover:text-[#003973] transition-colors flex items-center gap-2 group"
+              >
+                +91 9966629766
+              </a>
             </div>
-          </div>
-          <div className="flex items-start gap-4">
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.05, y: -5 }} className="flex items-start gap-4 p-4 rounded-2xl transition-colors hover:bg-white hover:shadow-md">
             <div className="w-12 h-12 bg-[#003973]/10 rounded-xl flex items-center justify-center shrink-0">
               <MapPin className="w-6 h-6 text-[#003973]" />
             </div>
             <div>
               <h3 className="font-bold text-slate-900 mb-1">Location</h3>
-              <p className="text-slate-600">San Francisco, CA</p>
+              <p className="text-slate-600">Hyderabad, Telangana, India</p>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>

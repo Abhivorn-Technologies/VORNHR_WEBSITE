@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
+import ScrollReveal from "./ScrollReveal";
 import emailjs from "@emailjs/browser";
 
 const ContactPage: React.FC = () => {
@@ -124,7 +125,7 @@ const ContactPage: React.FC = () => {
     return (
         <section
             id="contact"
-            className="pt-24 pb-16 bg-[#F8FAFC] relative overflow-hidden"
+            className="pt-32 pb-16 md:pt-40 bg-[#F8FAFC] relative overflow-hidden"
         >
             {/* Background Pattern */}
             <div className="absolute inset-0 bg-grid-slate-200/50 [background-size:30px_30px] opacity-50" />
@@ -132,170 +133,165 @@ const ContactPage: React.FC = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Header */}
                 <div className="text-center mb-16">
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-6"
-                    >
-                        <Mail className="w-4 h-4 text-blue-600" />
-                        <span className="text-sm font-semibold text-blue-600">Get In Touch</span>
-                    </motion.div>
+                    <ScrollReveal direction="down">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-6">
+                            <Mail className="w-4 h-4 text-blue-600" />
+                            <span className="text-sm font-semibold text-blue-600">Get In Touch</span>
+                        </div>
+                    </ScrollReveal>
 
-                    <motion.h2
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4"
-                    >
-                        <span className="text-[#003973]">Ready to Transform Your</span>{" "}
-                        <br className="hidden md:block" />
-                        <span className="text-[#2ab6ea]">Workforce?</span>
-                    </motion.h2>
-                    <motion.p
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed"
-                    >
-                        Leave us a message and our HR team will contact you shortly.
-                    </motion.p>
+                    <ScrollReveal delay={0.2}>
+                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+                            <span className="text-[#003973]">Ready to Transform Your</span>{" "}
+                            <br className="hidden md:block" />
+                            <span className="text-[#2ab6ea]">Workforce?</span>
+                        </h2>
+                    </ScrollReveal>
+                    <ScrollReveal delay={0.3}>
+                        <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                            Leave us a message and our HR team will contact you shortly.
+                        </p>
+                    </ScrollReveal>
                 </div>
 
-                <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden flex flex-col lg:flex-row min-h-[500px]">
+                <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden flex flex-col lg:flex-row min-h-[600px] border border-slate-100">
                     {/* Left Info Column */}
-                    <div className="lg:w-2/5 bg-gradient-to-br from-blue-50 to-indigo-50 relative p-8 lg:p-10 text-slate-800 overflow-hidden flex flex-col justify-between">
+                    <div className="lg:w-2/5 bg-gradient-to-br from-blue-50 to-indigo-50 relative p-8 lg:p-12 text-slate-800 overflow-hidden flex flex-col justify-center">
                         {/* Decorative Gradient Effects */}
                         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 rounded-full bg-blue-200/30 blur-3xl" />
                         <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 rounded-full bg-indigo-200/30 blur-3xl" />
 
-                        <div className="relative z-10">
-                            <h3 className="text-2xl font-bold mb-6 text-slate-900">Contact Information</h3>
-                            <div className="space-y-8">
-                                <div className="flex items-start gap-4 group">
-                                    <div className="w-12 h-12 rounded-xl bg-white border border-blue-100 shadow-sm flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
-                                        <Phone className="w-5 h-5" />
+                        <ScrollReveal direction="right" distance={40}>
+                            <div className="relative z-10">
+                                <h3 className="text-2xl font-bold mb-6 text-slate-900">Contact Information</h3>
+                                <div className="space-y-8">
+                                    <div className="flex items-start gap-4 group">
+                                        <div className="w-12 h-12 rounded-xl bg-white border border-blue-100 shadow-sm flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shrink-0">
+                                            <Phone className="w-5 h-5" />
+                                        </div>
+                                        <div>
+                                            <h4 className="font-semibold text-lg text-slate-900">Phone</h4>
+                                            <p className="text-slate-600 mt-1 hover:text-blue-600 transition-colors cursor-pointer">+91 99666 29766</p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h4 className="font-semibold text-lg text-slate-900">Phone</h4>
-                                        <p className="text-slate-600 mt-1 hover:text-blue-600 transition-colors cursor-pointer">+91 99666 29766</p>
+                                    <div className="flex items-start gap-4 group">
+                                        <div className="w-12 h-12 rounded-xl bg-white border border-blue-100 shadow-sm flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shrink-0">
+                                            <Mail className="w-5 h-5" />
+                                        </div>
+                                        <div>
+                                            <h4 className="font-semibold text-lg text-slate-900">Email</h4>
+                                            <p className="text-slate-600 mt-1 hover:text-blue-600 transition-colors cursor-pointer">hr@abhivorn.com</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="flex items-start gap-4 group">
-                                    <div className="w-12 h-12 rounded-xl bg-white border border-blue-100 shadow-sm flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
-                                        <Mail className="w-5 h-5" />
-                                    </div>
-                                    <div>
-                                        <h4 className="font-semibold text-lg text-slate-900">Email</h4>
-                                        <p className="text-slate-600 mt-1 hover:text-blue-600 transition-colors cursor-pointer">hr@abhivorn.com</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-4 group">
-                                    <div className="w-12 h-12 rounded-xl bg-white border border-blue-100 shadow-sm flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
-                                        <MapPin className="w-5 h-5" />
-                                    </div>
-                                    <div>
-                                        <h4 className="font-semibold text-lg text-slate-900">Office</h4>
-                                        <p className="text-slate-600 mt-1 leading-relaxed">
-                                            Matrix IT Hub, Near Temple Bus Stop,<br />
-                                            KPHB Phase 2, Kukatpally,<br />
-                                            Hyderabad, Telangana, India, 500072
-                                        </p>
+                                    <div className="flex items-start gap-4 group">
+                                        <div className="w-12 h-12 rounded-xl bg-white border border-blue-100 shadow-sm flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shrink-0">
+                                            <MapPin className="w-5 h-5" />
+                                        </div>
+                                        <div>
+                                            <h4 className="font-semibold text-lg text-slate-900">Office</h4>
+                                            <p className="text-slate-600 mt-1 leading-relaxed">
+                                                Matrix IT Hub, Near Temple Bus Stop,<br />
+                                                KPHB Phase 2, Kukatpally,<br />
+                                                Hyderabad, Telangana, India, 500072
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </ScrollReveal>
                     </div>
 
                     {/* Right Form Column */}
-                    <div className="lg:w-3/5 p-8 lg:p-10 bg-white relative">
-                        <form onSubmit={handleSubmit} className="space-y-4 max-w-lg mx-auto lg:mx-0">
-                            <div className="grid md:grid-cols-2 gap-4">
+                    <div className="lg:w-3/5 p-8 lg:p-12 bg-white relative flex flex-col justify-center">
+                        <ScrollReveal direction="left" delay={0.2} distance={40}>
+                            <form onSubmit={handleSubmit} className="space-y-4 max-w-lg mx-auto lg:mx-0">
+                                <div className="grid md:grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-semibold text-slate-700">First Name</label>
+                                        <input
+                                            name="name"
+                                            value={formState.name}
+                                            onChange={handleChange}
+                                            required
+                                            className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:border-[#39a4de] focus:ring-4 focus:ring-[#39a4de]/10 outline-none transition-all duration-300"
+                                            placeholder="John Doe"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-semibold text-slate-700">Phone Number</label>
+                                        <input
+                                            name="phone"
+                                            value={formState.phone}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:border-[#39a4de] focus:ring-4 focus:ring-[#39a4de]/10 outline-none transition-all duration-300"
+                                            placeholder="+91 00000 00000"
+                                        />
+                                    </div>
+                                </div>
+
                                 <div className="space-y-2">
-                                    <label className="text-sm font-semibold text-slate-700">First Name</label>
+                                    <label className="text-sm font-semibold text-slate-700">Email Address</label>
                                     <input
-                                        name="name"
-                                        value={formState.name}
+                                        type="email"
+                                        name="email"
+                                        value={formState.email}
                                         onChange={handleChange}
                                         required
                                         className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:border-[#39a4de] focus:ring-4 focus:ring-[#39a4de]/10 outline-none transition-all duration-300"
-                                        placeholder="John Doe"
+                                        placeholder="john@company.com"
                                     />
                                 </div>
+
                                 <div className="space-y-2">
-                                    <label className="text-sm font-semibold text-slate-700">Phone Number</label>
-                                    <input
-                                        name="phone"
-                                        value={formState.phone}
+                                    <label className="text-sm font-semibold text-slate-700">Subject</label>
+                                    <select
+                                        name="subject"
+                                        value={formState.subject}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:border-[#39a4de] focus:ring-4 focus:ring-[#39a4de]/10 outline-none transition-all duration-300"
-                                        placeholder="+91 00000 00000"
+                                        required
+                                        className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:border-[#39a4de] focus:ring-4 focus:ring-[#39a4de]/10 outline-none transition-all duration-300 text-slate-600"
+                                    >
+                                        <option value="" disabled>Select a topic</option>
+                                        <option value="demo">Request a Demo</option>
+                                        <option value="sales">Sales Inquiry</option>
+                                        <option value="support">Customer Support</option>
+                                        <option value="partnership">Partnership</option>
+                                    </select>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-semibold text-slate-700">Message</label>
+                                    <textarea
+                                        name="message"
+                                        value={formState.message}
+                                        onChange={handleChange}
+                                        required
+                                        rows={4}
+                                        className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:border-[#39a4de] focus:ring-4 focus:ring-[#39a4de]/10 outline-none transition-all duration-300 resize-none"
+                                        placeholder="Tell us about your requirements..."
                                     />
                                 </div>
-                            </div>
 
-                            <div className="space-y-2">
-                                <label className="text-sm font-semibold text-slate-700">Email Address</label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={formState.email}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:border-[#39a4de] focus:ring-4 focus:ring-[#39a4de]/10 outline-none transition-all duration-300"
-                                    placeholder="john@company.com"
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-sm font-semibold text-slate-700">Subject</label>
-                                <select
-                                    name="subject"
-                                    value={formState.subject}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:border-[#39a4de] focus:ring-4 focus:ring-[#39a4de]/10 outline-none transition-all duration-300 text-slate-600"
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className={`w-full py-3 rounded-xl font-bold text-lg text-white flex items-center justify-center gap-2 transition-all duration-300 shadow-xl ${isSuccess
+                                        ? "bg-green-500 hover:bg-green-600 shadow-green-500/30"
+                                        : "bg-gradient-to-r from-[#39a4de] to-[#2ab6ea] hover:shadow-lg hover:-translate-y-1 shadow-blue-500/30"
+                                        } disabled:opacity-70 disabled:cursor-not-allowed`}
                                 >
-                                    <option value="" disabled>Select a topic</option>
-                                    <option value="demo">Request a Demo</option>
-                                    <option value="sales">Sales Inquiry</option>
-                                    <option value="support">Customer Support</option>
-                                    <option value="partnership">Partnership</option>
-                                </select>
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-sm font-semibold text-slate-700">Message</label>
-                                <textarea
-                                    name="message"
-                                    value={formState.message}
-                                    onChange={handleChange}
-                                    required
-                                    rows={4}
-                                    className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:border-[#39a4de] focus:ring-4 focus:ring-[#39a4de]/10 outline-none transition-all duration-300 resize-none"
-                                    placeholder="Tell us about your requirements..."
-                                />
-                            </div>
-
-                            <button
-                                type="submit"
-                                disabled={isSubmitting}
-                                className={`w-full py-3 rounded-xl font-bold text-lg text-white flex items-center justify-center gap-2 transition-all duration-300 shadow-xl ${isSuccess
-                                    ? "bg-green-500 hover:bg-green-600 shadow-green-500/30"
-                                    : "bg-gradient-to-r from-[#39a4de] to-[#2ab6ea] hover:shadow-lg hover:-translate-y-1 shadow-blue-500/30"
-                                    } disabled:opacity-70 disabled:cursor-not-allowed`}
-                            >
-                                {isSubmitting
-                                    ? "Sending..."
-                                    : isSuccess
-                                        ? "Message Sent!"
-                                        : (
-                                            <>
-                                                Send Message <Send className="w-5 h-5" />
-                                            </>
-                                        )}
-                            </button>
-                        </form>
+                                    {isSubmitting
+                                        ? "Sending..."
+                                        : isSuccess
+                                            ? "Message Sent!"
+                                            : (
+                                                <>
+                                                    Send Message <Send className="w-5 h-5" />
+                                                </>
+                                            )}
+                                </button>
+                            </form>
+                        </ScrollReveal>
                     </div>
                 </div>
             </div>
