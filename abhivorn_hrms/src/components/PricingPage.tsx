@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
     AlertCircle,
@@ -36,8 +36,11 @@ type TrialFormState = {
     company_name: string;
     company_domain: string;
     selected_plan: string;
+    industry_category: string;
     message: string;
 };
+
+
 
 type Plan = {
     id: string;
@@ -116,8 +119,19 @@ const defaultTrialForm: TrialFormState = {
     company_name: '',
     company_domain: '',
     selected_plan: 'starter',
+    industry_category: '',
     message: ''
 };
+
+const industryCategories = [
+    "Agriculture", "Automobile", "Construction", "Consulting Services",
+    "E-commerce", "EdTech", "Energy & Utilities", "FinTech",
+    "Food & Beverage", "HealthTech", "Hospitality", "Information Technology (IT)",
+    "Legal Services", "Logistics & Supply Chain", "Manufacturing",
+    "Marketing & Advertising", "Media & Entertainment", "Real Estate",
+    "Retail", "SaaS (Software as a Service)", "Software Development",
+    "Telecommunications", "Travel & Tourism"
+];
 
 const faqCategories: { id: Category; label: string; icon: React.ReactNode }[] = [
     { id: 'general', label: 'General', icon: <LayoutGrid className="w-4 h-4" /> },
@@ -245,50 +259,41 @@ const PricingCalculator: React.FC = () => {
     const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>('idle');
     const [submissionError, setSubmissionError] = useState<string | null>(null);
     const [showTrialModal, setShowTrialModal] = useState(false);
+    const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+    const categoryDropdownRef = useRef<HTMLDivElement>(null);
     const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof TrialFormState, string>>>({});
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (categoryDropdownRef.current && !categoryDropdownRef.current.contains(event.target as Node)) {
+                setIsCategoryDropdownOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
     const openTrialModal = (selectedPlan: string) => {
         setTrialForm(prev => ({ ...prev, selected_plan: selectedPlan }));
         setShowTrialModal(true);
-        setSubmissionStatus('idle');
-        setSubmissionError(null);
-        setFieldErrors({});
     };
 
-    const validateTrialForm = () => {
+    const validateTrialForm = (): Partial<Record<keyof TrialFormState, string>> => {
         const errors: Partial<Record<keyof TrialFormState, string>> = {};
-
-        if (!trialForm.name.trim()) {
-            errors.name = 'Full name is required';
-        }
-
+        if (!trialForm.name.trim()) errors.name = 'Full Name is required';
         if (!trialForm.email.trim()) {
-            errors.email = 'Work email is required';
-        } else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(trialForm.email.trim())) {
-            errors.email = 'Enter a valid email';
+            errors.email = 'Work Email is required';
+        } else if (!/\S+@\S+\.\S+/.test(trialForm.email)) {
+            errors.email = 'Invalid email address';
         }
-
-        if (!trialForm.phone.trim()) {
-            errors.phone = 'Phone is required';
-        } else if (!/^[0-9+\-\s]{7,15}$/.test(trialForm.phone.trim())) {
-            errors.phone = 'Enter a valid phone number';
-        }
-
-        if (!trialForm.company_name.trim()) {
-            errors.company_name = 'Company name is required';
-        }
-
-        if (!trialForm.company_domain.trim()) {
-            errors.company_domain = 'Company domain is required';
-        } else if (!/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(trialForm.company_domain.trim())) {
-            errors.company_domain = 'Enter a valid domain (e.g. company.com)';
-        }
-
+        if (!trialForm.phone.trim()) errors.phone = 'Phone number is required';
+        if (!trialForm.company_name.trim()) errors.company_name = 'Company Name is required';
+        if (!trialForm.company_domain.trim()) errors.company_domain = 'Company Domain is required';
+        if (!trialForm.industry_category.trim()) errors.industry_category = 'Industry Category is required';
         return errors;
     };
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
         const errors = validateTrialForm();
         setFieldErrors(errors);
 
@@ -321,10 +326,10 @@ const PricingCalculator: React.FC = () => {
             let nextSubmissionError = 'Unable to submit. Please verify your details.';
 
             try {
-                const data: unknown = await response.json();
+                const data: any = await response.json();
 
                 if (data && typeof data === 'object') {
-                    Object.entries(data as Record<string, unknown>).forEach(([key, value]) => {
+                    Object.entries(data).forEach(([key, value]) => {
                         if (Array.isArray(value) && value.length > 0) {
                             nextFieldErrors[key as keyof TrialFormState] = String(value[0]);
                         } else if (typeof value === 'string') {
@@ -647,6 +652,64 @@ const PricingCalculator: React.FC = () => {
                                                     onChange={event => setTrialForm({ ...trialForm, company_domain: event.target.value })}
                                                 />
                                                 {fieldErrors.company_domain && <span className="text-xs text-red-600">{fieldErrors.company_domain}</span>}
+                                            </div>
+
+                                            <div className="flex flex-col gap-1 sm:col-span-2 relative" ref={categoryDropdownRef}>
+                                                <label htmlFor="trial-category" className="text-xs font-semibold text-gray-600">
+                                                    Industry Category <span className="text-red-500">*</span>
+                                                </label>
+                                                <div className="relative">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
+                                                        className={`w-full flex items-center justify-between border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 transition-all ${
+                                                            fieldErrors.industry_category 
+                                                                ? 'border-red-400 focus:ring-red-200 bg-red-50/10' 
+                                                                : 'border-gray-200 focus:ring-[#2ab6ea] bg-white'
+                                                        }`}
+                                                    >
+                                                        <span className={trialForm.industry_category ? 'text-gray-900' : 'text-gray-400'}>
+                                                            {trialForm.industry_category || 'Select Category'}
+                                                        </span>
+                                                        <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isCategoryDropdownOpen ? 'rotate-180' : ''}`} />
+                                                    </button>
+
+                                                    <AnimatePresence>
+                                                        {isCategoryDropdownOpen && (
+                                                            <motion.div
+                                                                initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                                                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                                exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                                                                transition={{ duration: 0.2 }}
+                                                                className="absolute z-[60] left-0 right-0 mt-2 bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden"
+                                                            >
+                                                                <div className="max-h-[200px] overflow-y-auto py-2 custom-scrollbar">
+                                                                    {industryCategories.map((cat) => (
+                                                                        <button
+                                                                            key={cat}
+                                                                            type="button"
+                                                                            onClick={() => {
+                                                                                setTrialForm({ ...trialForm, industry_category: cat });
+                                                                                setIsCategoryDropdownOpen(false);
+                                                                                if (fieldErrors.industry_category) {
+                                                                                    setFieldErrors(prev => ({ ...prev, industry_category: undefined }));
+                                                                                }
+                                                                            }}
+                                                                            className={`w-full text-left px-4 py-2.5 text-sm transition-colors hover:bg-blue-50 ${
+                                                                                trialForm.industry_category === cat 
+                                                                                    ? 'text-[#003973] font-bold bg-blue-50/50' 
+                                                                                    : 'text-gray-600'
+                                                                            }`}
+                                                                        >
+                                                                            {cat}
+                                                                        </button>
+                                                                    ))}
+                                                                </div>
+                                                            </motion.div>
+                                                        )}
+                                                    </AnimatePresence>
+                                                </div>
+                                                {fieldErrors.industry_category && <span className="text-xs text-red-600">{fieldErrors.industry_category}</span>}
                                             </div>
                                         </div>
 
