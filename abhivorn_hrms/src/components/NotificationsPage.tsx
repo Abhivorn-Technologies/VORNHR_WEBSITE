@@ -6,6 +6,7 @@ import {
   ArrowRight, Star, Shield, Globe, Zap, ChevronRight,
   UserPlus, Calendar, DollarSign, FileText, TrendingUp
 } from 'lucide-react';
+import ScrollReveal from './ScrollReveal';
 
 const NotificationsPage: React.FC = () => {
   const notificationTypes = [
@@ -19,19 +20,19 @@ const NotificationsPage: React.FC = () => {
       icon: Mail,
       title: "Email Notifications",
       description: "Daily or weekly email digests",
-      color: "purple"
+      color: "sky"
     },
     {
       icon: Smartphone,
       title: "SMS Alerts",
       description: "Critical alerts via text message",
-      color: "green"
+      color: "indigo"
     },
     {
       icon: MessageSquare,
       title: "In-App Messages",
       description: "Real-time alerts within the app",
-      color: "orange"
+      color: "blue"
     }
   ];
 
@@ -141,108 +142,127 @@ const NotificationsPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-amber-900 via-orange-900 to-amber-900 py-20 md:py-28">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2 text-amber-400 mb-4">
-            <Bell className="w-5 h-5" />
-            <span className="text-sm font-medium">Notifications</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Smart Notifications
-          </h1>
-          <p className="text-lg text-slate-300 max-w-2xl">
-            Stay informed with intelligent notifications. Customize your alerts, set priorities, and never miss important updates from your HR team.
-          </p>
-          <p className="text-sm text-amber-400 mt-4 font-medium">
-            Always Stay Connected
-          </p>
+      <div className="relative bg-gradient-to-r from-[#003973] via-[#004e92] to-[#003973] pt-32 pb-20 md:pt-40 md:pb-28 min-h-[300px] md:min-h-[350px] flex flex-col items-center justify-center px-4 text-center overflow-hidden">
+        {/* Background Decorative Elements */}
+        <div className="absolute inset-0 bg-grid-white/[0.03] [background-size:40px_40px] pointer-events-none" />
+        
+        <div className="max-w-4xl mx-auto z-10">
+          <ScrollReveal direction="down">
+            <div className="flex items-center justify-center gap-2 text-sky-400 mb-6 font-semibold uppercase tracking-[0.2em] text-xs md:text-sm">
+              <Bell className="w-5 h-5" />
+              <span>Smart Notifications</span>
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={0.2}>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">
+              Stay Connected
+            </h1>
+          </ScrollReveal>
+          <ScrollReveal delay={0.3}>
+            <p className="text-lg md:text-xl text-slate-200 max-w-2xl mx-auto leading-relaxed opacity-90">
+              Stay informed with intelligent notifications. Customize your alerts, set priorities, and never miss important updates from your HR team.
+            </p>
+          </ScrollReveal>
+          <ScrollReveal delay={0.4} direction="up" distance={10}>
+            <div className="mt-8">
+              <p className="text-sm text-sky-400 font-bold uppercase tracking-widest">
+                Always Stay Connected with Precision
+              </p>
+            </div>
+          </ScrollReveal>
         </div>
       </div>
 
       {/* Notification Preview */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-20">
         <div className="grid md:grid-cols-2 gap-6">
           {/* Notification Center */}
-          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-            <div className="p-4 border-b border-slate-200 flex items-center justify-between">
-              <h3 className="font-semibold text-slate-900">Notification Center</h3>
-              <button className="text-sm text-amber-600 hover:text-amber-700 font-medium">
-                Mark all as read
-              </button>
-            </div>
-            <div className="divide-y divide-slate-100 max-h-[400px] overflow-y-auto">
-              {sampleNotifications.map((notif, index) => (
-                <div 
-                  key={index} 
-                  className={`p-4 hover:bg-slate-50 transition-colors ${
-                    !notif.read ? 'bg-amber-50/50' : ''
-                  }`}
-                >
-                  <div className="flex items-start gap-3">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                      notif.type === 'success' ? 'bg-green-100' :
-                      notif.type === 'warning' ? 'bg-amber-100' : 'bg-blue-100'
-                    }`}>
-                      <notif.icon className={`w-5 h-5 ${
-                        notif.type === 'success' ? 'text-green-600' :
-                        notif.type === 'warning' ? 'text-amber-600' : 'text-blue-600'
-                      }`} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <h4 className="font-medium text-slate-900">{notif.title}</h4>
-                        {!notif.read && (
-                          <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
-                        )}
+          <ScrollReveal direction="right" distance={40}>
+            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden h-full">
+              <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
+                <h3 className="font-bold text-[#003973]">Notification Center</h3>
+                <button className="text-sm text-[#39a4de] hover:text-[#003973] font-bold">
+                  Mark all as read
+                </button>
+              </div>
+              <div className="divide-y divide-slate-100 max-h-[400px] overflow-y-auto">
+                {sampleNotifications.map((notif, index) => (
+                  <div 
+                    key={index} 
+                    className={`p-4 hover:bg-blue-50/30 transition-colors ${
+                      !notif.read ? 'bg-blue-50/80 border-l-4 border-[#39a4de]' : ''
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                        notif.type === 'success' ? 'bg-green-100' :
+                        notif.type === 'warning' ? 'bg-amber-100' : 'bg-blue-100'
+                      }`}>
+                        <notif.icon className={`w-5 h-5 ${
+                          notif.type === 'success' ? 'text-green-600' :
+                          notif.type === 'warning' ? 'text-amber-600' : 'text-blue-600'
+                        }`} />
                       </div>
-                      <p className="text-sm text-slate-600 truncate">{notif.message}</p>
-                      <p className="text-xs text-slate-400 mt-1">{notif.time}</p>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <h4 className={`font-bold ${!notif.read ? 'text-[#003973]' : 'text-slate-700'}`}>{notif.title}</h4>
+                          {!notif.read && (
+                            <span className="w-2 h-2 bg-[#2ab6ea] rounded-full animate-pulse"></span>
+                          )}
+                        </div>
+                        <p className="text-sm text-slate-600 truncate">{notif.message}</p>
+                        <p className="text-xs text-slate-400 mt-1">{notif.time}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Notification Settings */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                <Settings className="w-5 h-5 text-amber-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-900">Notification Settings</h3>
-                <p className="text-sm text-slate-500">Manage your preferences</p>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              {notificationCategories.slice(0, 4).map((cat, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <cat.icon className="w-5 h-5 text-slate-600" />
-                    <div>
-                      <h4 className="font-medium text-slate-900 text-sm">{cat.title}</h4>
-                      <p className="text-xs text-slate-500">{cat.desc}</p>
-                    </div>
-                  </div>
-                  <button className={`w-11 h-6 rounded-full transition-colors ${
-                    cat.enabled ? 'bg-amber-500' : 'bg-slate-300'
-                  }`}>
-                    <span className={`block w-5 h-5 bg-white rounded-full shadow transform transition-transform ${
-                      cat.enabled ? 'translate-x-5' : 'translate-x-0.5'
-                    }`}></span>
-                  </button>
+          <ScrollReveal direction="left" distance={40}>
+            <div className="bg-white rounded-2xl border border-slate-200 p-6 h-full">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                  <Settings className="w-5 h-5 text-[#003973]" />
                 </div>
-              ))}
-            </div>
+                <div>
+                  <h3 className="font-bold text-[#003973]">Notification Settings</h3>
+                  <p className="text-sm text-slate-500">Manage your preferences</p>
+                </div>
+              </div>
 
-            <button className="w-full mt-4 p-3 text-center text-amber-600 hover:text-amber-700 font-medium text-sm border border-amber-200 rounded-lg hover:bg-amber-50 transition-colors">
-              View All Settings
-            </button>
-          </div>
+              <div className="space-y-4">
+                {notificationCategories.slice(0, 4).map((cat, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <cat.icon className="w-5 h-5 text-slate-600" />
+                      <div>
+                        <h4 className="font-medium text-slate-900 text-sm">{cat.title}</h4>
+                        <p className="text-xs text-slate-500">{cat.desc}</p>
+                      </div>
+                    </div>
+                    <button 
+                      className={`w-12 h-6 rounded-full transition-all duration-300 relative ${
+                        cat.enabled ? 'bg-[#2ab6ea]' : 'bg-slate-300'
+                      }`}
+                    >
+                      <span className={`absolute top-0.5 block w-5 h-5 bg-white rounded-full shadow-lg transform transition-transform duration-300 ${
+                        cat.enabled ? 'translate-x-6' : 'translate-x-1'
+                      }`}></span>
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <button className="w-full mt-4 p-3 text-center text-[#003973] hover:text-white font-bold text-sm border border-blue-100 rounded-xl hover:bg-[#003973] transition-all duration-300">
+                View All Settings
+              </button>
+            </div>
+          </ScrollReveal>
         </div>
       </div>
 
@@ -259,16 +279,17 @@ const NotificationsPage: React.FC = () => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {notificationTypes.map((type, index) => (
-            <div 
-              key={index} 
-              className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-amber-200 hover:shadow-lg hover:shadow-amber-50 transition-all duration-300"
-            >
-              <div className={`w-12 h-12 bg-${type.color}-100 rounded-xl flex items-center justify-center mb-4`}>
-                <type.icon className={`w-6 h-6 text-${type.color}-600`} />
+            <ScrollReveal key={index} delay={index * 0.1} direction="up" distance={30}>
+              <div 
+                className="group bg-white rounded-2xl p-6 border border-slate-200 hover:border-[#39a4de] hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-500 h-full"
+              >
+                <div className={`w-12 h-12 bg-${type.color}-50 group-hover:bg-[#39a4de] rounded-xl flex items-center justify-center mb-4 transition-colors`}>
+                  <type.icon className={`w-6 h-6 text-[#39a4de] group-hover:text-white transition-colors`} />
+                </div>
+                <h3 className="text-lg font-bold text-[#003973] mb-2">{type.title}</h3>
+                <p className="text-slate-600 text-sm">{type.description}</p>
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">{type.title}</h3>
-              <p className="text-slate-600 text-sm">{type.description}</p>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
       </div>
@@ -289,13 +310,13 @@ const NotificationsPage: React.FC = () => {
             {features.map((feature, index) => (
               <div 
                 key={index} 
-                className="bg-white rounded-xl p-5 border border-slate-200 flex items-start gap-4"
+                className="bg-white rounded-2xl p-5 border border-slate-200 flex items-start gap-4 hover:border-[#39a4de] transition-colors group"
               >
-                <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <feature.icon className="w-6 h-6 text-amber-600" />
+                <div className="w-12 h-12 bg-blue-50 group-hover:bg-[#39a4de] rounded-xl flex items-center justify-center flex-shrink-0 transition-colors">
+                  <feature.icon className="w-6 h-6 text-[#39a4de] group-hover:text-white transition-colors" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-slate-900">{feature.title}</h3>
+                  <h3 className="font-bold text-[#003973]">{feature.title}</h3>
                   <p className="text-sm text-slate-600 mt-1">{feature.description}</p>
                 </div>
               </div>
@@ -334,26 +355,29 @@ const NotificationsPage: React.FC = () => {
 
       {/* CTA Section */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-        <div className="bg-gradient-to-r from-amber-600 to-orange-600 rounded-2xl p-8 md:p-12 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-            Stay Connected Always
-          </h2>
-          <p className="text-amber-100 mb-8 max-w-xl mx-auto">
-            Customize your notification experience and never miss important updates from your organization.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link 
-              to="/contact"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-amber-600 rounded-lg font-medium hover:bg-amber-50 transition-colors"
+        <div className="bg-gradient-to-r from-[#003973] to-[#39a4de] rounded-2xl p-8 md:p-12 text-center shadow-2xl relative overflow-hidden">
+          <div className="absolute inset-0 bg-grid-white/10 [background-size:20px_20px] pointer-events-none" />
+          <div className="relative z-10">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+              Stay Connected Always
+            </h2>
+            <p className="text-blue-50 mb-10 max-w-xl mx-auto text-lg leading-relaxed">
+              Customize your notification experience and never miss important updates from your organization.
+            </p>
+            <div className="flex flex-wrap justify-center gap-5">
+              <Link 
+              to="/pricing?trial=true"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-rose-600 rounded-xl font-bold hover:bg-rose-50 transition-all hover:scale-105 active:scale-95 shadow-lg"
             >
-              Get Started <ArrowRight className="w-4 h-4" />
+              Get Started Free <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link 
-              to="/features"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-amber-700 text-white rounded-lg font-medium hover:bg-amber-800 transition-colors"
-            >
-              Explore Features
-            </Link>
+              <Link 
+                to="/features"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-[#2ab6ea] text-white rounded-xl font-bold hover:bg-[#39a4de] transition-all hover:scale-105 active:scale-95 shadow-lg"
+              >
+                Explore Features
+              </Link>
+            </div>
           </div>
         </div>
       </div>

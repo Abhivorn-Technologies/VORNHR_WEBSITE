@@ -4,6 +4,8 @@ import {
     AlertCircle,
     ArrowRight,
     BarChart,
+    Trash2,
+    X,
     Calendar,
     Check,
     ChevronDown,
@@ -24,6 +26,7 @@ import {
     Zap
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import ScrollReveal from './ScrollReveal';
 
 type BillingCycle = 'monthly' | 'yearly';
 type SubmissionStatus = 'idle' | 'success' | 'error';
@@ -73,7 +76,6 @@ const plans: Plan[] = [
             'Employee Directory',
             'Basic Reports',
             'Email Support',
-            'No Payroll / Payslip',
             '100 AI Credits'
         ]
     },
@@ -118,7 +120,7 @@ const defaultTrialForm: TrialFormState = {
     phone: '',
     company_name: '',
     company_domain: '',
-    selected_plan: 'starter',
+    selected_plan: 'growth',
     industry_category: '',
     message: ''
 };
@@ -253,7 +255,12 @@ const faqsByCategory: Record<Category, FaqItem[]> = {
 };
 
 const PricingCalculator: React.FC = () => {
-    const [billingCycle, setBillingCycle] = useState<BillingCycle>('monthly');
+    const [billingCycle, setBillingCycle] = useState<BillingCycle>(() => {
+        return (localStorage.getItem('vorn_hr_billing_cycle') as BillingCycle) || 'monthly';
+    });
+    const [selectedPlanId, setSelectedPlanId] = useState<string | null>(() => {
+        return localStorage.getItem('vorn_hr_selected_plan') || 'growth';
+    });
     const [trialForm, setTrialForm] = useState<TrialFormState>(defaultTrialForm);
     const [submitting, setSubmitting] = useState(false);
     const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>('idle');
@@ -269,20 +276,51 @@ const PricingCalculator: React.FC = () => {
                 setIsCategoryDropdownOpen(false);
             }
         };
+
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
+
+    useEffect(() => {
+        localStorage.setItem('vorn_hr_billing_cycle', billingCycle);
+    }, [billingCycle]);
+
+    useEffect(() => {
+        if (selectedPlanId) {
+            localStorage.setItem('vorn_hr_selected_plan', selectedPlanId);
+        }
+    }, [selectedPlanId]);
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('trial') === 'true') {
+            // Small delay to allow the page transition to settle
+            const timer = setTimeout(() => {
+                setShowTrialModal(true);
+            }, 600);
+
+            return () => clearTimeout(timer);
+        }
+    }, []);
+
+    const handlePlanSelect = (planId: string) => {
+        setSelectedPlanId(planId);
+    };
     const openTrialModal = (selectedPlan: string) => {
+        setSelectedPlanId(selectedPlan);
         setTrialForm(prev => ({ ...prev, selected_plan: selectedPlan }));
         setShowTrialModal(true);
+        setSubmissionStatus('idle');
+        setSubmissionError(null);
+        setFieldErrors({});
     };
 
     const validateTrialForm = (): Partial<Record<keyof TrialFormState, string>> => {
         const errors: Partial<Record<keyof TrialFormState, string>> = {};
         if (!trialForm.name.trim()) errors.name = 'Full Name is required';
         if (!trialForm.email.trim()) {
-            errors.email = 'Work Email is required';
-        } else if (!/\S+@\S+\.\S+/.test(trialForm.email)) {
+            errors.email = 'Email is required';
+        } else if (!/^[^\s@]+@[^\s@]+$/.test(trialForm.email)) {
             errors.email = 'Invalid email address';
         }
         if (!trialForm.phone.trim()) errors.phone = 'Phone number is required';
@@ -305,237 +343,340 @@ const PricingCalculator: React.FC = () => {
         setSubmissionStatus('idle');
         setSubmissionError(null);
 
-        const apiBase = import.meta.env.VITE_API_BASE_URL || 'https://api.vornhr.com';
-
         try {
-            const response = await fetch(`${apiBase}/api/v1/core/public/register/`, {
+            const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+            const registrationUrl = `${apiBaseUrl}/api/v1/core/public/register/`;
+
+            const payload = {
+                company_name: trialForm.company_name,
+                company_domain: trialForm.company_domain,
+                email: trialForm.email,
+                phone: trialForm.phone,
+                name: trialForm.name,
+                industry_category: trialForm.industry_category,
+                selected_plan: trialForm.selected_plan,
+                message: trialForm.message.trim()
+            };
+
+            const response = await fetch(registrationUrl, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(trialForm)
+                body: JSON.stringify(payload),
             });
 
-            if (response.status === 201) {
-                setSubmissionStatus('success');
-                setTrialForm(prev => ({ ...defaultTrialForm, selected_plan: prev.selected_plan }));
-                return;
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || result.detail || 'Failed to submit registration request.');
             }
 
-            const nextFieldErrors: Partial<Record<keyof TrialFormState, string>> = {};
-            let nextSubmissionError = 'Unable to submit. Please verify your details.';
-
-            try {
-                const data: any = await response.json();
-
-                if (data && typeof data === 'object') {
-                    Object.entries(data).forEach(([key, value]) => {
-                        if (Array.isArray(value) && value.length > 0) {
-                            nextFieldErrors[key as keyof TrialFormState] = String(value[0]);
-                        } else if (typeof value === 'string') {
-                            nextFieldErrors[key as keyof TrialFormState] = value;
-                        }
-                    });
-                }
-            } catch {
-                nextSubmissionError = 'Unable to submit right now. Please try again.';
-            }
-
-            if (Object.keys(nextFieldErrors).length > 0) {
-                nextSubmissionError = 'Please fix the highlighted fields.';
-            }
-
-            setFieldErrors(nextFieldErrors);
+            setSubmissionStatus('success');
+            setTrialForm(prev => ({ ...defaultTrialForm, selected_plan: prev.selected_plan }));
+        } catch (error: any) {
             setSubmissionStatus('error');
-            setSubmissionError(nextSubmissionError);
-        } catch {
-            setSubmissionStatus('error');
-            setSubmissionError('Network error. Please try again.');
+            setSubmissionError(error.message || 'Unable to submit your request right now. Please try again.');
         } finally {
             setSubmitting(false);
         }
     };
 
+
     return (
         <section className="w-full max-w-7xl mx-auto px-4" id="pricing-container">
             <div className="text-center mb-16">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-6">
-                    <CreditCard className="w-4 h-4 text-blue-600" />
-                    <span className="text-sm font-semibold text-blue-600">Flexible Plans</span>
-                </div>
+                <ScrollReveal direction="down">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-6">
+                        <CreditCard className="w-4 h-4 text-blue-600" />
+                        <span className="text-sm font-semibold text-blue-600">Flexible Plans</span>
+                    </div>
+                </ScrollReveal>
 
-                <motion.h2
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="text-4xl md:text-5xl font-bold mb-4 tracking-tight"
-                >
-                    <span className="text-[#003973]">Simple,</span>{' '}
-                    <span className="text-[#2ab6ea]">Transparent Pricing</span>
-                </motion.h2>
+                <ScrollReveal delay={0.2}>
+                    <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
+                        <AnimatePresence mode="wait">
+                            {selectedPlanId ? (
+                                <motion.div
+                                    key="selected-header"
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 1.05 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    <span className="text-[#003973]">You've Selected the</span>{' '}
+                                    <span className="text-[#2ab6ea] capitalize">{selectedPlanId}</span>{' '}
+                                    <span className="text-[#003973]">Plan</span>
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    key="default-header"
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 1.05 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    <span className="text-[#003973]">Simple,</span>{' '}
+                                    <span className="text-[#2ab6ea]">Transparent Pricing</span>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </h2>
+                </ScrollReveal>
 
-                <motion.p
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.1 }}
-                    className="text-lg text-gray-600 max-w-2xl mx-auto"
-                >
-                    Start with a 7-day free trial on any plan. No credit card needed.
-                </motion.p>
+                <ScrollReveal delay={0.3}>
+                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                        Start with a 7-day free trial on any plan. No credit card needed.
+                    </p>
+                </ScrollReveal>
 
-                <div className="mt-8 flex justify-center items-center gap-4">
-                    <span
-                        onClick={() => setBillingCycle('monthly')}
-                        className={`text-sm font-bold cursor-pointer transition-colors ${billingCycle === 'monthly' ? 'text-gray-900' : 'text-gray-500'}`}
-                    >
-                        Monthly
-                    </span>
-                    <button
-                        type="button"
-                        onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
-                        className={`relative w-14 h-8 rounded-full p-1 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${billingCycle === 'yearly' ? 'bg-[#2ab6ea]' : 'bg-gray-200'}`}
-                    >
-                        <motion.div
-                            className="w-6 h-6 bg-white rounded-full shadow-sm"
-                            animate={{ x: billingCycle === 'monthly' ? 0 : 24 }}
-                            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                        />
-                    </button>
-                    <span
-                        onClick={() => setBillingCycle('yearly')}
-                        className={`text-sm font-bold cursor-pointer transition-colors flex items-center gap-2 ${billingCycle === 'yearly' ? 'text-gray-900' : 'text-gray-500'}`}
-                    >
-                        Yearly
-                        <span className="bg-emerald-100 text-emerald-700 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wide shadow-sm border border-emerald-200">
-                            Save ~17%
+                <ScrollReveal delay={0.4} direction="up" distance={20}>
+                    <div className="mt-10 flex justify-center items-center gap-6">
+                        <span
+                            onClick={() => setBillingCycle('monthly')}
+                            className={`text-sm font-bold cursor-pointer transition-all duration-300 ${billingCycle === 'monthly' ? 'text-[#003973] scale-110' : 'text-gray-400 hover:text-gray-600'}`}
+                        >
+                            Monthly
                         </span>
-                    </span>
-                </div>
+                        <button
+                            type="button"
+                            onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
+                            className={`relative w-16 h-9 rounded-full p-1.5 transition-colors duration-500 focus:outline-none focus:ring-4 focus:ring-blue-100 ${billingCycle === 'yearly' ? 'bg-[#2ab6ea]' : 'bg-gray-200'}`}
+                        >
+                            <motion.div
+                                className="w-6 h-6 bg-white rounded-full shadow-lg"
+                                animate={{ x: billingCycle === 'monthly' ? 0 : 28 }}
+                                transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                            />
+                        </button>
+                        <span
+                            onClick={() => setBillingCycle('yearly')}
+                            className={`text-sm font-bold cursor-pointer transition-all duration-300 flex items-center gap-2 ${billingCycle === 'yearly' ? 'text-[#003973] scale-110' : 'text-gray-400 hover:text-gray-600'}`}
+                        >
+                            Yearly
+                            <motion.span 
+                                animate={{ scale: [1, 1.05, 1] }}
+                                transition={{ repeat: Infinity, duration: 2 }}
+                                className="bg-emerald-500 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-sm border border-emerald-400"
+                            >
+                                Save ~17%
+                            </motion.span>
+                        </span>
+                    </div>
+                </ScrollReveal>
             </div>
 
-            <div className="grid md:grid-cols-4 gap-4 mb-16">
+            <div className="grid md:grid-cols-4 gap-10 mb-16">
                 {plans.map((plan, index) => {
                     const isPopular = plan.id === 'growth';
+                    const isSelected = selectedPlanId === plan.id;
 
                     return (
-                        <motion.div
+                        <ScrollReveal
                             key={plan.id}
-                            initial={{ opacity: 0, y: 10 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.1 }}
-                            className={`relative rounded-3xl flex flex-col overflow-hidden h-full group transition-all duration-300 ${isPopular
-                                ? 'bg-white border-2 border-[#2ab6ea] shadow-xl z-10 scale-[1.02]'
-                                : 'bg-[#fbfbfc] border border-gray-200 shadow-sm hover:shadow-md hover:-translate-y-1'
-                                }`}
+                            delay={index * 0.1}
+                            direction="up"
                         >
-                            {isPopular && (
-                                <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-[#2ab6ea] text-white text-[10px] uppercase font-bold px-3 py-1 rounded-b-lg tracking-widest shadow-md">
-                                    Best Value
-                                </div>
-                            )}
+                            <motion.div
+                                whileHover={{ 
+                                    y: -20,
+                                    scale: 1.04,
+                                    borderColor: "#2ab6ea",
+                                    boxShadow: "0 50px 100px -20px rgba(0, 57, 115, 0.35), 0 30px 60px -30px rgba(42, 182, 234, 0.3)",
+                                    zIndex: 50
+                                }}
+                                transition={{ 
+                                    type: "spring", 
+                                    stiffness: 400, 
+                                    damping: 25,
+                                    mass: 1
+                                }}
+                                whileTap={{ scale: 0.98 }}
+                                onClick={() => handlePlanSelect(plan.id)}
+                                className={`relative rounded-3xl flex flex-col overflow-hidden h-full group cursor-pointer border-2 transition-all duration-300 ${
+                                    isSelected 
+                                        ? 'bg-white border-[#003973] shadow-2xl z-20 scale-[1.03] ring-4 ring-[#2ab6ea]/20'
+                                        : isPopular
+                                            ? 'bg-white border-[#2ab6ea] shadow-xl z-10 scale-[1.02]'
+                                            : 'bg-[#fbfbfc] border-gray-200 shadow-sm'
+                                }`}
+                            >
+                                {isPopular && (
+                                    <motion.div 
+                                        animate={{ 
+                                            scale: [1, 1.05, 1],
+                                            backgroundColor: ["#2ab6ea", "#003973", "#2ab6ea"]
+                                        }}
+                                        transition={{ repeat: Infinity, duration: 4 }}
+                                        className="absolute top-0 left-1/2 -translate-x-1/2 text-white text-[10px] uppercase font-bold px-4 py-1.5 rounded-b-xl tracking-widest shadow-lg z-30"
+                                    >
+                                        Best Value
+                                    </motion.div>
+                                )}
 
-                            <div className={`p-6 pb-4 border-b ${isPopular ? 'bg-blue-50/50 border-blue-100' : 'bg-[#f9fbfd] border-gray-100'}`}>
-                                <div className="flex items-start justify-between gap-3">
-                                    <h3 className={`text-lg font-bold ${isPopular ? 'text-[#003973]' : 'text-gray-900'}`}>
-                                        {plan.name} Plan
-                                    </h3>
-                                    {billingCycle === 'yearly' && (
-                                        <span className="shrink-0 bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-full border border-emerald-200 uppercase tracking-wide">
-                                            17% Off
+                                <div className={`p-6 pb-4 border-b ${isPopular ? 'bg-blue-50/50 border-blue-100' : 'bg-[#f9fbfd] border-gray-100'}`}>
+                                    <div className="flex items-start justify-between gap-3">
+                                        <h3 className={`text-lg font-bold ${isPopular ? 'text-[#003973]' : 'text-gray-900'}`}>
+                                            {plan.name} Plan
+                                        </h3>
+                                        {billingCycle === 'yearly' && (
+                                            <span className="shrink-0 bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-full border border-emerald-200 uppercase tracking-wide">
+                                                17% Off
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="mt-3 flex items-baseline gap-1">
+                                        <AnimatePresence mode="wait">
+                                            <motion.span 
+                                                key={billingCycle}
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -10 }}
+                                                transition={{ duration: 0.3 }}
+                                                className="text-4xl font-extrabold text-gray-900 tracking-tight inline-block"
+                                            >
+                                                {billingCycle === 'monthly' ? plan.monthlyPrice : plan.yearlyPrice}
+                                            </motion.span>
+                                        </AnimatePresence>
+                                        <span className="text-gray-500 text-sm font-medium">
+                                            /{billingCycle === 'monthly' ? 'month' : 'year'}
                                         </span>
+                                    </div>
+                                    <p className="text-sm text-gray-500 mt-2 font-medium">{plan.description}</p>
+                                    {billingCycle === 'yearly' && (
+                                        <p className="text-xs font-semibold text-emerald-700 mt-3">{plan.yearlySavings}</p>
                                     )}
                                 </div>
-                                <div className="mt-3 flex items-baseline gap-1">
-                                    <span className="text-3xl font-extrabold text-gray-900 tracking-tight">
-                                        {billingCycle === 'monthly' ? plan.monthlyPrice : plan.yearlyPrice}
-                                    </span>
-                                    <span className="text-gray-500 text-sm font-medium">
-                                        /{billingCycle === 'monthly' ? 'month' : 'year'}
-                                    </span>
+
+                                <div className="flex-1 p-6">
+                                    <ul className="space-y-3">
+                                        {plan.features.map((feature, featureIndex) => (
+                                            <li key={featureIndex} className="flex items-start gap-3">
+                                                <div className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 ${isPopular ? 'bg-blue-100 text-[#003973]' : 'bg-gray-100 text-gray-500'}`}>
+                                                    <Check className="w-3 h-3" />
+                                                </div>
+                                                <span className="text-sm text-gray-600 font-medium leading-tight">{feature}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </div>
-                                <p className="text-sm text-gray-500 mt-2 font-medium">{plan.description}</p>
-                                {billingCycle === 'yearly' && (
-                                    <p className="text-xs font-semibold text-emerald-700 mt-3">{plan.yearlySavings}</p>
-                                )}
-                            </div>
 
-                            <div className="flex-1 p-6">
-                                <ul className="space-y-3">
-                                    {plan.features.map((feature, featureIndex) => (
-                                        <li key={featureIndex} className="flex items-start gap-3">
-                                            <div className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 ${isPopular ? 'bg-blue-100 text-[#003973]' : 'bg-gray-100 text-gray-500'}`}>
-                                                <Check className="w-3 h-3" />
-                                            </div>
-                                            <span className="text-sm text-gray-600 font-medium leading-tight">{feature}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-
-                            <div className="p-5 mt-auto">
-                                <button
-                                    type="button"
-                                    onClick={() => openTrialModal(plan.id)}
-                                    className={`w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 transition-all duration-300 active:scale-[0.98] ${isPopular
-                                        ? 'bg-[#2ab6ea] text-white hover:bg-[#003973]'
-                                        : 'bg-white border-2 border-[#2ab6ea] text-[#2ab6ea] hover:bg-[#2ab6ea] hover:text-white'
-                                        }`}
-                                >
-                                    Start 7-Day Trial
-                                    <ArrowRight className="w-4 h-4" />
-                                </button>
-                            </div>
-                        </motion.div>
+                                <div className="p-5 mt-auto">
+                                    <motion.button
+                                        type="button"
+                                        whileHover="hover"
+                                        onClick={() => openTrialModal(plan.id)}
+                                        className={`w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 transition-all duration-300 active:scale-[0.98] ${isPopular
+                                            ? 'bg-[#2ab6ea] text-white hover:bg-[#003973]'
+                                            : 'bg-white border-2 border-[#2ab6ea] text-[#2ab6ea] hover:bg-[#2ab6ea] hover:text-white'
+                                            }`}
+                                    >
+                                        Start 7-Day Trial
+                                        <motion.span
+                                            variants={{
+                                                hover: { x: 5 }
+                                            }}
+                                            transition={{ type: "spring", stiffness: 400 }}
+                                        >
+                                            <ArrowRight className="w-4 h-4" />
+                                        </motion.span>
+                                    </motion.button>
+                                </div>
+                            </motion.div>
+                        </ScrollReveal>
                     );
                 })}
 
-                <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.3 }}
-                    className="relative rounded-3xl flex flex-col overflow-hidden h-full group bg-[#fbfbfc] border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300"
-                >
-                    <div className="relative p-8 flex-1 flex flex-col justify-center text-center">
-                        <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                            <Zap className="w-8 h-8 text-[#2ab6ea]" />
-                        </div>
-
-                        <h3 className="text-xl font-bold text-gray-900 mb-4">Enterprise</h3>
-                        <p className="text-gray-500 text-sm leading-relaxed mb-8 font-medium">
-                            Tailored for teams with 50+ employees. Custom workflows, dedicated account manager, and API access.
-                        </p>
-
-                        <div className="mt-auto">
-                            <Link
-                                to="/contact"
-                                className="w-full bg-gray-900 border-2 border-gray-900 text-white hover:bg-black py-4 rounded-xl text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2"
+                <ScrollReveal delay={0.4} direction="up">
+                    <motion.div
+                        whileHover={{ 
+                            y: -10,
+                            scale: 1.03, 
+                            borderColor: "#2ab6ea",
+                            boxShadow: "0 40px 60px -15px rgba(0, 57, 115, 0.2)",
+                        }}
+                        transition={{ 
+                            type: "spring", 
+                            stiffness: 400, 
+                            damping: 25 
+                        }}
+                        whileTap={{ scale: 0.98 }}
+                        className="relative rounded-3xl flex flex-col overflow-hidden h-full group bg-[#fbfbfc] border-2 border-gray-200 shadow-sm transition-all duration-300 cursor-pointer"
+                        onClick={() => window.location.href = '/contact'}
+                    >
+                        <div className="relative p-8 flex-1 flex flex-col justify-center text-center">
+                            <motion.div 
+                                whileHover={{ scale: 1.25, rotate: 12 }}
+                                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                                className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-6 cursor-default"
                             >
-                                Contact Sales
-                                <ArrowRight className="w-4 h-4" />
-                            </Link>
+                                <Zap className="w-8 h-8 text-[#2ab6ea]" />
+                            </motion.div>
+
+                            <h3 className="text-xl font-bold text-gray-900 mb-4">Enterprise</h3>
+                            <p className="text-gray-500 text-sm leading-relaxed mb-8 font-medium">
+                                Tailored for teams with 50+ employees. Custom workflows, dedicated account manager, and API access.
+                            </p>
+
+                            <div className="mt-auto">
+                                <motion.div
+                                    whileHover="hover"
+                                    className="w-full"
+                                >
+                                    <Link
+                                        to="/contact"
+                                        className="w-full bg-gray-900 border-2 border-gray-900 text-white hover:bg-black py-4 rounded-xl text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2"
+                                    >
+                                        Contact Sales
+                                        <motion.span
+                                            variants={{
+                                                hover: { x: 5 }
+                                            }}
+                                            transition={{ type: "spring", stiffness: 400 }}
+                                        >
+                                            <ArrowRight className="w-4 h-4" />
+                                        </motion.span>
+                                    </Link>
+                                </motion.div>
+                            </div>
                         </div>
-                    </div>
-                </motion.div>
+                    </motion.div>
+                </ScrollReveal>
             </div>
 
             <AnimatePresence>
                 {showTrialModal && (
                     <motion.div
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        onClick={() => setShowTrialModal(false)}
+                        className="fixed inset-0 z-[9999] flex items-start justify-center p-4 sm:p-6 overflow-y-auto pt-24 md:pt-32"
+                        initial="hidden"
+                        animate="visible"
+                        exit="hidden"
                     >
                         <motion.div
-                            className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl p-6 relative overflow-hidden"
-                            initial={{ scale: 0.95, y: 20, opacity: 0 }}
-                            animate={{ scale: 1, y: 0, opacity: 1 }}
-                            exit={{ scale: 0.97, y: -10, opacity: 0 }}
-                            transition={{ type: 'spring', stiffness: 260, damping: 24 }}
+                            variants={{
+                                hidden: { opacity: 0 },
+                                visible: { opacity: 1 }
+                            }}
+                            transition={{ duration: 0.3 }}
+                            className="absolute inset-0 bg-slate-900/60 backdrop-blur-md cursor-pointer"
+                            onClick={() => setShowTrialModal(false)}
+                        />
+                        <motion.div
+                            variants={{
+                                hidden: { scale: 0.95, opacity: 0, y: -50 },
+                                visible: { 
+                                    scale: 1, 
+                                    opacity: 1, 
+                                    y: 0,
+                                    transition: { 
+                                        type: 'spring', 
+                                        stiffness: 300, 
+                                        damping: 25,
+                                        delay: 0.1 
+                                    }
+                                }
+                            }}
+                            className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl p-6 sm:p-8 relative overflow-hidden z-10 my-8"
                             onClick={event => event.stopPropagation()}
                         >
                             <button
@@ -595,14 +736,14 @@ const PricingCalculator: React.FC = () => {
 
                                             <div className="flex flex-col gap-1">
                                                 <label htmlFor="trial-email" className="text-xs font-semibold text-gray-600">
-                                                    Work Email <span className="text-red-500">*</span>
+                                                    Email <span className="text-red-500">*</span>
                                                 </label>
                                                 <input
                                                     id="trial-email"
                                                     required
                                                     type="email"
                                                     className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${fieldErrors.email ? 'border-red-400 focus:ring-red-200' : 'border-gray-200 focus:ring-[#2ab6ea]'}`}
-                                                    placeholder="Work Email"
+                                                    placeholder="Email"
                                                     value={trialForm.email}
                                                     onChange={event => setTrialForm({ ...trialForm, email: event.target.value })}
                                                 />
@@ -742,16 +883,93 @@ const PricingCalculator: React.FC = () => {
                                                     initial={{ opacity: 0, y: 6 }}
                                                     animate={{ opacity: 1, y: 0 }}
                                                     exit={{ opacity: 0, y: -6 }}
-                                                    className="text-sm text-red-700 font-semibold bg-red-50 border border-red-200 rounded-xl px-3 py-2 break-words"
+                                                    className="text-sm text-red-700 font-semibold bg-red-50 border border-red-200 rounded-xl px-3 py-2 break-words mt-4"
                                                 >
                                                     {submissionError || 'Something went wrong. Please try again.'}
                                                 </motion.div>
                                             )}
                                         </AnimatePresence>
+
                                     </form>
                                 </>
                             )}
                         </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {selectedPlanId && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        className="mt-20 border-t pt-16"
+                    >
+                        <div className="text-center mb-12">
+                            <h3 className="text-3xl font-bold text-[#003973]">Feature Comparison</h3>
+                            <p className="text-gray-500 mt-2">Detailed breakdown of what's included in your selected plan</p>
+                        </div>
+                        <div className="overflow-x-auto pb-8">
+                            <table className="w-full text-left border-collapse min-w-[600px]">
+                                <thead>
+                                    <tr className="border-b">
+                                        <th className="py-4 px-6 text-sm font-bold text-gray-500 uppercase tracking-wider">Features</th>
+                                        {plans.map(p => (
+                                            <th 
+                                                key={p.id} 
+                                                className={`py-4 px-6 text-sm font-bold uppercase tracking-wider text-center transition-all duration-300 ${selectedPlanId === p.id ? 'text-[#2ab6ea] bg-blue-50/50 rounded-t-xl scale-105' : 'text-gray-500'}`}
+                                            >
+                                                {p.name}
+                                            </th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {[
+                                        { name: 'Employee Management', bold: true },
+                                        { name: 'Attendance & Leave', bold: true },
+                                        { name: 'Payroll & Payslips', plans: ['growth', 'business'] },
+                                        { name: 'HR Analytics', plans: ['business'] },
+                                        { name: 'Role-Based Controls', plans: ['business'] },
+                                        { name: 'Employee Self-Service', plans: ['growth', 'business'] },
+                                        { name: 'Priority Support', plans: ['business'] },
+                                        { name: 'AI Credits', dynamic: true }
+                                    ].map((feature, i) => (
+                                        <motion.tr 
+                                            key={i} 
+                                            initial={{ opacity: 0, x: -10 }}
+                                            whileInView={{ opacity: 1, x: 0 }}
+                                            viewport={{ }}
+                                            transition={{ delay: i * 0.05 }}
+                                            className="border-b hover:bg-gray-50/50 transition-colors"
+                                        >
+                                            <td className="py-5 px-6 font-medium text-gray-700">{feature.name}</td>
+                                            {plans.map(p => {
+                                                const hasFeature = feature.plans ? feature.plans.includes(p.id) : true;
+                                                const isSelected = selectedPlanId === p.id;
+                                                
+                                                let content;
+                                                if (feature.dynamic && feature.name === 'AI Credits') {
+                                                    content = p.id === 'starter' ? '100' : p.id === 'growth' ? '150' : '500';
+                                                } else {
+                                                    content = hasFeature ? <Check className="w-5 h-5 text-emerald-500 mx-auto" /> : <X className="w-4 h-4 text-gray-300 mx-auto" />;
+                                                }
+
+                                                return (
+                                                    <td 
+                                                        key={p.id} 
+                                                        className={`py-5 px-6 text-center transition-all duration-300 ${isSelected ? 'bg-blue-50/30 font-bold scale-105' : ''}`}
+                                                    >
+                                                        {content}
+                                                    </td>
+                                                );
+                                            })}
+                                        </motion.tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -776,7 +994,7 @@ const FAQ: React.FC = () => {
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
+                    viewport={{ }}
                     transition={{ duration: 0.5 }}
                     className="text-center mb-16"
                 >
@@ -856,7 +1074,7 @@ const FAQ: React.FC = () => {
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
+                    viewport={{ }}
                     className="relative"
                 >
                     <div className="bg-gradient-to-br from-white to-slate-50 rounded-3xl border border-gray-200 p-8 md:p-10 shadow-xl">

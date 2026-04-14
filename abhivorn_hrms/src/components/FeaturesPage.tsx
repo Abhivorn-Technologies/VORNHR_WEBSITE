@@ -6,6 +6,7 @@ import {
     Bell, CheckCircle, TrendingUp
 } from 'lucide-react';
 import { motion, useInView, useMotionValue, useTransform, animate } from 'framer-motion';
+import ScrollReveal from './ScrollReveal';
 
 // --- Brand Colors ---
 // Primary: #003973
@@ -13,7 +14,7 @@ import { motion, useInView, useMotionValue, useTransform, animate } from 'framer
 
 const CountUp = ({ to, prefix = "", suffix = "" }: { to: number, prefix?: string, suffix?: string }) => {
     const ref = useRef(null);
-    const inView = useInView(ref, { once: true });
+    const inView = useInView(ref, { });
     const count = useMotionValue(0);
     const rounded = useTransform(count, (latest) => `${prefix}${Math.round(latest)}${suffix}`);
 
@@ -137,62 +138,72 @@ const FeaturesOverview: React.FC = () => {
 
                 {/* Header */}
                 <div className="text-center mb-12">
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-6"
-                    >
-                        <Layout className="w-4 h-4 text-blue-600" />
-                        <span className="text-sm font-semibold text-blue-600">Platform Capabilities</span>
-                    </motion.div>
-                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 tracking-tight text-[#003973]">
-                        Everything You Need to <span className="text-[#2ab6ea]">Scale</span>
-                    </h2>
-                    <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                        A complete suite of tools designed to manage your workforce from onboarding to exit, all in one unified platform.
-                    </p>
+                    <ScrollReveal direction="down" duration={0.8}>
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-6">
+                            <Layout className="w-4 h-4 text-blue-600" />
+                            <span className="text-sm font-semibold text-blue-600">Platform Capabilities</span>
+                        </div>
+                    </ScrollReveal>
+                    <ScrollReveal delay={0.2}>
+                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 tracking-tight text-[#003973]">
+                            Everything You Need to <span className="text-[#2ab6ea]">Scale</span>
+                        </h2>
+                    </ScrollReveal>
+                    <ScrollReveal delay={0.3}>
+                        <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                            A complete suite of tools designed to manage your workforce from onboarding to exit, all in one unified platform.
+                        </p>
+                    </ScrollReveal>
                 </div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {/* Features List */}
                     {features.map((feature, index) => (
-                        <motion.button
+                        <ScrollReveal
                             key={index}
-                            onClick={() => setActiveTab(index)}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.05 }}
-                            className={`group relative text-left p-6 rounded-2xl transition-all duration-300 border h-full flex flex-col ${activeTab === index
-                                ? 'bg-[#e6f0fa] border-[#2ab6ea] shadow-xl scale-[1.02] border'
-                                : 'bg-white border-gray-100 hover:border-[#2ab6ea] hover:shadow-lg hover:bg-[#f0f9ff]'
-                                }`}
+                            delay={index % 3 * 0.1}
+                            direction="up"
                         >
+                            <motion.button
+                                onClick={() => setActiveTab(index)}
+                                whileHover={{ 
+                                    scale: 1.05, 
+                                    y: -8,
+                                    boxShadow: "0 20px 40px -15px rgba(0, 57, 115, 0.1)" 
+                                }}
+                                whileTap={{ scale: 0.98 }}
+                                transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                                className={`group relative text-left p-6 rounded-2xl transition-all duration-300 border h-full flex flex-col ${activeTab === index
+                                    ? 'bg-white border-[#2ab6ea] shadow-xl border-2'
+                                    : 'bg-white border-gray-100 hover:border-[#2ab6ea]'
+                                    }`}
+                            >
 
 
-                            <div className="flex items-start justify-between mb-4">
-                                <div className={`
-                                    flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 shadow-sm
-                                    ${activeTab === index ? feature.activeColor : 'bg-[#e6f0fa] text-[#003973] group-hover:bg-[#2ab6ea] group-hover:text-white'}
-                                `}>
-                                    {feature.icon}
+                                <div className="flex items-start justify-between mb-4">
+                                    <div className={`
+                                        flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 shadow-sm
+                                        ${activeTab === index ? feature.activeColor : 'bg-slate-50 text-[#003973] group-hover:bg-[#2ab6ea] group-hover:text-white'}
+                                    `}>
+                                        {feature.icon}
+                                    </div>
+                                    <div className={`opacity-0 group-hover:opacity-100 transition-opacity text-[#2ab6ea]`}>
+                                        <TrendingUp className="w-5 h-5" />
+                                    </div>
                                 </div>
-                                <div className={`opacity-0 group-hover:opacity-100 transition-opacity text-[#2ab6ea]`}>
-                                    <TrendingUp className="w-5 h-5" />
-                                </div>
-                            </div>
 
-                            <div>
-                                <h3 className={`font-bold text-lg mb-2 transition-colors duration-200 ${activeTab === index ? 'text-[#003973]' : 'text-gray-800 group-hover:text-[#2ab6ea]'
-                                    }`}>
-                                    {feature.title}
-                                </h3>
-                                <p className={`text-sm leading-relaxed transition-colors duration-200 ${activeTab === index ? 'text-gray-600' : 'text-gray-600'
-                                    }`}>
-                                    {feature.description}
-                                </p>
-                            </div>
-                        </motion.button>
+                                <div>
+                                    <h3 className={`font-bold text-lg mb-2 transition-colors duration-200 ${activeTab === index ? 'text-[#003973]' : 'text-gray-800 group-hover:text-[#2ab6ea]'
+                                        }`}>
+                                        {feature.title}
+                                    </h3>
+                                    <p className={`text-sm leading-relaxed transition-colors duration-200 ${activeTab === index ? 'text-gray-600' : 'text-gray-600'
+                                        }`}>
+                                        {feature.description}
+                                    </p>
+                                </div>
+                            </motion.button>
+                        </ScrollReveal>
                     ))}
                 </div>
 
@@ -200,25 +211,30 @@ const FeaturesOverview: React.FC = () => {
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
+                    viewport={{ }}
                     transition={{ duration: 0.5, delay: 0.3 }}
                     className="mt-10 pt-10 border-t border-gray-200"
                 >
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        {[
-                            { label: "Active Users", value: 100, suffix: "+", color: "text-[#003973]" },
+                        { [
+                            { label: "Active Users", value: 5000, suffix: "+", color: "text-[#003973]" },
                             { label: "Processed Payroll", value: 25, prefix: "₹", suffix: "L+", color: "text-[#2ab6ea]" },
                             { label: "Companies", value: 5, color: "text-[#003973]" },
                             { label: "Support Score", value: 99, suffix: "%", color: "text-[#2ab6ea]" }
                         ].map((stat, index) => (
-                            <div key={index} className="text-center group cursor-default">
-                                <div className={`text-3xl md:text-4xl font-bold ${stat.color} mb-2 transform group-hover:scale-105 transition-transform duration-300`}>
+                            <motion.div 
+                                key={index} 
+                                whileHover={{ scale: 1.1, y: -5 }}
+                                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                                className="text-center group cursor-default"
+                            >
+                                <div className={`text-3xl md:text-4xl font-bold ${stat.color} mb-2 transition-transform duration-300`}>
                                     <CountUp to={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
                                 </div>
                                 <div className="text-sm text-gray-500 font-medium uppercase tracking-wide">
                                     {stat.label}
                                 </div>
-                            </div>
+                            </motion.div>
                         ))}
                     </div>
                 </motion.div>
@@ -286,98 +302,91 @@ const DetailedFeatures: React.FC = () => {
         <section className="py-16 bg-gradient-to-b from-white to-[#f0f4f8] overflow-hidden">
             <div className="max-w-7xl mx-auto px-6">
                 <div className="text-center mb-12">
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-6"
-                    >
-                        <TrendingUp className="w-4 h-4 text-blue-600" />
-                        <span className="text-sm font-semibold text-blue-600">Beyond the Basics</span>
-                    </motion.div>
-                    <motion.h2
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
-                        className="mt-3 text-3xl md:text-4xl lg:text-5xl font-bold text-[#003973]"
-                    >
-                        Deep Dive into <span className="text-[#2ab6ea]">Advanced Features</span>
-                    </motion.h2>
+                    <ScrollReveal direction="down">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-6">
+                            <TrendingUp className="w-4 h-4 text-blue-600" />
+                            <span className="text-sm font-semibold text-blue-600">Beyond the Basics</span>
+                        </div>
+                    </ScrollReveal>
+                    <ScrollReveal delay={0.2}>
+                        <h2 className="mt-3 text-3xl md:text-4xl lg:text-5xl font-bold text-[#003973]">
+                            Deep Dive into <span className="text-[#2ab6ea]">Advanced Features</span>
+                        </h2>
+                    </ScrollReveal>
                 </div>
 
                 <div className="space-y-16">
                     {details.map((item, index) => (
-                        <motion.div
+                        <ScrollReveal
                             key={index}
-                            initial={{ opacity: 0, y: 40 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-100px" }}
-                            transition={{ duration: 0.7, ease: "easeOut" }}
-                            className={`flex flex-col ${item.direction} items-center gap-8 lg:gap-12`}
+                            direction={index % 2 === 0 ? 'right' : 'left'}
+                            distance={50}
+                            duration={0.8}
                         >
-                            {/* Image Side - SaaS Browser Style */}
-                            <div className="flex-1 w-full relative group">
-                                <motion.div
-                                    className="absolute inset-0 bg-gradient-to-br from-[#003973]/5 to-[#2ab6ea]/5 rounded-2xl transform scale-105 transition-all duration-500"
-                                    animate={{ y: [0, -8, 0] }}
-                                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: index * 0.2 }}
-                                />
+                            <motion.div 
+                                whileHover={{ scale: 1.01 }}
+                                transition={{ duration: 0.3 }}
+                                className={`flex flex-col ${item.direction} items-center gap-8 lg:gap-12 p-4 rounded-3xl transition-colors hover:bg-white hover:shadow-xl`}
+                            >
+                                {/* Image Side - SaaS Browser Style */}
+                                <div className="flex-1 w-full relative group">
+                                    <motion.div
+                                        className="absolute inset-0 bg-gradient-to-br from-[#003973]/5 to-[#2ab6ea]/5 rounded-2xl transform scale-105 transition-all duration-500"
+                                        animate={{ y: [0, -8, 0] }}
+                                        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: index * 0.2 }}
+                                    />
 
-                                <motion.div
-                                    className="relative rounded-xl overflow-hidden shadow-2xl bg-white border border-gray-200/60 ring-1 ring-gray-900/5"
-                                    animate={{ y: [0, -8, 0] }}
-                                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: index * 0.2 }}
-                                >
-                                    {/* Browser Header */}
-
-
-                                    <div className="relative overflow-hidden bg-gray-50 transition-colors duration-500">
-                                        {/* Browser Dots Overlay - Clean */}
-                                        <div className="absolute top-4 left-4 flex gap-2 z-20 opacity-0 group-hover:opacity-100 transition-all duration-300 transform -translate-y-2 group-hover:translate-y-0">
-                                            <div className="w-2.5 h-2.5 rounded-full bg-[#fa5f57] shadow-sm ring-1 ring-black/10" />
-                                            <div className="w-2.5 h-2.5 rounded-full bg-[#febc2e] shadow-sm ring-1 ring-black/10" />
-                                            <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f] shadow-sm ring-1 ring-black/10" />
-                                        </div>
-                                        <SmoothImage
-                                            src={item.image}
-                                            alt={item.title}
-                                            className="w-full h-auto object-contain transform group-hover:scale-105 transition-transform duration-700"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-[#003973]/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                    </div>
-                                </motion.div>
-
-                                {/* Floating Badge */}
-                                <div className={`absolute -bottom-6 ${item.direction === 'lg:flex-row' ? 'right-0' : 'left-0'} w-16 h-16 ${item.color} rounded-2xl shadow-lg flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300 z-20 ring-4 ring-white`}>
-                                    {item.icon}
-                                </div>
-                            </div>
-
-                            {/* Content Side */}
-                            <div className="flex-1 w-full">
-                                <div className="flex items-center gap-3 mb-4">
-                                    <span className="text-gray-500 font-bold uppercase tracking-wider text-xs">{item.subtitle}</span>
-                                </div>
-                                <h3 className="text-3xl md:text-4xl font-bold text-[#003973] mb-6 leading-tight">
-                                    {item.title}
-                                </h3>
-                                <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                                    {item.description}
-                                </p>
-                                <ul className="space-y-4">
-                                    {item.points.map((point, idx) => (
-                                        <li key={idx} className="flex items-start gap-3">
-                                            <div className={`mt-1 w-4 h-4 rounded-full ${item.color.replace('bg-', 'bg-opacity-10 bg-')} flex items-center justify-center flex-shrink-0`}>
-                                                <CheckCircle className={`w-2.5 h-2.5 ${item.color.replace('bg-', 'text-')}`} />
+                                    <motion.div
+                                        className="relative rounded-xl overflow-hidden shadow-2xl bg-white border border-gray-200/60 ring-1 ring-gray-900/5"
+                                        animate={{ y: [0, -8, 0] }}
+                                        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: index * 0.2 }}
+                                    >
+                                        <div className="relative overflow-hidden bg-gray-50 transition-colors duration-500">
+                                            {/* Browser Dots Overlay - Clean */}
+                                            <div className="absolute top-4 left-4 flex gap-2 z-20 opacity-0 group-hover:opacity-100 transition-all duration-300 transform -translate-y-2 group-hover:translate-y-0">
+                                                <div className="w-2.5 h-2.5 rounded-full bg-[#fa5f57] shadow-sm ring-1 ring-black/10" />
+                                                <div className="w-2.5 h-2.5 rounded-full bg-[#febc2e] shadow-sm ring-1 ring-black/10" />
+                                                <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f] shadow-sm ring-1 ring-black/10" />
                                             </div>
-                                            <span className="text-gray-700 font-medium">{point}</span>
-                                        </li>
-                                    ))}
-                                </ul>
+                                            <SmoothImage
+                                                src={item.image}
+                                                alt={item.title}
+                                                className="w-full h-auto object-contain transform group-hover:scale-105 transition-transform duration-700"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-[#003973]/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                        </div>
+                                    </motion.div>
 
-                            </div>
-                        </motion.div>
+                                    {/* Floating Badge */}
+                                    <div className={`absolute -bottom-6 ${item.direction === 'lg:flex-row' ? 'right-0' : 'left-0'} w-16 h-16 ${item.color} rounded-2xl shadow-lg flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300 z-20 ring-4 ring-white`}>
+                                        {item.icon}
+                                    </div>
+                                </div>
+
+                                {/* Content Side */}
+                                <div className="flex-1 w-full">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <span className="text-gray-500 font-bold uppercase tracking-wider text-xs">{item.subtitle}</span>
+                                    </div>
+                                    <h3 className="text-3xl md:text-4xl font-bold text-[#003973] mb-6 leading-tight">
+                                        {item.title}
+                                    </h3>
+                                    <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                                        {item.description}
+                                    </p>
+                                    <ul className="space-y-4">
+                                        {item.points.map((point, idx) => (
+                                            <li key={idx} className="flex items-start gap-3">
+                                                <div className={`mt-1 w-4 h-4 rounded-full ${item.color.replace('bg-', 'bg-opacity-10 bg-')} flex items-center justify-center flex-shrink-0`}>
+                                                    <CheckCircle className={`w-2.5 h-2.5 ${item.color.replace('bg-', 'text-')}`} />
+                                                </div>
+                                                <span className="text-gray-700 font-medium">{point}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </motion.div>
+                        </ScrollReveal>
                     ))}
                 </div>
             </div>
