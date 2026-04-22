@@ -36,8 +36,10 @@ const Navbar: React.FC = () => {
     const navLinks = [
         { name: 'Features', href: '/features' },
         { name: 'Solutions', href: '/solutions' },
+        { name: 'HRMS India', href: '/hrms-software-india' },
+        { name: 'Payroll', href: '/payroll-software' },
         { name: 'Pricing', href: '/pricing' },
-        { name: 'Contact', href: '/contact' },
+        { name: 'Demo', href: '/demo' },
     ];
 
     const handleNavClick = (e: React.MouseEvent, href: string) => {

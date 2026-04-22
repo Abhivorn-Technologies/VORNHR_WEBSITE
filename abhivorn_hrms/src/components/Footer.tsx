@@ -123,7 +123,7 @@ const Footer: React.FC = () => {
                 {/* Bottom Bar */}
                 <div className="border-t border-slate-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
                     <p className="text-sm text-slate-500">
-                        © {new Date().getFullYear()} <a href="https://www.abhivorn.com/" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition-colors">Abhivorn Technologies Pvt. Ltd.</a> All rights reserved.
+                        ©2025 <a href="https://www.abhivorn.com/" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition-colors">Abhivorn Technologies Pvt. Ltd.</a> All rights reserved.
                     </p>
                     <div className="flex items-center gap-1 text-sm text-slate-500">
                         <span>Built in India by</span>
@@ -133,7 +133,7 @@ const Footer: React.FC = () => {
                             rel="noopener noreferrer"
                             className="flex items-center gap-2.5 hover:text-blue-500 transition-colors font-medium "
                         >
-                            <img src="/abhivorn.webp" alt="Abhivorn" className="h-9 w-auto object-contain" />
+                            {/* <img src="/abhivorn.webp" alt="Abhivorn" className="h-9 w-auto object-contain" /> */}
                             <span>Abhivorn Technologies Pvt. Ltd.</span>
                         </a>
                     </div>
