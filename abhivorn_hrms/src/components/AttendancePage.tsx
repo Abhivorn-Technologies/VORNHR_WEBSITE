@@ -1,15 +1,12 @@
 import React, { useEffect } from 'react';
-import SEOLandingPage from './SEOLandingPage';
+import SEOLandingPage, { LandingPageProps } from './SEOLandingPage';
 import {
   MapPin, Fingerprint, Clock, Calendar, Users,
   ShieldCheck, Smartphone, CheckCircle, BarChart
 } from 'lucide-react';
 
 const AttendancePage: React.FC = () => {
-  useEffect(() => {
-    document.title = "Attendance Management Software India | GPS Tracking | VornHR";
-  }, []);
-  const pageData = {
+  const pageData: LandingPageProps = {
     title: "Attendance Management Software India | GPS Tracking | VornHR",
     metaDescription: "Track employee attendance with VornHR's GPS-based attendance system. Biometric integration, geo-fencing, shift management. Free demo.",
     heroHeadline: "Smart Attendance Tracking for Your Team",

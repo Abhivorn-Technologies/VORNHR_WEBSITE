@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import SEOLandingPage from './SEOLandingPage';
+import SEOLandingPage, { Section, LandingPageProps } from './SEOLandingPage';
 import {
   IndianRupee, Fingerprint, CalendarDays, Users2,
   BarChart, ChartLine, ShieldCheck, Smartphone,
@@ -7,15 +7,9 @@ import {
 } from 'lucide-react';
 
 const HRMSIndiaPage: React.FC = () => {
-  useEffect(() => {
-    document.title = "Best HRMS Software in India for Payroll, Attendance & Leave | VornHR";
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute("content", "VornHR is an all-in-one HRMS software for Indian businesses. Manage payroll, attendance, leave, employee records and performance from one smart platform.");
-    }
-  }, []);
-
-  const pageData = {
+  const pageData: LandingPageProps = {
+    title: "Best HRMS Software in India for Payroll, Attendance & Leave | VornHR",
+    metaDescription: "VornHR is an all-in-one HRMS software for Indian businesses. Manage payroll, attendance, leave, employee records and performance from one smart platform.",
     heroHeadline: "Best HRMS Software in India for Modern Businesses",
     heroSubheadline: "Automate payroll, attendance, leave management, and employee records with India's most trusted HR platform. TDS, PF, ESI compliant.",
     heroCTAPrimary: { text: "Book Free Demo", link: "/contact" },
@@ -44,7 +38,7 @@ const HRMSIndiaPage: React.FC = () => {
           { icon: <Zap className="w-6 h-6" />, title: "Easy to Use", description: "Intuitive interface that requires minimal training." }
         ]
       }
-    ],
+    ] as Section[],
     features: [
       { icon: <IndianRupee className="w-6 h-6" />, title: "Automated Payroll", description: "Process salaries in minutes, not hours" },
       { icon: <Fingerprint className="w-6 h-6" />, title: "Smart Attendance", description: "GPS tracking and geo-fencing" },

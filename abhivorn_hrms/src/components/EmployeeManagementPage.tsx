@@ -1,15 +1,12 @@
 import React, { useEffect } from 'react';
-import SEOLandingPage from './SEOLandingPage';
+import SEOLandingPage, { LandingPageProps } from './SEOLandingPage';
 import {
   Users2, Database, FileText, ShieldCheck,
   CheckCircle, Smartphone, BarChart, Folder
 } from 'lucide-react';
 
 const EmployeeManagementPage: React.FC = () => {
-  useEffect(() => {
-    document.title = "Employee Management Software India | Digital HR Records | VornHR";
-  }, []);
-  const pageData = {
+  const pageData: LandingPageProps = {
     title: "Employee Management Software India | Digital HR Records | VornHR",
     metaDescription: "Manage employee records digitally with VornHR. Centralized database, document management, org charts. Complete employee lifecycle management.",
     heroHeadline: "Digital Employee Management for Growing Teams",

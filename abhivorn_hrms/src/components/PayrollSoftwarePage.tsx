@@ -1,20 +1,14 @@
 import React, { useEffect } from 'react';
-import SEOLandingPage from './SEOLandingPage';
+import SEOLandingPage, { Section, LandingPageProps } from './SEOLandingPage';
 import {
   IndianRupee, ShieldCheck, Zap, Lock, Globe,
   Calculator, CreditCard, FileText, Percent, Wallet
 } from 'lucide-react';
 
 const PayrollSoftwarePage: React.FC = () => {
-  useEffect(() => {
-    document.title = "Best HRMS Software in India for Payroll, Attendance & Leave | VornHR";
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute("content", "VornHR is an all-in-one HRMS software for Indian businesses. Manage payroll, attendance, leave, employee records and performance from one smart platform.");
-    }
-  }, []);
-
-  const pageData = {
+  const pageData: LandingPageProps = {
+    title: "Best HRMS Software in India for Payroll, Attendance & Leave | VornHR",
+    metaDescription: "VornHR is an all-in-one HRMS software for Indian businesses. Manage payroll, attendance, leave, employee records and performance from one smart platform.",
     heroHeadline: "Smart Payroll Software for Indian Businesses",
     heroSubheadline: "Automate salary processing with TDS, PF, ESI calculations. Generate payslips in one click. Fully compliant with Indian tax laws.",
     heroCTAPrimary: { text: "Book Free Demo", link: "/contact" },
@@ -43,7 +37,7 @@ const PayrollSoftwarePage: React.FC = () => {
           { icon: <Globe className="w-6 h-6" />, title: "Multi-location", description: "Manage payroll across branches." }
         ]
       }
-    ],
+    ] as Section[],
     features: [
       { icon: <Calculator className="w-6 h-6" />, title: "TDS Automation", description: "Auto-calculate and deduct TDS" },
       { icon: <CreditCard className="w-6 h-6" />, title: "PF/ESI", description: "EPF and ESI compliance" },

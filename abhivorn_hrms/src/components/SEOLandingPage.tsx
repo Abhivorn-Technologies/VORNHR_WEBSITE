@@ -9,7 +9,7 @@ import {
   Zap, Lock, Globe, Headphones, CreditCard
 } from 'lucide-react';
 
-interface LandingPageProps {
+export interface LandingPageProps {
   title: string;
   metaDescription: string;
   heroHeadline: string;
@@ -22,32 +22,32 @@ interface LandingPageProps {
   testimonials?: Testimonial[];
 }
 
-interface Section {
+export interface SectionItem {
+  icon?: React.ReactNode;
+  title: string;
+  description: string;
+}
+
+export interface Section {
   type: 'features' | 'benefits' | 'audience' | 'comparison' | 'faq' | 'trust';
   title: string;
   subtitle?: string;
   items: SectionItem[];
 }
 
-interface SectionItem {
-  icon?: React.ReactNode;
-  title: string;
-  description: string;
-}
-
-interface Feature {
+export interface Feature {
   icon: React.ReactNode;
   title: string;
   description: string;
 }
 
-interface Stat {
+export interface Stat {
   value: number;
   suffix: string;
   label: string;
 }
 
-interface Testimonial {
+export interface Testimonial {
   name: string;
   role: string;
   company: string;
@@ -81,6 +81,14 @@ const SEOLandingPage: React.FC<LandingPageProps> = ({
   stats,
   testimonials
 }) => {
+  useEffect(() => {
+    document.title = title;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute("content", metaDescription);
+    }
+  }, [title, metaDescription]);
+
   const trustIndicators = [
     { icon: <CreditCard className="w-5 h-5" />, text: "No credit card required" },
     { icon: <CalendarDays className="w-5 h-5" />, text: "Cancel anytime" },

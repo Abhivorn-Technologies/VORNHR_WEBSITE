@@ -1,15 +1,12 @@
 import React, { useEffect } from 'react';
-import SEOLandingPage from './SEOLandingPage';
+import SEOLandingPage, { LandingPageProps } from './SEOLandingPage';
 import {
   Building, IndianRupee, ShieldCheck, CheckCircle,
   Users, Clock, BarChart, Globe, Database, MapPinned
 } from 'lucide-react';
 
 const HRMSForSMEsPage: React.FC = () => {
-  useEffect(() => {
-    document.title = "HRMS Software for SMEs India | Mid-Market HR Solution | VornHR";
-  }, []);
-  const pageData = {
+  const pageData: LandingPageProps = {
     title: "HRMS Software for SMEs India | Mid-Market HR Solution | VornHR",
     metaDescription: "VornHR offers comprehensive HRMS software for Indian SMEs. Automated payroll, multi-location support, compliance. Perfect for 50-500 employees.",
     heroHeadline: "HRMS for Growing Indian SMEs",

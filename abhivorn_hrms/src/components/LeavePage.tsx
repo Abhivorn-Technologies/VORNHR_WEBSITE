@@ -1,15 +1,12 @@
-import React, { useEffect } from 'react';
-import SEOLandingPage from './SEOLandingPage';
+import React from 'react';
+import SEOLandingPage, { LandingPageProps } from './SEOLandingPage';
 import {
   CalendarDays, CheckCircle, Users, Clock,
   ShieldCheck, Smartphone, BarChart, FileText
 } from 'lucide-react';
 
 const LeavePage: React.FC = () => {
-  useEffect(() => {
-    document.title = "Leave Management System India | Online Leave Tracker | VornHR";
-  }, []);
-  const pageData = {
+  const pageData: LandingPageProps = {
     title: "Leave Management System India | Online Leave Tracker | VornHR",
     metaDescription: "Manage employee leave requests online with VornHR. Automated approvals, leave balance tracking, holiday calendars. Simplify your leave management today.",
     heroHeadline: "Streamlined Leave Management for Indian Companies",

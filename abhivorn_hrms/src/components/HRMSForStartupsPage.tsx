@@ -1,15 +1,12 @@
-import React, { useEffect } from 'react';
-import SEOLandingPage from './SEOLandingPage';
+import React from 'react';
+import SEOLandingPage, { LandingPageProps } from './SEOLandingPage';
 import {
   Rocket, IndianRupee, Smartphone, CheckCircle,
   Users, Clock, ShieldCheck, Zap, Globe
 } from 'lucide-react';
 
 const HRMSForStartupsPage: React.FC = () => {
-  useEffect(() => {
-    document.title = "HRMS Software for Startups India | Affordable HR Tool | VornHR";
-  }, []);
-  const pageData = {
+  const pageData: LandingPageProps = {
     title: "HRMS Software for Startups India | Affordable HR Tool | VornHR",
     metaDescription: "VornHR offers affordable HRMS software designed for Indian startups. Quick setup, essential HR features, and scalable pricing. Start free today.",
     heroHeadline: "HRMS Built for Indian Startups",
