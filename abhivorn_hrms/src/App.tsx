@@ -19,7 +19,14 @@ import NotificationsPage from "./components/NotificationsPage";
 import RealTimeChatPage from "./components/RealTimeChatPage";
 import AboutUsPage from "./components/AboutUsPage";
 import BlogPage from "./components/BlogPage";
-import DeleteAccountPage from "./components/DeleteAccountPage";
+import HRMSIndiaPage from "./components/HRMSIndiaPage";
+import PayrollSoftwarePage from "./components/PayrollSoftwarePage";
+import AttendancePage from "./components/AttendancePage";
+import LeavePage from "./components/LeavePage";
+import EmployeeManagementPage from "./components/EmployeeManagementPage";
+import HRMSForStartupsPage from "./components/HRMSForStartupsPage";
+import HRMSForSMEsPage from "./components/HRMSForSMEsPage";
+import DemoPage from "./components/DemoPage";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -76,7 +83,14 @@ const AnimatedRoutes = () => {
           <Route path="realtime-chat" element={<PageTransition><RealTimeChatPage /></PageTransition>} />
           <Route path="about" element={<PageTransition><AboutUsPage /></PageTransition>} />
           <Route path="blog" element={<PageTransition><BlogPage /></PageTransition>} />
-          <Route path="delete-account" element={<PageTransition><DeleteAccountPage /></PageTransition>} />
+          <Route path="hrms-software-india" element={<PageTransition><HRMSIndiaPage /></PageTransition>} />
+          <Route path="payroll-software" element={<PageTransition><PayrollSoftwarePage /></PageTransition>} />
+          <Route path="attendance-management-software" element={<PageTransition><AttendancePage /></PageTransition>} />
+          <Route path="leave-management-system" element={<PageTransition><LeavePage /></PageTransition>} />
+          <Route path="employee-management-software" element={<PageTransition><EmployeeManagementPage /></PageTransition>} />
+          <Route path="hrms-for-startups" element={<PageTransition><HRMSForStartupsPage /></PageTransition>} />
+          <Route path="hrms-for-smes" element={<PageTransition><HRMSForSMEsPage /></PageTransition>} />
+          <Route path="demo" element={<PageTransition><DemoPage /></PageTransition>} />
         </Route>
       </Routes>
     </AnimatePresence>

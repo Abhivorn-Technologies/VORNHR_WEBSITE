@@ -38,7 +38,10 @@ import {
   User, UserCheck, UserPlus, Cog,
   BellOff, VolumeX, MicOff,
   Download as DownloadIcon, Upload as UploadIcon,
-  CalendarDays, Navigation as NavIcon
+  CalendarDays, Navigation as NavIcon,
+  Building2, IndianRupee, Fingerprint, ChartLine,
+  Rocket, Building as BuildingIcon, Network, MapPinned,
+  Gauge, BadgeIndianRupee, UserCircle, ClipboardList
 } from "lucide-react";
 
 // CountUp Component
@@ -199,16 +202,15 @@ const Hero: React.FC = () => {
               </div>
 
               <h1 className="text-4xl lg:text-6xl font-bold tracking-tight mb-4 leading-[1.1]">
-                <span className="text-[#003973]">Simplifying</span>{' '}
+                <span className="text-[#003973]">Smart HRMS Software</span>{' '}
                 <span className="text-[#2ab6ea]">
-                  HR Management
+                  for Growing Businesses in India
                 </span>
               </h1>
 
               <ScrollReveal delay={0.2}>
                 <p className="text-xl text-slate-600 mb-6 leading-relaxed max-w-lg">
-                  Empower your workforce with an intelligent, data-driven HR platform.
-                  From payroll to performance, we automate it all with precision and ease.
+                  Automate payroll, attendance, leave management, employee records and performance reviews with one powerful HR platform.
                 </p>
               </ScrollReveal>
 
@@ -220,10 +222,10 @@ const Hero: React.FC = () => {
                     transition={{ type: "spring", stiffness: 400, damping: 15 }}
                   >
                       <Link
-                        to="/pricing?trial=true"
+                        to="/contact"
                       className="group inline-flex items-center justify-center px-6 py-3 md:px-8 md:py-4 text-base font-bold text-white bg-gradient-to-r from-[#39a4de] to-[#2ab6ea] rounded-xl shadow-lg shadow-[#003973]/25 transition-all duration-300"
                     >
-                      Get Started Free
+                      Book Free Demo
                       <ArrowRight className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
                     </Link>
                   </motion.div>
@@ -233,13 +235,27 @@ const Hero: React.FC = () => {
                     transition={{ type: "spring", stiffness: 400, damping: 15 }}
                   >
                     <Link
-                      to="/contact"
+                      to="/pricing?trial=true"
                       className="group relative inline-flex items-center justify-center px-6 py-3 md:px-8 md:py-4 text-base font-bold text-slate-700 bg-white border border-slate-200/60 rounded-xl shadow-sm hover:border-[#39a4de]/30 hover:text-[#39a4de] transition-all duration-300 overflow-hidden"
                     >
                       <span className="absolute inset-0 bg-gradient-to-tr from-[#39a4de]/5 to-[#b5a5fa]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       <span className="relative flex items-center gap-2">
-                        <Video className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
-                        Book Demo
+                        Start Free Trial
+                      </span>
+                    </Link>
+                  </motion.div>
+                  <motion.div
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                  >
+                    <Link
+                      to="/pricing"
+                      className="group relative inline-flex items-center justify-center px-6 py-3 md:px-8 md:py-4 text-base font-bold text-[#003973] bg-white border border-slate-200/60 rounded-xl shadow-sm hover:border-[#003973]/30 transition-all duration-300 overflow-hidden"
+                    >
+                      <span className="absolute inset-0 bg-gradient-to-tr from-[#003973]/5 to-[#39a4de]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <span className="relative flex items-center gap-2">
+                        Get Pricing
                       </span>
                     </Link>
                   </motion.div>
@@ -466,6 +482,145 @@ const Hero: React.FC = () => {
               ))}
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* ================= CORE FEATURES SEO SECTION ================= */}
+      <section className="py-20 bg-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-slate-50 [background-size:40px_40px] opacity-40 pointer-events-none" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#003973]">
+              Complete <span className="text-[#2ab6ea]">HRMS Features</span> for Indian Businesses
+            </h2>
+            <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+              Everything you need to manage your workforce efficiently - from hire to retire.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { icon: <IndianRupee className="w-6 h-6" />, title: "Payroll Management", desc: "Automated salary processing with TDS, PF, ESI calculations and compliance." },
+              { icon: <Fingerprint className="w-6 h-6" />, title: "Attendance Tracking", desc: "GPS-based attendance, biometric integration, and real-time attendance reports." },
+              { icon: <CalendarDays className="w-6 h-6" />, title: "Leave Management", desc: "Online leave requests, approval workflows, and leave balance tracking." },
+              { icon: <Users2 className="w-6 h-6" />, title: "Employee Database", desc: "Centralized employee records, documents, and org chart management." },
+              { icon: <BarChart className="w-6 h-6" />, title: "Performance Reviews", desc: "Goal setting, appraisals, and performance analytics for your team." },
+              { icon: <ChartLine className="w-6 h-6" />, title: "Reports & Analytics", desc: "Real-time HR dashboards, custom reports, and data-driven insights." }
+            ].map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -5, boxShadow: "0 20px 40px -15px rgba(0, 57, 115, 0.15)" }}
+                className="bg-white rounded-2xl p-6 border border-slate-200 shadow-lg transition-all duration-300"
+              >
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#39a4de]/10 to-[#b5a5fa]/10 flex items-center justify-center mb-4 text-[#39a4de]">
+                  {feature.icon}
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">{feature.title}</h3>
+                <p className="text-slate-600 text-sm">{feature.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ================= WHO IT'S FOR SECTION ================= */}
+      <section className="py-20 bg-gradient-to-b from-slate-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#003973]">
+              Perfect HR Solution for <span className="text-[#2ab6ea]">Every Business Type</span>
+            </h2>
+            <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+              Whether you're a startup or enterprise, VornHR scales with your business needs.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { icon: <Rocket className="w-8 h-8" />, title: "Startups", desc: "Quick setup, affordable pricing, and essential HR tools to build your team." },
+              { icon: <BuildingIcon className="w-8 h-8" />, title: "SMEs", desc: "Mid-market features with automated payroll and compliance for growing businesses." },
+              { icon: <Building2 className="w-8 h-8" />, title: "Enterprises", desc: "Advanced analytics, multi-location management, and custom integrations." },
+              { icon: <MapPinned className="w-8 h-8" />, title: "Multi-location", desc: "Centralized HR management across branches with geo-tracking and compliance." }
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.03 }}
+                className="bg-white rounded-2xl p-8 border border-slate-200 shadow-lg text-center"
+              >
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#39a4de]/10 to-[#b5a5fa]/10 flex items-center justify-center mx-auto mb-4 text-[#39a4de]">
+                  {item.icon}
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 mb-2">{item.title}</h3>
+                <p className="text-slate-600 text-sm">{item.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ================= WHY CHOOSE VORNHR SECTION ================= */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#003973]">
+              Why Choose <span className="text-[#2ab6ea]">VornHR</span>
+            </h2>
+            <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+              The most trusted HRMS platform for Indian businesses.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { icon: <CheckCircle className="w-8 h-8" />, title: "Easy to Use", desc: "Intuitive interface that requires minimal training." },
+              { icon: <BadgeIndianRupee className="w-8 h-8" />, title: "India-ready Payroll", desc: "Built for Indian tax laws, PF, ESI, and compliance." },
+              { icon: <Smartphone className="w-8 h-8" />, title: "Mobile Friendly", desc: "Access HR portal from any device, anywhere." },
+              { icon: <ShieldCheck className="w-8 h-8" />, title: "Secure Cloud", desc: "Enterprise-grade security with data encryption." }
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="flex items-start gap-4 bg-slate-50 rounded-2xl p-6"
+              >
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#39a4de]/10 to-[#b5a5fa]/10 flex items-center justify-center flex-shrink-0 text-[#39a4de]">
+                  {item.icon}
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-slate-900 mb-1">{item.title}</h3>
+                  <p className="text-slate-600 text-sm">{item.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
