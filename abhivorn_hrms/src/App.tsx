@@ -19,6 +19,7 @@ import NotificationsPage from "./components/NotificationsPage";
 import RealTimeChatPage from "./components/RealTimeChatPage";
 import AboutUsPage from "./components/AboutUsPage";
 import BlogPage from "./components/BlogPage";
+import DeleteAccountPage from "./components/DeleteAccountPage";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -75,6 +76,7 @@ const AnimatedRoutes = () => {
           <Route path="realtime-chat" element={<PageTransition><RealTimeChatPage /></PageTransition>} />
           <Route path="about" element={<PageTransition><AboutUsPage /></PageTransition>} />
           <Route path="blog" element={<PageTransition><BlogPage /></PageTransition>} />
+          <Route path="delete-account" element={<PageTransition><DeleteAccountPage /></PageTransition>} />
         </Route>
       </Routes>
     </AnimatePresence>

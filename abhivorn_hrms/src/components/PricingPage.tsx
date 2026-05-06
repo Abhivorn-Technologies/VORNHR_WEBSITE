@@ -265,7 +265,6 @@ const PricingCalculator: React.FC = () => {
     const [submitting, setSubmitting] = useState(false);
     const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>('idle');
     const [submissionError, setSubmissionError] = useState<string | null>(null);
-    const [showTrialModal, setShowTrialModal] = useState(false);
     const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
     const categoryDropdownRef = useRef<HTMLDivElement>(null);
     const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof TrialFormState, string>>>({});
@@ -294,10 +293,12 @@ const PricingCalculator: React.FC = () => {
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         if (params.get('trial') === 'true') {
-            // Small delay to allow the page transition to settle
             const timer = setTimeout(() => {
-                setShowTrialModal(true);
-            }, 600);
+                const formElement = document.getElementById('trial-form-section');
+                if (formElement) {
+                    formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 800);
 
             return () => clearTimeout(timer);
         }
@@ -306,13 +307,18 @@ const PricingCalculator: React.FC = () => {
     const handlePlanSelect = (planId: string) => {
         setSelectedPlanId(planId);
     };
-    const openTrialModal = (selectedPlan: string) => {
+    const handleTrialClick = (selectedPlan: string) => {
         setSelectedPlanId(selectedPlan);
         setTrialForm(prev => ({ ...prev, selected_plan: selectedPlan }));
-        setShowTrialModal(true);
         setSubmissionStatus('idle');
         setSubmissionError(null);
         setFieldErrors({});
+        
+        // Scroll to form
+        const formElement = document.getElementById('trial-form-section');
+        if (formElement) {
+            formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     };
 
     const validateTrialForm = (): Partial<Record<keyof TrialFormState, string>> => {
@@ -565,7 +571,7 @@ const PricingCalculator: React.FC = () => {
                                     <motion.button
                                         type="button"
                                         whileHover="hover"
-                                        onClick={() => openTrialModal(plan.id)}
+                                        onClick={() => handleTrialClick(plan.id)}
                                         className={`w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 transition-all duration-300 active:scale-[0.98] ${isPopular
                                             ? 'bg-[#2ab6ea] text-white hover:bg-[#003973]'
                                             : 'bg-white border-2 border-[#2ab6ea] text-[#2ab6ea] hover:bg-[#2ab6ea] hover:text-white'
@@ -644,259 +650,187 @@ const PricingCalculator: React.FC = () => {
                 </ScrollReveal>
             </div>
 
-            <AnimatePresence>
-                {showTrialModal && (
-                    <motion.div
-                        className="fixed inset-0 z-[9999] flex items-start justify-center p-4 sm:p-6 overflow-y-auto pt-24 md:pt-32"
-                        initial="hidden"
-                        animate="visible"
-                        exit="hidden"
-                    >
-                        <motion.div
-                            variants={{
-                                hidden: { opacity: 0 },
-                                visible: { opacity: 1 }
-                            }}
-                            transition={{ duration: 0.3 }}
-                            className="absolute inset-0 bg-slate-900/60 backdrop-blur-md cursor-pointer"
-                            onClick={() => setShowTrialModal(false)}
-                        />
-                        <motion.div
-                            variants={{
-                                hidden: { scale: 0.95, opacity: 0, y: -50 },
-                                visible: { 
-                                    scale: 1, 
-                                    opacity: 1, 
-                                    y: 0,
-                                    transition: { 
-                                        type: 'spring', 
-                                        stiffness: 300, 
-                                        damping: 25,
-                                        delay: 0.1 
-                                    }
-                                }
-                            }}
-                            className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl p-6 sm:p-8 relative overflow-hidden z-10 my-8"
-                            onClick={event => event.stopPropagation()}
-                        >
-                            <button
-                                type="button"
-                                aria-label="Close"
-                                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-                                onClick={() => setShowTrialModal(false)}
-                            >
-                                ✕
-                            </button>
-
-                            {submissionStatus === 'success' ? (
-                                <div className="py-6 sm:py-8 text-center">
-                                    <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-                                        <Check className="w-8 h-8" />
+            {/* Embedded Trial Form Section */}
+            <div id="trial-form-section" className="mt-20 pt-20 border-t border-gray-100">
+                <ScrollReveal direction="up">
+                    <div className="max-w-3xl mx-auto bg-white rounded-[2.5rem] shadow-2xl border border-slate-100 overflow-hidden">
+                        <div className="grid md:grid-cols-5 h-full">
+                            {/* Form Header/Info Sidebar */}
+                            <div className="md:col-span-2 bg-[#003973] p-10 text-white flex flex-col justify-center">
+                                <h3 className="text-2xl font-bold mb-4">Start your 7-day free trial</h3>
+                                <p className="text-blue-100 text-sm leading-relaxed mb-8">
+                                    Experience the full power of VornHR. No credit card required, cancel anytime.
+                                </p>
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                                            <Check className="w-4 h-4 text-blue-300" />
+                                        </div>
+                                        <span className="text-sm font-medium">Full Feature Access</span>
                                     </div>
-                                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                                        Registration request submitted successfully.
-                                    </h3>
-                                    <p className="text-sm text-gray-600 max-w-md mx-auto leading-6">
-                                        Your application is under admin review. You will receive an email once the review is complete.
-                                    </p>
-                                    <div className="mt-5 rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
-                                        Selected plan: <span className="font-bold uppercase">{trialForm.selected_plan}</span>
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                                            <Check className="w-4 h-4 text-blue-300" />
+                                        </div>
+                                        <span className="text-sm font-medium">Priority Onboarding</span>
                                     </div>
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowTrialModal(false)}
-                                        className="mt-6 inline-flex items-center justify-center rounded-2xl bg-[#003973] px-6 py-3 text-sm font-bold text-white transition-colors duration-300 hover:bg-[#002b57]"
-                                    >
-                                        Close
-                                    </button>
                                 </div>
-                            ) : (
-                                <>
-                                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Start your 7-day free trial</h3>
-                                    <p className="text-sm text-gray-500 mb-4">
-                                        You selected the <strong className="text-[#2ab6ea] uppercase">{trialForm.selected_plan}</strong> plan.
-                                    </p>
+                            </div>
 
-                                    <form className="space-y-3" onSubmit={handleSubmit}>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                            <div className="flex flex-col gap-1">
-                                                <label htmlFor="trial-name" className="text-xs font-semibold text-gray-600">
-                                                    Full Name <span className="text-red-500">*</span>
-                                                </label>
-                                                <input
-                                                    id="trial-name"
-                                                    required
-                                                    className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${fieldErrors.name ? 'border-red-400 focus:ring-red-200' : 'border-gray-200 focus:ring-[#2ab6ea]'}`}
-                                                    placeholder="Full Name"
-                                                    value={trialForm.name}
-                                                    onChange={event => setTrialForm({ ...trialForm, name: event.target.value })}
-                                                />
-                                                {fieldErrors.name && <span className="text-xs text-red-600">{fieldErrors.name}</span>}
+                            {/* Actual Form */}
+                            <div className="md:col-span-3 p-8 md:p-10">
+                                {submissionStatus === 'success' ? (
+                                    <div className="h-full flex flex-col items-center justify-center text-center py-10">
+                                        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                                            <Check className="w-8 h-8" />
+                                        </div>
+                                        <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                                            Request Submitted!
+                                        </h3>
+                                        <p className="text-sm text-gray-600 max-w-xs mx-auto leading-6">
+                                            Your application is under review. We'll contact you shortly via email.
+                                        </p>
+                                        <button
+                                            type="button"
+                                            onClick={() => setSubmissionStatus('idle')}
+                                            className="mt-8 text-blue-600 font-bold hover:underline"
+                                        >
+                                            Submit another request
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <div className="mb-8">
+                                            <span className="text-xs font-bold text-blue-600 uppercase tracking-widest block mb-2">Selected Plan</span>
+                                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-xl text-[#003973] font-bold border border-blue-100">
+                                                <Zap className="w-4 h-4" />
+                                                <span className="capitalize">{trialForm.selected_plan} Plan</span>
+                                            </div>
+                                        </div>
+
+                                        <form className="space-y-4" onSubmit={handleSubmit}>
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                <div className="space-y-2">
+                                                    <label className="text-xs font-bold text-gray-700 ml-1">Full Name *</label>
+                                                    <input
+                                                        required
+                                                        className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 transition-all duration-300 ${fieldErrors.name ? 'border-red-400 focus:ring-red-50/50' : 'border-gray-200 focus:border-blue-400 focus:ring-blue-50/50 bg-gray-50/50 focus:bg-white'}`}
+                                                        placeholder="John Doe"
+                                                        value={trialForm.name}
+                                                        onChange={event => setTrialForm({ ...trialForm, name: event.target.value })}
+                                                    />
+                                                </div>
+
+                                                <div className="space-y-2">
+                                                    <label className="text-xs font-bold text-gray-700 ml-1">Work Email *</label>
+                                                    <input
+                                                        required
+                                                        type="email"
+                                                        className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 transition-all duration-300 ${fieldErrors.email ? 'border-red-400 focus:ring-red-50/50' : 'border-gray-200 focus:border-blue-400 focus:ring-blue-50/50 bg-gray-50/50 focus:bg-white'}`}
+                                                        placeholder="john@company.com"
+                                                        value={trialForm.email}
+                                                        onChange={event => setTrialForm({ ...trialForm, email: event.target.value })}
+                                                    />
+                                                </div>
                                             </div>
 
-                                            <div className="flex flex-col gap-1">
-                                                <label htmlFor="trial-email" className="text-xs font-semibold text-gray-600">
-                                                    Email <span className="text-red-500">*</span>
-                                                </label>
-                                                <input
-                                                    id="trial-email"
-                                                    required
-                                                    type="email"
-                                                    className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${fieldErrors.email ? 'border-red-400 focus:ring-red-200' : 'border-gray-200 focus:ring-[#2ab6ea]'}`}
-                                                    placeholder="Email"
-                                                    value={trialForm.email}
-                                                    onChange={event => setTrialForm({ ...trialForm, email: event.target.value })}
-                                                />
-                                                {fieldErrors.email && <span className="text-xs text-red-600">{fieldErrors.email}</span>}
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                <div className="space-y-2">
+                                                    <label className="text-xs font-bold text-gray-700 ml-1">Phone Number *</label>
+                                                    <input
+                                                        required
+                                                        className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 transition-all duration-300 ${fieldErrors.phone ? 'border-red-400 focus:ring-red-50/50' : 'border-gray-200 focus:border-blue-400 focus:ring-blue-50/50 bg-gray-50/50 focus:bg-white'}`}
+                                                        placeholder="+91 00000 00000"
+                                                        value={trialForm.phone}
+                                                        onChange={event => setTrialForm({ ...trialForm, phone: event.target.value })}
+                                                    />
+                                                </div>
+
+                                                <div className="space-y-2">
+                                                    <label className="text-xs font-bold text-gray-700 ml-1">Company Name *</label>
+                                                    <input
+                                                        required
+                                                        className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 transition-all duration-300 ${fieldErrors.company_name ? 'border-red-400 focus:ring-red-50/50' : 'border-gray-200 focus:border-blue-400 focus:ring-blue-50/50 bg-gray-50/50 focus:bg-white'}`}
+                                                        placeholder="Company Ltd."
+                                                        value={trialForm.company_name}
+                                                        onChange={event => setTrialForm({ ...trialForm, company_name: event.target.value })}
+                                                    />
+                                                </div>
                                             </div>
 
-                                            <div className="flex flex-col gap-1">
-                                                <label htmlFor="trial-phone" className="text-xs font-semibold text-gray-600">
-                                                    Phone <span className="text-red-500">*</span>
-                                                </label>
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-bold text-gray-700 ml-1">Company Domain *</label>
                                                 <input
-                                                    id="trial-phone"
                                                     required
-                                                    className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${fieldErrors.phone ? 'border-red-400 focus:ring-red-200' : 'border-gray-200 focus:ring-[#2ab6ea]'}`}
-                                                    placeholder="Phone"
-                                                    value={trialForm.phone}
-                                                    onChange={event => setTrialForm({ ...trialForm, phone: event.target.value })}
-                                                />
-                                                {fieldErrors.phone && <span className="text-xs text-red-600">{fieldErrors.phone}</span>}
-                                            </div>
-
-                                            <div className="flex flex-col gap-1">
-                                                <label htmlFor="trial-company" className="text-xs font-semibold text-gray-600">
-                                                    Company Name <span className="text-red-500">*</span>
-                                                </label>
-                                                <input
-                                                    id="trial-company"
-                                                    required
-                                                    className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${fieldErrors.company_name ? 'border-red-400 focus:ring-red-200' : 'border-gray-200 focus:ring-[#2ab6ea]'}`}
-                                                    placeholder="Company Name"
-                                                    value={trialForm.company_name}
-                                                    onChange={event => setTrialForm({ ...trialForm, company_name: event.target.value })}
-                                                />
-                                                {fieldErrors.company_name && <span className="text-xs text-red-600">{fieldErrors.company_name}</span>}
-                                            </div>
-
-                                            <div className="flex flex-col gap-1 sm:col-span-2">
-                                                <label htmlFor="trial-domain" className="text-xs font-semibold text-gray-600">
-                                                    Company Domain <span className="text-red-500">*</span>
-                                                </label>
-                                                <input
-                                                    id="trial-domain"
-                                                    required
-                                                    className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${fieldErrors.company_domain ? 'border-red-400 focus:ring-red-200' : 'border-gray-200 focus:ring-[#2ab6ea]'}`}
+                                                    className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 transition-all duration-300 ${fieldErrors.company_domain ? 'border-red-400 focus:ring-red-50/50' : 'border-gray-200 focus:border-blue-400 focus:ring-blue-50/50 bg-gray-50/50 focus:bg-white'}`}
                                                     placeholder="e.g. company.com"
                                                     value={trialForm.company_domain}
                                                     onChange={event => setTrialForm({ ...trialForm, company_domain: event.target.value })}
                                                 />
-                                                {fieldErrors.company_domain && <span className="text-xs text-red-600">{fieldErrors.company_domain}</span>}
                                             </div>
 
-                                            <div className="flex flex-col gap-1 sm:col-span-2 relative" ref={categoryDropdownRef}>
-                                                <label htmlFor="trial-category" className="text-xs font-semibold text-gray-600">
-                                                    Industry Category <span className="text-red-500">*</span>
-                                                </label>
-                                                <div className="relative">
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
-                                                        className={`w-full flex items-center justify-between border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 transition-all ${
-                                                            fieldErrors.industry_category 
-                                                                ? 'border-red-400 focus:ring-red-200 bg-red-50/10' 
-                                                                : 'border-gray-200 focus:ring-[#2ab6ea] bg-white'
-                                                        }`}
-                                                    >
-                                                        <span className={trialForm.industry_category ? 'text-gray-900' : 'text-gray-400'}>
-                                                            {trialForm.industry_category || 'Select Category'}
-                                                        </span>
-                                                        <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isCategoryDropdownOpen ? 'rotate-180' : ''}`} />
-                                                    </button>
-
-                                                    <AnimatePresence>
-                                                        {isCategoryDropdownOpen && (
-                                                            <motion.div
-                                                                initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                                                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                                exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                                                                transition={{ duration: 0.2 }}
-                                                                className="absolute z-[60] left-0 right-0 mt-2 bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden"
-                                                            >
-                                                                <div className="max-h-[200px] overflow-y-auto py-2 custom-scrollbar">
-                                                                    {industryCategories.map((cat) => (
-                                                                        <button
-                                                                            key={cat}
-                                                                            type="button"
-                                                                            onClick={() => {
-                                                                                setTrialForm({ ...trialForm, industry_category: cat });
-                                                                                setIsCategoryDropdownOpen(false);
-                                                                                if (fieldErrors.industry_category) {
-                                                                                    setFieldErrors(prev => ({ ...prev, industry_category: undefined }));
-                                                                                }
-                                                                            }}
-                                                                            className={`w-full text-left px-4 py-2.5 text-sm transition-colors hover:bg-blue-50 ${
-                                                                                trialForm.industry_category === cat 
-                                                                                    ? 'text-[#003973] font-bold bg-blue-50/50' 
-                                                                                    : 'text-gray-600'
-                                                                            }`}
-                                                                        >
-                                                                            {cat}
-                                                                        </button>
-                                                                    ))}
-                                                                </div>
-                                                            </motion.div>
-                                                        )}
-                                                    </AnimatePresence>
-                                                </div>
-                                                {fieldErrors.industry_category && <span className="text-xs text-red-600">{fieldErrors.industry_category}</span>}
-                                            </div>
-                                        </div>
-
-                                        <div className="flex flex-col gap-1">
-                                            <label htmlFor="trial-message" className="text-xs font-semibold text-gray-600">
-                                                Message (optional)
-                                            </label>
-                                            <textarea
-                                                id="trial-message"
-                                                rows={3}
-                                                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2ab6ea]"
-                                                placeholder="Tell us a bit about your team"
-                                                value={trialForm.message}
-                                                onChange={event => setTrialForm({ ...trialForm, message: event.target.value })}
-                                            />
-                                        </div>
-
-                                        <button
-                                            type="submit"
-                                            disabled={submitting}
-                                            className="w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 transition-all duration-300 active:scale-[0.98] bg-[#2ab6ea] border-2 border-[#2ab6ea] text-white hover:bg-[#003973] hover:border-[#003973] disabled:opacity-60 disabled:cursor-not-allowed"
-                                        >
-                                            {submitting ? 'Submitting...' : 'Submit Request'}
-                                            {!submitting && <ArrowRight className="w-4 h-4" />}
-                                        </button>
-
-                                        <AnimatePresence>
-                                            {submissionStatus === 'error' && (
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: 6 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    exit={{ opacity: 0, y: -6 }}
-                                                    className="text-sm text-red-700 font-semibold bg-red-50 border border-red-200 rounded-xl px-3 py-2 break-words mt-4"
+                                            <div className="space-y-2 relative" ref={categoryDropdownRef}>
+                                                <label className="text-xs font-bold text-gray-700 ml-1">Industry Category *</label>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
+                                                    className={`w-full border rounded-xl px-4 py-3 text-sm flex items-center justify-between transition-all duration-300 ${fieldErrors.industry_category ? 'border-red-400 focus:ring-red-50/50' : 'border-gray-200 focus:border-blue-400 focus:ring-blue-50/50 bg-gray-50/50 focus:bg-white'}`}
                                                 >
-                                                    {submissionError || 'Something went wrong. Please try again.'}
-                                                </motion.div>
-                                            )}
-                                        </AnimatePresence>
+                                                    <span className={trialForm.industry_category ? 'text-gray-900' : 'text-gray-400 font-medium'}>
+                                                        {trialForm.industry_category || 'Select Category'}
+                                                    </span>
+                                                    <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isCategoryDropdownOpen ? 'rotate-180' : ''}`} />
+                                                </button>
 
-                                    </form>
-                                </>
-                            )}
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                                                <AnimatePresence>
+                                                    {isCategoryDropdownOpen && (
+                                                        <motion.div
+                                                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                            className="absolute bottom-full left-0 right-0 mb-2 max-h-60 overflow-y-auto bg-white border border-gray-200 rounded-xl shadow-2xl z-[100] p-1 shadow-blue-500/10"
+                                                        >
+                                                            {industryCategories.map(cat => (
+                                                                <button
+                                                                    key={cat}
+                                                                    type="button"
+                                                                    onClick={() => {
+                                                                        setTrialForm({ ...trialForm, industry_category: cat });
+                                                                        setIsCategoryDropdownOpen(false);
+                                                                    }}
+                                                                    className="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 rounded-lg transition-colors font-medium text-gray-700"
+                                                                >
+                                                                    {cat}
+                                                                </button>
+                                                            ))}
+                                                        </motion.div>
+                                                    )}
+                                                </AnimatePresence>
+                                            </div>
+
+                                            <button
+                                                type="submit"
+                                                disabled={submitting}
+                                                className="w-full py-4 bg-[#2ab6ea] hover:bg-[#003973] text-white rounded-xl text-md font-bold transition-all duration-300 shadow-xl shadow-blue-200 flex items-center justify-center gap-2 mt-4 disabled:opacity-70 disabled:cursor-not-allowed group"
+                                            >
+                                                {submitting ? 'Creating your account...' : 'Claim 7-Day Free Trial'}
+                                                {!submitting && <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
+                                            </button>
+
+                                            {submissionError && (
+                                                <div className="mt-4 p-3 bg-red-50 border border-red-100 rounded-xl flex items-start gap-2">
+                                                    <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                                                    <span className="text-xs text-red-600 font-medium">{submissionError}</span>
+                                                </div>
+                                            )}
+                                        </form>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </ScrollReveal>
+            </div>
 
             <AnimatePresence>
                 {selectedPlanId && (

@@ -10,7 +10,6 @@ import ScrollReveal from './ScrollReveal';
 
 const BlogPage: React.FC = () => {
   const [selectedPost, setSelectedPost] = React.useState<any>(null);
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const [activeCategory, setActiveCategory] = React.useState("All Posts");
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -151,7 +150,7 @@ Finally, don't overlook "Hardware & Ergonomics." A professional remote work poli
 
   const handleReadMore = (post: any) => {
     setSelectedPost(post);
-    setIsModalOpen(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const popularPosts = [
@@ -282,167 +281,247 @@ Finally, don't overlook "Hardware & Ergonomics." A professional remote work poli
 
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Posts Grid */}
-          <div className="lg:col-span-2">
-            <h2 className="text-2xl font-bold text-slate-900 mb-6">
-              {searchQuery 
-                ? `Search results for "${searchQuery}"`
-                : (activeCategory === "All Posts" ? "Latest Articles" : `${activeCategory} Articles`)}
-            </h2>
-            <div className="grid gap-6">
-              <AnimatePresence mode="popLayout">
-                {(() => {
-                  const allPosts = [featuredPost, ...posts];
-                  const filtered = allPosts.filter(p => {
-                    const matchesCategory = activeCategory === "All Posts" || p.category === activeCategory;
-                    
-                    const query = searchQuery.toLowerCase();
-                    const matchesSearch = 
-                      p.title.toLowerCase().includes(query) || 
-                      p.excerpt.toLowerCase().includes(query) ||
-                      p.content.toLowerCase().includes(query) ||
-                      p.category.toLowerCase().includes(query);
-                    
-                    // If searching, we show anything that matches searching across all fields
-                    if (searchQuery) return matchesSearch;
-                    
-                    // If not searching, we show category matches, but exclude featured post from the grid if on "All Posts"
-                    if (activeCategory === "All Posts") return p !== featuredPost;
-                    return matchesCategory;
-                  });
-
-                  if (filtered.length === 0) {
-                    return (
-                      <motion.div 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="text-center py-20 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200"
-                      >
-                        <Search className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                        <h3 className="text-lg font-bold text-slate-900 mb-2">No articles found</h3>
-                        <p className="text-slate-500">Try adjusting your search or category filters</p>
-                        <button 
-                          onClick={() => { setSearchQuery(""); setActiveCategory("All Posts"); }}
-                          className="mt-6 text-[#003973] font-bold hover:underline"
-                        >
-                          Clear all filters
-                        </button>
-                      </motion.div>
-                    );
-                  }
-
-                  return filtered.map((post, index) => (
-                    <motion.div
-                      key={post.title}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ duration: 0.3, delay: index * 0.05 }}
-                    >
-                    <div className="bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-lg transition-shadow duration-300 h-full">
-                      <div className="grid md:grid-cols-3">
-                        <div 
-                          className="h-48 md:h-auto bg-cover bg-center cursor-pointer overflow-hidden group relative"
-                          style={{ backgroundImage: `url(${post.image})`, willChange: 'transform' }}
-                          onClick={() => handleReadMore(post)}
-                        >
-                           <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-all duration-300" />
-                        </div>
-                        <div className="p-6 md:col-span-2">
-                          <div className="flex items-center gap-2 mb-3">
-                            <span className="px-2 py-1 bg-slate-100 text-slate-600 text-xs font-medium rounded">
-                              {post.category}
-                            </span>
-                          </div>
-                          <h3 
-                            className="text-lg font-bold text-slate-900 mb-2 cursor-pointer hover:text-[#003973] transition-colors"
-                            onClick={() => handleReadMore(post)}
-                          >
-                            {post.title}
-                          </h3>
-                          <p className="text-slate-600 text-sm mb-4 line-clamp-2">
-                            {post.excerpt}
-                          </p>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-slate-500">{post.date}</span>
-                            <button 
-                              onClick={() => handleReadMore(post)}
-                              className="text-[#003973] font-medium text-sm flex items-center gap-1 hover:gap-2 transition-all"
-                            >
-                              Read More <ArrowRight className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                ));
-              })()}
-              </AnimatePresence>
-            </div>
-
-            {/* Load More */}
-            <div className="text-center mt-10">
-              <div className="inline-flex items-center justify-center px-6 py-3 font-bold text-slate-400 bg-slate-100 rounded-xl cursor-not-allowed">
-                More articles are coming soon
-                <Clock className="w-5 h-5 ml-2" />
+        <AnimatePresence mode="wait">
+          {selectedPost ? (
+            <motion.div
+              key="full-article"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}
+              className="bg-white rounded-[2rem] overflow-hidden shadow-2xl border border-slate-100"
+            >
+              <div className="relative h-[300px] md:h-[500px]">
+                <img 
+                  src={selectedPost.image} 
+                  alt={selectedPost.title} 
+                  className="w-full h-full object-cover"
+                />
+                <button 
+                  onClick={() => {
+                    setSelectedPost(null);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-md text-[#003973] font-bold rounded-xl shadow-lg hover:bg-white transition-all transform hover:-translate-x-1"
+                >
+                  <ChevronRight className="w-5 h-5 rotate-180" />
+                  Back to Blogs
+                </button>
               </div>
-            </div>
-          </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Popular Posts */}
-            <div className="bg-white rounded-2xl p-6 border border-slate-200">
-              <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-[#003973]" />
-                Popular Posts
-              </h3>
-              <div className="space-y-4">
-                {popularPosts.map((post, index) => (
-                  <div key={index} className="group cursor-pointer">
-                    <h4 className="text-slate-900 font-medium group-hover:text-[#003973] transition-colors">
-                      {post.title}
-                    </h4>
-                    <span className="text-slate-500 text-sm flex items-center gap-1">
-                      <Eye className="w-3 h-3" />
-                      {post.views.toLocaleString()} views
+              <div className="p-8 md:p-16">
+                <div className="max-w-4xl mx-auto">
+                  <div className="flex items-center gap-3 mb-6">
+                    <span className="px-3 py-1 bg-blue-50 text-[#003973] text-sm font-bold rounded-full">
+                      {selectedPost.category}
                     </span>
+                    <span className="text-slate-400">•</span>
+                    <span className="text-slate-500 text-sm font-medium">{selectedPost.date}</span>
                   </div>
-                ))}
+
+                  <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-8 leading-tight">
+                    {selectedPost.title}
+                  </h2>
+
+                  <div className="flex items-center gap-4 mb-12 pb-8 border-b border-slate-100">
+                    <div className="w-12 h-12 bg-[#003973]/10 rounded-full flex items-center justify-center">
+                      <User className="w-6 h-6 text-[#003973]" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-lg text-slate-900">{selectedPost.author}</p>
+                      <p className="text-sm text-slate-500">Professional HR Expert</p>
+                    </div>
+                  </div>
+
+                  <div className="prose prose-slate prose-lg max-w-none">
+                    {selectedPost.content.split('\n\n').map((paragraph: string, idx: number) => (
+                      <p key={idx} className="text-slate-600 leading-relaxed mb-8 text-lg">
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+
+                  <div className="mt-16 p-10 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl border border-blue-100 text-center">
+                    <h4 className="text-2xl font-bold text-slate-900 mb-4">Ready to transform your HR?</h4>
+                    <p className="text-slate-600 mb-8 max-w-xl mx-auto text-lg">
+                      Our HR experts can help you implement these practices. Get a personalized demo of the VornHR platform.
+                    </p>
+                    <Link 
+                      to="/contact"
+                      className="inline-flex items-center gap-3 px-8 py-4 bg-[#003973] text-white rounded-2xl font-bold hover:bg-[#2ab6ea] transition-all shadow-xl hover:shadow-blue-200"
+                    >
+                      Contact an Expert <ArrowRight className="w-5 h-5" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ) : (
+            <div className="grid lg:grid-cols-3 gap-8">
+              {/* Posts Grid */}
+              <div className="lg:col-span-2">
+                <h2 className="text-2xl font-bold text-slate-900 mb-6">
+                  {searchQuery 
+                    ? `Search results for "${searchQuery}"`
+                    : (activeCategory === "All Posts" ? "Latest Articles" : `${activeCategory} Articles`)}
+                </h2>
+                <div className="grid gap-6">
+                  <AnimatePresence mode="popLayout">
+                    {(() => {
+                      const allPosts = [featuredPost, ...posts];
+                      const filtered = allPosts.filter(p => {
+                        const matchesCategory = activeCategory === "All Posts" || p.category === activeCategory;
+                        
+                        const query = searchQuery.toLowerCase();
+                        const matchesSearch = 
+                          p.title.toLowerCase().includes(query) || 
+                          p.excerpt.toLowerCase().includes(query) ||
+                          p.content.toLowerCase().includes(query) ||
+                          p.category.toLowerCase().includes(query);
+                        
+                        if (searchQuery) return matchesSearch;
+                        if (activeCategory === "All Posts") return p !== featuredPost;
+                        return matchesCategory;
+                      });
+
+                      if (filtered.length === 0) {
+                        return (
+                          <motion.div 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="text-center py-20 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200"
+                          >
+                            <Search className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                            <h3 className="text-lg font-bold text-slate-900 mb-2">No articles found</h3>
+                            <p className="text-slate-500">Try adjusting your search or category filters</p>
+                            <button 
+                              onClick={() => { setSearchQuery(""); setActiveCategory("All Posts"); }}
+                              className="mt-6 text-[#003973] font-bold hover:underline"
+                            >
+                              Clear all filters
+                            </button>
+                          </motion.div>
+                        );
+                      }
+
+                      return filtered.map((post, index) => (
+                        <motion.div
+                          key={post.title}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.95 }}
+                          transition={{ duration: 0.3, delay: index * 0.05 }}
+                        >
+                          <div className="bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-lg transition-shadow duration-300 h-full">
+                            <div className="grid md:grid-cols-3">
+                              <div 
+                                className="h-48 md:h-auto bg-cover bg-center cursor-pointer overflow-hidden group relative"
+                                style={{ backgroundImage: `url(${post.image})`, willChange: 'transform' }}
+                                onClick={() => handleReadMore(post)}
+                              >
+                                <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-all duration-300" />
+                              </div>
+                              <div className="p-6 md:col-span-2">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <span className="px-2 py-1 bg-slate-100 text-slate-600 text-xs font-medium rounded">
+                                    {post.category}
+                                  </span>
+                                </div>
+                                <h3 
+                                  className="text-lg font-bold text-slate-900 mb-2 cursor-pointer hover:text-[#003973] transition-colors"
+                                  onClick={() => handleReadMore(post)}
+                                >
+                                  {post.title}
+                                </h3>
+                                <p className="text-slate-600 text-sm mb-4 line-clamp-2">
+                                  {post.excerpt}
+                                </p>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm text-slate-500">{post.date}</span>
+                                  <button 
+                                    onClick={() => handleReadMore(post)}
+                                    className="text-[#003973] font-bold text-sm flex items-center gap-1 hover:gap-2 transition-all"
+                                  >
+                                    Read Article <ArrowRight className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ));
+                    })()}
+                  </AnimatePresence>
+                </div>
+
+                {/* Load More */}
+                <div className="text-center mt-10">
+                  <div className="inline-flex items-center justify-center px-6 py-3 font-bold text-slate-400 bg-slate-100 rounded-xl cursor-not-allowed">
+                    More articles coming soon
+                    <Clock className="w-5 h-5 ml-2" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Sidebar */}
+              <div className="space-y-6">
+                {/* Popular Posts */}
+                <div className="bg-white rounded-2xl p-6 border border-slate-200">
+                  <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5 text-[#003973]" />
+                    Popular Posts
+                  </h3>
+                  <div className="space-y-4">
+                    {popularPosts.map((post, index) => (
+                      <div key={index} className="group cursor-pointer">
+                        <h4 className="text-slate-900 font-medium group-hover:text-[#003973] transition-colors">
+                          {post.title}
+                        </h4>
+                        <span className="text-slate-500 text-sm flex items-center gap-1">
+                          <Eye className="w-3 h-3" />
+                          {post.views.toLocaleString()} views
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Newsletter */}
+                <div className="bg-gradient-to-br from-[#003973] to-[#00509E] rounded-2xl p-6 text-white text-center">
+                  <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+                    <Zap className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold mb-2">HR Insights</h3>
+                  <p className="text-slate-200 text-sm mb-6">
+                    Join 5,000+ HR leaders getting weekly trends
+                  </p>
+                  <div className="space-y-3">
+                    <input
+                      type="email"
+                      placeholder="work@company.com"
+                      className="w-full px-4 py-3 rounded-xl text-slate-900 focus:outline-none placeholder:text-slate-400 text-sm shadow-inner"
+                    />
+                    <button className="w-full py-3 bg-[#2ab6ea] text-white font-bold rounded-xl hover:bg-white hover:text-[#003973] transition-all shadow-lg active:scale-[0.98]">
+                      Subscribe Free
+                    </button>
+                  </div>
+                </div>
+
+                {/* Tags */}
+                <div className="bg-white rounded-2xl p-6 border border-slate-200">
+                  <h3 className="text-lg font-bold text-slate-900 mb-4">Popular Tags</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {["Payroll", "AI", "Retention", "Wellness", "Compliance", "Remote"].map((tag, index) => (
+                      <span key={index} className="px-3 py-1.5 bg-slate-50 text-slate-600 text-sm font-medium rounded-lg hover:bg-blue-50 hover:text-[#003973] cursor-pointer transition-colors border border-slate-100">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
-
-            {/* Newsletter */}
-            <div className="bg-gradient-to-br from-[#003973] to-[#00509E] rounded-2xl p-6 text-white">
-              <h3 className="text-lg font-bold mb-2">Newsletter</h3>
-              <p className="text-slate-300 text-sm mb-4">
-                Get the latest HR insights delivered to your inbox
-              </p>
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="w-full px-4 py-2 rounded-lg text-slate-900 mb-3 focus:outline-none"
-              />
-              <button className="w-full py-2 bg-white text-[#003973] font-bold rounded-lg hover:bg-slate-100 transition-colors">
-                Subscribe
-              </button>
-            </div>
-
-            {/* Tags */}
-            <div className="bg-white rounded-2xl p-6 border border-slate-200">
-              <h3 className="text-lg font-bold text-slate-900 mb-4">Tags</h3>
-              <div className="flex flex-wrap gap-2">
-                {["HR Software", "Payroll", "Recruitment", "Employee Engagement", "Remote Work", "AI in HR", "Compliance", "Performance Management", "Benefits", "Onboarding"].map((tag, index) => (
-                  <span key={index} className="px-3 py-1 bg-slate-100 text-slate-600 text-sm rounded-full hover:bg-[#003973]/10 hover:text-[#003973] cursor-pointer transition-colors">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* CTA Section */}
@@ -463,86 +542,6 @@ Finally, don't overlook "Hardware & Ergonomics." A professional remote work poli
           </Link>
         </div>
       </div>
-      {/* Article Reader Modal */}
-      <AnimatePresence>
-        {isModalOpen && selectedPost && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsModalOpen(false)}
-              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
-            />
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="bg-white w-full max-w-4xl max-h-[90vh] rounded-3xl overflow-hidden shadow-2xl relative z-10 flex flex-col"
-            >
-              <button 
-                onClick={() => setIsModalOpen(false)}
-                className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-20"
-              >
-                <X className="w-6 h-6" />
-              </button>
-
-              <div className="h-64 md:h-80 relative overflow-hidden">
-                <img src={selectedPost.image} alt={selectedPost.title} loading="lazy" decoding="async" className="w-full h-full object-cover" style={{ willChange: 'transform' }} />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8">
-                  <span className="inline-block px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded-full mb-3 w-fit">
-                    {selectedPost.category}
-                  </span>
-                  <h2 className="text-2xl md:text-4xl font-bold text-white mb-2">{selectedPost.title}</h2>
-                </div>
-              </div>
-
-              <div className="flex-1 overflow-y-auto p-8 md:p-12">
-                <div className="flex items-center gap-6 mb-8 pb-6 border-b border-slate-100">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                      <User className="w-5 h-5 text-blue-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-slate-900">{selectedPost.author}</p>
-                      <p className="text-xs text-slate-500">Professional HR Expert</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 text-sm text-slate-500">
-                    <span className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4" />
-                      {selectedPost.date}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="prose prose-slate max-w-none">
-                  {selectedPost.content.split('\n\n').map((paragraph: string, idx: number) => (
-                    <p key={idx} className="text-slate-600 leading-relaxed mb-6 whitespace-pre-wrap">
-                      {paragraph.startsWith('1.') || paragraph.startsWith('**') ? (
-                         <span className="block">{paragraph}</span>
-                      ) : paragraph}
-                    </p>
-                  ))}
-                </div>
-
-                <div className="mt-12 p-8 bg-slate-50 rounded-2xl border border-slate-100">
-                  <h4 className="font-bold text-slate-900 mb-2">Want to learn more?</h4>
-                  <p className="text-sm text-slate-600 mb-6">
-                    Our HR experts can help you implement these practices in your own organization.
-                  </p>
-                  <Link 
-                    to="/contact"
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-[#003973] text-white rounded-xl font-bold hover:bg-[#00509E] transition-colors"
-                  >
-                    Contact an Expert <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };
