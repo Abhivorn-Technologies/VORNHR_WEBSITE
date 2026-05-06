@@ -55,6 +55,7 @@ const Footer: React.FC = () => {
                 { name: "Terms of Service", href: "/terms-of-service" },
                 { name: "Cookie Policy", href: "/cookie-policy" },
                 { name: "Security", href: "/security" },
+                { name: "Delete Account", href: "/delete-account" },
             ]
         },
     ];
@@ -120,7 +121,6 @@ const Footer: React.FC = () => {
                     ))}
                 </div>
 
-                {/* Bottom Bar */}
                 <div className="border-t border-slate-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
                     <p className="text-sm text-slate-500">
                         ©2025 <a href="https://www.abhivorn.com/" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition-colors">Abhivorn Technologies Pvt. Ltd.</a> All rights reserved.
