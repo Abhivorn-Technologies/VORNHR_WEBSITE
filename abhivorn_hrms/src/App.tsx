@@ -27,6 +27,7 @@ import EmployeeManagementPage from "./components/EmployeeManagementPage";
 import HRMSForStartupsPage from "./components/HRMSForStartupsPage";
 import HRMSForSMEsPage from "./components/HRMSForSMEsPage";
 import DemoPage from "./components/DemoPage";
+import DeleteAccountPage from "./components/DeleteAccountPage";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -91,6 +92,8 @@ const AnimatedRoutes = () => {
           <Route path="hrms-for-startups" element={<PageTransition><HRMSForStartupsPage /></PageTransition>} />
           <Route path="hrms-for-smes" element={<PageTransition><HRMSForSMEsPage /></PageTransition>} />
           <Route path="demo" element={<PageTransition><DemoPage /></PageTransition>} />
+          <Route path="delete-account" element={<PageTransition><DeleteAccountPage /></PageTransition>} />
+          <Route path="delete account" element={<PageTransition><DeleteAccountPage /></PageTransition>} />
         </Route>
       </Routes>
     </AnimatePresence>

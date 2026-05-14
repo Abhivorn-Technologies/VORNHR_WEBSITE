@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Shield, Trash2, AlertTriangle, Database, Mail, ChevronRight, Info } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 
 const DeleteAccountPage: React.FC = () => {
+  useEffect(() => {
+    document.title = "Delete Account | VornHR - Workforce Management";
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute("content", "Information about deleting your VornHR account, data retention policies, and how to export your organizational data before closure.");
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Hero Section */}
